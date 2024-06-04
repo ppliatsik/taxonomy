@@ -1,8 +1,9 @@
-{:http/service {:port              8082
-                :db                #ig/ref :db/pg
-                :build             :dev
-                :host              "0.0.0.0"
-                :server-address    "http://localhost:8888"}
+{:http/service {:port           8082
+                :db             #ig/ref :db/pg
+                :auth-keys      #ig/ref :auth/keys
+                :build          :dev
+                :host           "0.0.0.0"
+                :server-address "http://localhost:8888"}
 
  :db/pg {:server-name       "localhost"
          :database-name     "taxonomy"
@@ -11,4 +12,7 @@
          :adapter           "postgresql"
          :port-number       15432
          :minimum-idle      3
-         :maximum-pool-size 15}}
+         :maximum-pool-size 15}
+
+ :auth/keys {:public-key-file  "resources/public-key.pem"
+             :private-key-file "resources/private-key.pem"}}
