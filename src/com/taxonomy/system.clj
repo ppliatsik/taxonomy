@@ -14,7 +14,7 @@
     (ac/read-config filename)))
 
 (s/def ::configuration
-  (s/keys :req [:http/service :db/pg]))
+  (s/keys :req [:http/service :db/pg :auth/keys]))
 
 (defn config [filename]
   (s/assert ::configuration (load-config filename)))
