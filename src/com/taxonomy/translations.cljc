@@ -11,7 +11,5 @@
 
 (let [dictionary (tongue/build-translate dicts)]
   (defn tr
-    ([language key]
-     (dictionary (or language :gr) (or key :com.taxonomy.ui/missing-translation)))
-    ([language key x]
-     (dictionary (or language :gr) (or key :com.taxonomy.ui/missing-translation) x))))
+    [language key]
+    (dictionary (or language :gr) (or key :com.taxonomy.ui/missing-translation))))
