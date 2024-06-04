@@ -10,7 +10,7 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./static:/usr/share/nginx/html
     networks:
-      - anet
+      - tnet
 
   tax-db:
     image: mdillon/postgis
@@ -28,8 +28,8 @@ services:
       POSTGRES_PASSWORD: test
     command: [ "postgres", "-c", "wal_level=logical" ]
     networks:
-      - anet
+      - tnet
 
 networks:
-  anet:
+  tnet:
     driver: bridge

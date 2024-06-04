@@ -24,6 +24,16 @@
   (fn [db _]
     (:ui/current-view db)))
 
+(rf/reg-event-db
+  ::set-language
+  (fn [db [_ language]]
+    (assoc db :language (or language :gr))))
+
+(rf/reg-sub
+  :ui/language
+  (fn [db _]
+    (get db :language)))
+
 (defn main-view
   []
   [:article.box
@@ -49,15 +59,16 @@
         [:div.content.has-text-centered.m-2.p-2
          [:span ""]]]]]]))
 
-(rf/reg-event-fx
-  ::load-success
-  (fn [_ _]
-    {::visit-current-url []}))
-
 (rf/reg-fx
   ::visit-current-url
   (fn [_]
     (sec/dispatch! (-> js/window .-location .-hash (subs 1)))))
+
+(rf/reg-event-fx
+  ::load-success
+  (fn [_ _]
+    {:dispatch-n         [[::set-language]]
+     ::visit-current-url []}))
 
 (defn main-app
   "Mount to root element"

@@ -18,11 +18,11 @@
   (:import [java.sql PreparedStatement]))
 
 (defmethod ig/init-key :db/pg [_ spec]
-  (log/info "Starting PostgreSQL connection pool...")
+  (log/info "Starting PostgreSQL connection pool")
   {:datasource (make-datasource spec)})
 
 (defmethod ig/halt-key! :db/pg [_ pool]
-  (log/info "Stopping PostgreSQL connection pool...")
+  (log/info "Stopping PostgreSQL connection pool")
   (close-datasource (:datasource pool)))
 
 (defmethod pg-types/read-pgobject :jsonb
