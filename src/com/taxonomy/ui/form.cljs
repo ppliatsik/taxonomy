@@ -28,12 +28,12 @@
       {:on-click (fn []
                    (when (< (:first-page pagination) (:current-page pagination))
                      (rf/dispatch [pagination-event (dec (:current-page pagination))])))}
-      (trans/tr language :com.taxonomy.ui/previous-page)]
+      (trans/translate language :com.taxonomy.ui/previous-page)]
      [:a.pagination-next.has-background-success.has-text-white
       {:on-click (fn []
                    (when (< (:current-page pagination) (:last-page pagination))
                      (rf/dispatch [pagination-event (inc (:current-page pagination))])))}
-      (trans/tr language :com.taxonomy.ui/next-page)]
+      (trans/translate language :com.taxonomy.ui/next-page)]
      [:ul.pagination-list
       [:li (when-not (= (:first-page pagination) (:current-page pagination))
              [:a.pagination-link

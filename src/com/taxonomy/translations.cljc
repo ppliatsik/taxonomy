@@ -10,6 +10,6 @@
    :el              gr/translations})
 
 (let [dictionary (tongue/build-translate dicts)]
-  (defn tr
+  (defn translate
     [language key]
     (dictionary (or language :gr) (or key :com.taxonomy.ui/missing-translation))))
