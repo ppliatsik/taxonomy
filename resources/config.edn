@@ -1,0 +1,14 @@
+{:http/service {:port              8082
+                :db                #ig/ref :db/pg
+                :build             :dev
+                :host              "0.0.0.0"
+                :server-address    "http://localhost:8888"}
+
+ :db/pg {:server-name       "localhost"
+         :database-name     "taxonomy"
+         :username          "test"
+         :password          "test"
+         :adapter           "postgresql"
+         :port-number       15432
+         :minimum-idle      3
+         :maximum-pool-size 15}}

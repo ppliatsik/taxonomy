@@ -1,0 +1,35 @@
+version: '3.2'
+
+services:
+  tax-nginx:
+    image: nginx:latest
+    container_name: tax-nginx
+    ports:
+      - "8888:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./static:/usr/share/nginx/html
+    networks:
+      - anet
+
+  tax-db:
+    image: mdillon/postgis
+    container_name: tax-db
+    volumes:
+      #- ./db-init:/docker-entrypoint-initdb.d
+      - ./dbdata:/var/lib/postgresql/data
+    ports:
+      - '15432:5432'
+    expose:
+      - '5432'
+    environment:
+      POSTGRES_DB: taxonomy
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+    command: [ "postgres", "-c", "wal_level=logical" ]
+    networks:
+      - anet
+
+networks:
+  anet:
+    driver: bridge

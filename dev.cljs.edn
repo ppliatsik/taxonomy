@@ -1,0 +1,15 @@
+;; docs for figwheel.main metadata options: https://figwheel.org/config-options
+^{:css-dirs            ["resources/public/css"]
+  :watch-dirs          ["src"]
+  :ring-server-options {:port 8081
+                        :host "localhost"}
+  :log-level           :debug
+  :open-url            "http://localhost:8888/"
+  :auto-testing        true}
+;; docs for this map: https://clojurescript.org/reference/compiler-options
+{:main              com.taxonomy.ui
+ :output-to         "target/public/cljs-out/main.js"
+ :closure-defines   {"re_frame.trace.trace_enabled_QMARK_"        true
+                     "day8.re_frame.tracing.trace_enabled_QMARK_" true
+                     "goog.DEBUG"                                 true}
+ :repl-eval-timeout 30}

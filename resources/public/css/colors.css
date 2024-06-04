@@ -1,0 +1,35 @@
+.is-bg-orange {
+    background-color: #FF470F !important;
+}
+
+.is-bg-yellow {
+    background-color: #FFE08A !important;
+}
+
+.is-bg-green {
+    background-color: #48C78E !important;
+}
+
+.is-bg-turquoise {
+    background-color: #00D1B2 !important;
+}
+
+.is-bg-cyan {
+    background-color: #3E8ED0 !important;
+}
+
+.is-bg-blue {
+    background-color: #485FC7 !important;
+}
+
+.is-bg-red {
+    background-color: #F14668 !important;
+}
+
+.is-orange {
+    color: #FF470F !important;
+}
+
+.is-red {
+    color: #F14668 !important;
+}

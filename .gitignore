@@ -1,0 +1,6 @@
+/target
+/.cpcache
+/.idea
+/resources/photos/*.*
+/dock/dbdata/
+*.iml
