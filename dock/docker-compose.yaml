@@ -8,6 +8,8 @@ services:
       - "8888:80"
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/certs/nginx-selfsigned.crt:/etc/nginx/nginx-selfsigned.crt
+      - ./nginx/certs/nginx-selfsigned.key:/etc/nginx/nginx-selfsigned.key
       - ./static:/usr/share/nginx/html
     networks:
       - tnet

@@ -1,6 +1,9 @@
 /target
 /.cpcache
 /.idea
-/resources/photos/*.*
 /dock/dbdata/
 *.iml
+/dock/nginx/certs/mail.key
+/dock/nginx/certs/mailcert.pem
+/dock/nginx/certs/nginx-selfsigned.crt
+/dock/nginx/certs/nginx-selfsigned.key
