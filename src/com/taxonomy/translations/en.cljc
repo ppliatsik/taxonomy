@@ -9,7 +9,8 @@
   {})
 
 (def end-user
-  {})
+  {:user-not-exists     "User does not exists"
+   :user-already-exists "User already exists"})
 
 (def translations
   {:com.taxonomy.ui       taxonomy-ui

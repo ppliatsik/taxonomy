@@ -97,7 +97,7 @@
                :swagger {:info {:title       "Taxonomy API"
                                 :description "With pedestal & reitit-http"}}
                :handler (swagger/create-swagger-handler)}}]
-       ;; Main API routes
+
        ["/api" {:middleware (standard-middleware service-map)}
         end-user.routes/routes
         product.routes/routes]]
@@ -107,7 +107,6 @@
        :data      {:coercion (reitit.coercion.spec/create coerce-options)
                    :muuntaja muuntaja-instance}})
 
-    ;; Optional default ring handler (if no routes have matched)
     (ring/routes
       (swagger-ui/create-swagger-ui-handler
         {:url    "/swagger/swagger.json"

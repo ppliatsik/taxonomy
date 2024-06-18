@@ -9,7 +9,8 @@
   {})
 
 (def end-user
-  {})
+  {:user-not-exists     "Ο χρήστης δεν υπάρχει"
+   :user-already-exists "Ο χρήστης υπάρχει ήδη"})
 
 (def translations
   {:com.taxonomy.ui       taxonomy-ui

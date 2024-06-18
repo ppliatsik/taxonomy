@@ -3,3 +3,23 @@
 
 (hugs/def-db-fns "com/taxonomy/end_user/sql/end_user.sql")
 (hugs/def-sqlvec-fns "com/taxonomy/end_user/sql/end_user.sql")
+
+(defn create-user
+  [db data]
+  (let [user (create-user* db data)]
+    (dissoc user :password)))
+
+(defn activate-user
+  [db data]
+  (let [user (activate-user* db data)]
+    (dissoc user :password)))
+
+(defn change-user-password
+  [db data]
+  (let [user (change-user-password* db data)]
+    (dissoc user :password)))
+
+(defn update-user-info
+  [db data]
+  (let [user (update-user-info* db data)]
+    (dissoc user :password)))
