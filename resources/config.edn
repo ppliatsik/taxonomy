@@ -1,9 +1,10 @@
-{:http/service {:port           8082
-                :db             #ig/ref :db/pg
-                :auth-keys      #ig/ref :auth/keys
-                :build          :dev
-                :host           "0.0.0.0"
-                :server-address "http://localhost:8888"}
+{:http/service {:port             8082
+                :db               #ig/ref :db/pg
+                :auth-keys        #ig/ref :auth/keys
+                :build            :dev
+                :token-valid-time 180 ;; in minutes
+                :host             "0.0.0.0"
+                :server-address   "http://localhost:8888"}
 
  :db/pg {:server-name       "localhost"
          :database-name     "taxonomy"
