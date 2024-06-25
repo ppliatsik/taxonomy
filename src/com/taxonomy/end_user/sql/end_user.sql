@@ -9,7 +9,23 @@ returning *;
 -- :command :returning-execute
 -- :result :one
 update end_user
-set active = true
+set active = true, email_activation = false
+where username = :username
+returning *;
+
+-- :name activate-user-by-email*
+-- :command :returning-execute
+-- :result :one
+update end_user
+set active = true, email_activation = true
+where username = :username
+returning *;
+
+-- :name deactivate-user*
+-- :command :returning-execute
+-- :result :one
+update end_user
+set active = false
 where username = :username
 returning *;
 
@@ -41,11 +57,17 @@ order by last_name, first_name;
 -- :result :one
 select count(*) from users;
 
--- :name get-user-by-username
+-- :name get-user-by-username*
 -- :result :one
 select *
 from end_user
 where username = :username;
+
+-- :name get-active-user-by-username
+-- :result :one
+select *
+from end_user
+where username = :username and active = true;
 
 -- :name get-user-by-username-and-password
 -- :result :one
@@ -61,3 +83,20 @@ where username = :username and email = :email;
 
 -- :name delete-user :! :n
 delete from end_user where username = :username;
+
+-- :name create-confirmation-token*
+-- :command :returning-execute
+-- :result :one
+insert into confirmation_token (username, token, valid_to)
+values (:username, :token, :valid_to)
+on conflict (username) do nothing
+returning *;
+
+-- :name get-valid-confirmation-token-by-token
+-- :result :one
+select *
+from confirmation_token
+where token = :token and valid_to > now();
+
+-- :name delete-invalid-user-confirmation-token :! :n
+delete from confirmation_token where valid_to < now();

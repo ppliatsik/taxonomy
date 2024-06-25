@@ -2,7 +2,8 @@
   (:require [spec-tools.core :as st]
             [clojure.spec.alpha :as s]
             [expound.alpha :as expound]
-            [com.taxonomy.end-user :as end-user]))
+            [com.taxonomy.end-user :as end-user]
+            [com.taxonomy.product :as product]))
 
 (defn inject-system
   [system]
@@ -31,3 +32,14 @@
           (expound/expound ::end-user/update-user-info-request coerced-body)
           {:status 400
            :body   (s/explain-str ::end-user/update-user-info-request coerced-body)})))))
+
+(defn coerce-product-creation-body
+  [handler]
+  (fn [{:keys [body-params] :as req}]
+    (let [coerced-body (st/coerce ::product/create-product-request body-params st/string-transformer)]
+      (if (s/valid? ::product/create-product-request coerced-body)
+        (handler (assoc-in req [:parameters :body] coerced-body))
+        (do
+          (expound/expound ::product/create-product-request coerced-body)
+          {:status 400
+           :body   (s/explain-str ::product/create-product-request coerced-body)})))))

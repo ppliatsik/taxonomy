@@ -39,6 +39,7 @@
         camel-snake-kebab/camel-snake-kebab {:mvn/version "0.4.2"}
         expound/expound                     {:mvn/version "0.8.9"}
         clojure.java-time/clojure.java-time {:mvn/version "0.3.2"}
+        jarohen/chime                       {:mvn/version "0.3.3"}
 
         ;;postgres
         org.postgresql/postgresql        {:mvn/version "42.6.0"}
@@ -79,4 +80,9 @@
 
            :migrate {:extra-deps  {migratus/migratus {:mvn/version "1.0.9"}}
                      :extra-paths ["scripts"]
-                     :main-opts   ["-m" "migratedb"]}}}
+                     :main-opts   ["-m" "migratedb"]}
+
+           :uberjar {:extra-deps {uberdeps/uberdeps {:mvn/version "1.0.0"}}
+                     :main-opts  ["-m"        "uberdeps.uberjar"
+                                  "--target"  "taxonomy.jar"
+                                  "--aliases" "migrate"]}}}

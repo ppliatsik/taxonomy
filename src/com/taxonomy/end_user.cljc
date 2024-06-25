@@ -21,6 +21,8 @@
   [email]
   (re-matches #"^[^@]+@[^@]+$" email))
 
+(s/def ::token string?)
+
 (s/def ::role
   (s/and string? #{"admin" "user"}))
 

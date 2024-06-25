@@ -2,7 +2,10 @@
   (:require [aero.core :as ac]
             [integrant.core :as ig]
             [clojure.spec.alpha :as s]
-            [buddy.core.keys :as bk]))
+            [buddy.core.keys :as bk]
+            [java-time :as jt]
+            [com.taxonomy.end-user.data :as end-user.data])
+  (:import [java.lang AutoCloseable]))
 
 (defmethod ac/reader 'ig/ref
   [opts tag value]
@@ -14,7 +17,7 @@
     (ac/read-config filename)))
 
 (s/def ::configuration
-  (s/keys :req [:http/service :db/pg :auth/keys]))
+  (s/keys :req [:http/service :db/pg :auth/keys :invalid-token/scheduler]))
 
 (defn config [filename]
   (s/assert ::configuration (load-config filename)))
@@ -28,3 +31,18 @@
 
 (defmethod ig/halt-key! :auth/keys [_ _]
   )
+
+(defmethod ig/init-key :invalid-token/scheduler [_ {:keys [db hour minute enable] :as cfg}]
+  (when enable
+    (let [times     (chime/periodic-seq (-> (jt/local-time hour minute)
+                                            (jt/zoned-date-time (jt/zone-id))
+                                            (jt/instant))
+                                        (jt/period 1 :days))
+          scheduler (chime/chime-at times
+                                    (fn [_]
+                                      (end-user.data/delete-invalid-user-confirmation-token db)))]
+      (assoc cfg :scheduler scheduler))))
+
+(defmethod ig/halt-key! :invalid-token/scheduler [_ {:keys [scheduler]}]
+  (when scheduler
+    (.close ^AutoCloseable scheduler)))
