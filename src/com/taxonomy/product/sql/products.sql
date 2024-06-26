@@ -42,5 +42,11 @@ select *
 from product
 where id = :id;
 
+-- :name get-product-by-name*
+-- :result :one
+select *
+from product
+where lower(replace(name, '\s', '')) = :name;
+
 -- :name delete-product :! :n
 delete from product where id = :id;

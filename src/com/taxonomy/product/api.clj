@@ -8,9 +8,12 @@
 
 (defn create-product
   [{:keys [db parameters] :as request}]
-  (let [product (data/create-product db (:body parameters))]
-    (http-response/ok {:result  :success
-                       :payload product})))
+  (if (data/get-product-by-name db (:body parameters))
+    (http-response/invalid {:result :failure
+                            :reason ::product/product-already-exists})
+    (let [product (data/create-product db (:body parameters))]
+      (http-response/ok {:result  :success
+                         :payload product}))))
 
 (defn publish-product
   [{:keys [db parameters] :as request}]
