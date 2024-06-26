@@ -114,10 +114,7 @@
 (defn deactivate-user
   [{:keys [db parameters] :as request}]
   (if (data/get-active-user-by-username db (:path parameters))
-    (let [user   (data/deactivate-user db (:path parameters))
-          params {:username (-> parameters :path :username)
-                  :password (-> util/create-password util/string->md5)}
-          _      (data/change-user-password db params)]
+    (let [user (data/deactivate-user db (:path parameters))]
       (http-response/ok {:result  :success
                          :payload user}))
     (http-response/invalid {:result :failure
