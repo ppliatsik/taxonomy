@@ -4,6 +4,7 @@
             [clojure.spec.alpha :as s]
             [buddy.core.keys :as bk]
             [java-time :as jt]
+            [chime.core :as chime]
             [com.taxonomy.end-user.data :as end-user.data])
   (:import [java.lang AutoCloseable]))
 

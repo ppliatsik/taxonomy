@@ -21,7 +21,7 @@
                                                                  (jt/plus (jt/minutes activation-token-valid-time)))})]
     (email/send {:to      [email]
                  :subject "User account activation"
-                 :body    (str "<a href=" server-address "/email-activate-account?"
+                 :body    (str "<a href=" server-address "/email-activate-account?token="
                                token ">Click to activate account</a>")})))
 
 (defn login
@@ -47,6 +47,29 @@
       (http-response/invalid {:result :failure
                               :reason ::end-user/invalid-token}))))
 
+(defn resend-email-activation-account
+  [{:keys [db parameters] :as request}]
+  (let [user (data/get-user-by-username* db (:path parameters))
+        ck   (data/get-confirmation-token-by-username db (:path parameters))]
+    (cond (nil? user)
+          (http-response/invalid {:result :failure
+                                  :reason ::end-user/user-not-exists})
+
+          (:active user)
+          (http-response/invalid {:result :failure
+                                  :reason ::end-user/user-already-active})
+
+          (jt/after? (jt/instant (:valid-to ck))
+                     (jt/instant))
+          (http-response/invalid {:result :failure
+                                  :reason ::end-user/valid-token-exists})
+
+          :else
+          (do
+            (data/delete-user-confirmation-token db (:path parameters))
+            (create-token-and-send-email-account-activation request (:username user) (:email user))
+            (http-response/ok {:result :success})))))
+
 (defn create-user
   [{:keys [db parameters] :as request}]
   (cond (data/get-user-by-username* db (:path parameters))
@@ -59,7 +82,9 @@
                                 :reason ::end-user/user-provides-different-passwords})
 
         :else
-        (let [data (update (:body parameters) :password util/string->md5)
+        (let [data (-> (:body parameters)
+                       (update :password util/string->md5)
+                       (assoc :roles (into-array String ["user"])))
               user (data/create-user db data)]
           (create-token-and-send-email-account-activation request (:username user) (:email user))
           (http-response/ok {:result  :success

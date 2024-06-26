@@ -52,6 +52,12 @@
                 :middleware []
                 :parameters {:path {:username ::end-user/username}}
                 :handler    api/deactivate-user}}]
+    ["/:username/resend-email-activation-account"
+     {:swagger {:tags ["users"]}
+      :name    ::end-user/resend-email-activation-account
+      :post    {:summary    "Resend email activation account"
+                :parameters {:path {:username ::end-user/username}}
+                :handler    api/resend-email-activation-account}}]
     ["/:username/change-password"
      {:swagger {:tags ["users"]}
       :name    ::end-user/change-user-password

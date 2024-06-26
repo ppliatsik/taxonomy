@@ -30,7 +30,7 @@ where is_published = true
 --~ (when (:offset params) "offset :offset")
 ;
 
--- :name get-users-count
+-- :name get-products-count
 -- :result :one
 select count(*)
 from product

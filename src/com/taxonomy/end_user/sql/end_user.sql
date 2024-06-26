@@ -98,5 +98,14 @@ select *
 from confirmation_token
 where token = :token and valid_to > now();
 
+-- :name get-confirmation-token-by-username
+-- :result :one
+select *
+from confirmation_token
+where username = :username;
+
 -- :name delete-invalid-user-confirmation-token :! :n
 delete from confirmation_token where valid_to < now();
+
+-- :name delete-user-confirmation-token :! :n
+delete from confirmation_token where username = :username;

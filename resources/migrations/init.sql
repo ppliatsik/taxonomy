@@ -17,7 +17,7 @@ create table if not exists confirmation_token (
 );
 
 insert into end_user (username, password, first_name, last_name, email, roles, active, created_at)
-values ('panos', md5('Pan_pan7'), 'Panagiotis', 'Pliatsikas', 'icsdm322017@icsd.aegean.gr', '{admin}', true, now());
+values ('panos', md5('Pan_pan7'), 'Panagiotis', 'Pliatsikas', 'icsdm322017@icsd.aegean.gr', '{admin, user}', true, now());
 
 create table if not exists product (
     id           bigserial not null primary key,
