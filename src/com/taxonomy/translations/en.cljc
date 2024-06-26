@@ -3,7 +3,9 @@
 (def taxonomy-ui
   {:missing-translation "Missing translation"
    :previous-page       "Previous page"
-   :next-page           "Next page"})
+   :next-page           "Next page"
+   :success             "Success"
+   :failure             "Failure"})
 
 (def product
   {:product-not-exists     "Product does not exists"

@@ -3,7 +3,9 @@
 (def taxonomy-ui
   {:missing-translation "Λείπει η μετάφραση"
    :previous-page       "Προηγούμενη σελίδα"
-   :next-page           "Επόμενη σελίδα"})
+   :next-page           "Επόμενη σελίδα"
+   :success             "Επιτυχία"
+   :failure             "Αποτυχία"})
 
 (def product
   {:product-not-exists     "Το προϊόν δεν υπάρχει"
