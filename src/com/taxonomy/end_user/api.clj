@@ -158,7 +158,7 @@
           _        (data/change-user-password db params)]
       (email/send {:to      [email]
                    :subject "New account password"
-                   :body    (str "Your new password is: " password ".\nChange it after login")})
+                   :body    (str "Your new password is: " password ".\nChange it after login.")})
       (http-response/ok {:result :success}))
     (http-response/invalid {:result :failure
                             :reason ::end-user/user-not-exists})))
