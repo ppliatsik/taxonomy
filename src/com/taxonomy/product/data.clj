@@ -15,7 +15,7 @@
 
 (defn get-product-by-name
   [db params]
-  (let [data (-> (:name params)
-                 clj.str/lower-case
-                 (clj.str/replace #"\s" ""))]
+  (let [data (some-> (:name params)
+                     clj.str/lower-case
+                     (clj.str/replace #"\s" ""))]
     (get-product-by-name* db {:name data})))
