@@ -41,11 +41,17 @@
   (let [token (-> parameters :query :token)
         ck    (data/get-valid-confirmation-token-by-token db {:token token})
         user  (data/get-user-by-username* db ck)]
-    (if user
-      (http-response/ok {:result  :success
-                         :payload (data/activate-user-by-email db user)})
-      (http-response/invalid {:result :failure
-                              :reason ::end-user/invalid-token}))))
+    (cond (nil? user)
+          (http-response/invalid {:result :failure
+                                  :reason ::end-user/invalid-token})
+
+          (:active user)
+          (http-response/invalid {:result :failure
+                                  :reason ::end-user/user-already-active})
+
+          :else
+          (http-response/ok {:result  :success
+                             :payload (data/activate-user-by-email db user)}))))
 
 (defn resend-email-activation-account
   [{:keys [db parameters] :as request}]
@@ -92,12 +98,18 @@
 
 (defn activate-user
   [{:keys [db parameters] :as request}]
-  (if (data/get-user-by-username* db (:path parameters))
-    (let [user (data/activate-user db (:path parameters))]
-      (http-response/ok {:result  :success
-                         :payload user}))
-    (http-response/invalid {:result :failure
-                            :reason ::end-user/user-not-exists})))
+  (let [user (data/get-user-by-username* db (:path parameters))]
+    (cond (nil? user)
+          (http-response/invalid {:result :failure
+                                  :reason ::end-user/user-not-exists})
+
+          (:active user)
+          (http-response/invalid {:result :failure
+                                  :reason ::end-user/user-already-active})
+
+          :else
+          (http-response/ok {:result  :success
+                             :payload (data/activate-user db user)}))))
 
 (defn deactivate-user
   [{:keys [db parameters] :as request}]
