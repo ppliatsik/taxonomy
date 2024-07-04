@@ -66,8 +66,12 @@
 (s/def ::threats-faced string?)
 (s/def ::restrictions (s/nilable string?))
 
+(def product-support-type-set #{"phone" "email" "faq" "documentation" "portal" "video"
+                                "twitter" "troubleshooting-center" "software-versions"
+                                "chat" "forum" "tickets" "community" "notifications" "blog"})
+(s/def ::product-support-type (s/and string? product-support-type-set))
 (s/def ::product-support-packets (s/nilable pos-int?))
-(s/def ::product-support string?)
+(s/def ::product-support-time (s/nilable pos-int?))
 
 (s/def ::limit (s/nilable nat-int?))
 (s/def ::offset (s/nilable nat-int?))
@@ -77,7 +81,7 @@
                    ::security-features ::protected-items ::product-usages ::product-company
                    ::marketplaces ::version-type ::cost-model]
           :opt-un [::free-version-details ::cost-model-types ::cost-model-packets ::cost-model-charge
-                   ::minimum-cost]))
+                   ::minimum-cost ::product-support-type ::product-support-packets ::product-support-time]))
 
 (s/def ::get-products-request
   (s/keys :opt-un [::limit ::offset]))
