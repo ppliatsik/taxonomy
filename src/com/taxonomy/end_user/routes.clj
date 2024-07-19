@@ -24,7 +24,6 @@
      {:swagger {:tags ["users"]}
       :name    ::end-user/users
       :post    {:summary    "Create user"
-                :middleware [mw/coerce-user-creation-body]
                 :handler    api/create-user}
       :get     {:summary    "Get all users"
                 :parameters {:query ::end-user/get-users-request}
@@ -78,7 +77,7 @@
      {:swagger {:tags ["users"]}
       :name    ::end-user/update-user-info
       :put     {:summary    "Update user info"
-                :middleware [mw/coerce-user-update-body]
+                :middleware []
                 :parameters {:path {:username ::end-user/username}
                              :body ::end-user/update-user-info-request}
                 :handler    api/update-user-info}}]]])

@@ -23,7 +23,7 @@
      {:swagger {:tags ["products"]}
       :name    ::product/products
       :post    {:summary    "Create product"
-                :middleware [mw/coerce-product-creation-body]
+                :middleware []
                 :handler    api/create-product}
       :get     {:summary    "Get products"
                 :parameters {:query ::product/get-products-request}

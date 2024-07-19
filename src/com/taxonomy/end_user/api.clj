@@ -161,7 +161,7 @@
                             :reason ::end-user/user-not-exists})))
 
 (defn update-user-info
-  [{:keys [db parameters] :as request}]
+  [{:keys [db parameters user-info] :as request}]
   (if-let [old-user (data/get-active-user-by-username db (:path parameters))]
     (let [params (merge old-user
                         (:body parameters))
@@ -196,6 +196,6 @@
     (http-response/one-or-404 user)))
 
 (defn delete-user
-  [{:keys [db parameters] :as request}]
+  [{:keys [db parameters user-info] :as request}]
   (let [_ (data/delete-user db (:path parameters))]
     (http-response/ok {:result :success})))

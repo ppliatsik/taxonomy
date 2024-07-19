@@ -73,13 +73,13 @@ where username = :username and active = true;
 -- :result :one
 select username, first_name, last_name, email, roles, active, created_at
 from end_user
-where username = :username and password = :password;
+where username = :username and password = :password and active = true;
 
 -- :name get-user-by-username-and-email
 -- :result :one
 select username, first_name, last_name, email, roles, active, created_at
 from end_user
-where username = :username and email = :email;
+where username = :username and email = :email and active = true;
 
 -- :name delete-user :! :n
 delete from end_user where username = :username;

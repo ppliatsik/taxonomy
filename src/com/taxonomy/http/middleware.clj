@@ -1,9 +1,5 @@
 (ns com.taxonomy.http.middleware
-  (:require [spec-tools.core :as st]
-            [clojure.spec.alpha :as s]
-            [expound.alpha :as expound]
-            [com.taxonomy.end-user :as end-user]
-            [com.taxonomy.product :as product]))
+  (:require [com.taxonomy.http.token :as http.token]))
 
 (defn inject-system
   [system]
@@ -11,35 +7,12 @@
     (fn [req]
       (h (merge req system)))))
 
-(defn coerce-user-creation-body
+(defn resource-authorization
   [handler]
-  (fn [{:keys [body-params] :as req}]
-    (let [coerced-body (st/coerce ::end-user/create-user-request body-params st/string-transformer)]
-      (if (s/valid? ::end-user/create-user-request coerced-body)
-        (handler (assoc-in req [:parameters :body] coerced-body))
-        (do
-          (expound/expound ::end-user/create-user-request coerced-body)
-          {:status 400
-           :body   (s/explain-str ::end-user/create-user-request coerced-body)})))))
-
-(defn coerce-user-update-body
-  [handler]
-  (fn [{:keys [body-params] :as req}]
-    (let [coerced-body (st/coerce ::end-user/update-user-info-request body-params st/string-transformer)]
-      (if (s/valid? ::end-user/update-user-info-request coerced-body)
-        (handler (assoc-in req [:parameters :body] coerced-body))
-        (do
-          (expound/expound ::end-user/update-user-info-request coerced-body)
-          {:status 400
-           :body   (s/explain-str ::end-user/update-user-info-request coerced-body)})))))
-
-(defn coerce-product-creation-body
-  [handler]
-  (fn [{:keys [body-params] :as req}]
-    (let [coerced-body (st/coerce ::product/create-product-request body-params st/string-transformer)]
-      (if (s/valid? ::product/create-product-request coerced-body)
-        (handler (assoc-in req [:parameters :body] coerced-body))
-        (do
-          (expound/expound ::product/create-product-request coerced-body)
-          {:status 400
-           :body   (s/explain-str ::product/create-product-request coerced-body)})))))
+  (fn [{:keys [cookies headers auth-keys] :as request}]
+    (let [token     (or (get-in cookies ["X-Auth-Token" :value])
+                        (get-in headers ["x-auth-token"]))
+          user-info (http.token/unsign token auth-keys)]
+      (if user-info
+        (handler (assoc request :user-info user-info))
+        {:status 401 :body {:result :unauthorized}}))))

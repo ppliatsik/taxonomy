@@ -7,7 +7,7 @@
 (def default-offset 0)
 
 (defn create-product
-  [{:keys [db parameters] :as request}]
+  [{:keys [db parameters user-info] :as request}]
   (if (data/get-product-by-name db (:body parameters))
     (http-response/invalid {:result :failure
                             :reason ::product/product-already-exists})
@@ -16,7 +16,7 @@
                          :payload product}))))
 
 (defn publish-product
-  [{:keys [db parameters] :as request}]
+  [{:keys [db parameters user-info] :as request}]
   (let [product (data/get-product-by-id db (:path parameters))]
     (if product
       (http-response/ok {:result  :success
@@ -24,7 +24,7 @@
       (http-response/not-found {:result ::product/product-not-exists}))))
 
 (defn unpublish-product
-  [{:keys [db parameters] :as request}]
+  [{:keys [db parameters user-info] :as request}]
   (let [product (data/get-product-by-id db (:path parameters))]
     (if product
       (http-response/ok {:result  :success
@@ -61,6 +61,6 @@
     (http-response/one-or-404 product)))
 
 (defn delete-product
-  [{:keys [db parameters] :as request}]
+  [{:keys [db parameters user-info] :as request}]
   (let [_ (data/delete-product db (:path parameters))]
     (http-response/ok {:result :success})))

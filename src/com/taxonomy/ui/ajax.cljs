@@ -15,8 +15,8 @@
         :with-credentials true
         :timeout          (or timeout 20000)
         :format           (ajax.edn/edn-request-format)
-        :response-format  (or response-format (ajax.edn/edn-response-format))
-        :on-failure       (if failure [failure] [::http-post-failure])}
+        :response-format  (or response-format (ajax.edn/edn-response-format))}
+       (when failure {:on-failure [failure]})
        (when success {:on-success (if (coll? success) success [success])}))}))
 
 (rf/reg-event-fx
@@ -30,11 +30,8 @@
              :timeout          (or timeout 20000)
              :format           (ajax.edn/edn-request-format)
              :response-format  (or response-format (ajax.edn/edn-response-format))}
-            (when vec-strategy
-              {:vec-strategy vec-strategy})
-            (if failure
-              {:on-failure (if (coll? failure) failure [failure])}
-              {:on-failure [::http-get-failure]})
+            (when vec-strategy {:vec-strategy vec-strategy})
+            (when failure {:on-failure (if (coll? failure) failure [failure])})
             (when success {:on-success (if (coll? success) success [success])}))}))
 
 (rf/reg-event-fx
@@ -49,9 +46,7 @@
         :timeout          (or timeout 20000)
         :format           (ajax.edn/edn-request-format)
         :response-format  (ajax.edn/edn-response-format)}
-       (if failure
-         {:on-failure [failure]}
-         {:on-failure [::http-put-failure]})
+       (when failure {:on-failure [failure]})
        (when success {:on-success (if (coll? success) success [success])}))}))
 
 (rf/reg-event-fx
@@ -66,9 +61,7 @@
         :timeout          (or timeout 20000)
         :format           (ajax.edn/edn-request-format)
         :response-format  (ajax.edn/edn-response-format)}
-       (if failure
-         {:on-failure [failure]}
-         {:on-failure [::http-delete-failure]})
+       (when failure {:on-failure [failure]})
        (when success {:on-success (if (coll? success) success [success])}))}))
 
 (rf/reg-event-fx
@@ -82,7 +75,5 @@
         :with-credentials true
         :response-format  (or response-format (ajax.json/json-response-format {:keywords? true}))
         :timeout          (or timeout 20000)}
-       (if failure
-         {:on-failure [failure]}
-         {:on-failure [::http-post-failure]})
+       (when failure {:on-failure [failure]})
        (when success {:on-success (if (coll? success) success [success])}))}))
