@@ -48,5 +48,6 @@
 (s/def ::change-user-password-request
   (s/keys :req-un [::password ::old-password ::password-verification]))
 
+(s/def ::q (s/nilable string?))
 (s/def ::get-users-request
-  (s/keys :opt-un [::limit ::offset]))
+  (s/keys :opt-un [::q ::limit ::offset]))

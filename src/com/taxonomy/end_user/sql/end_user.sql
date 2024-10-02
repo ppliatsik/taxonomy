@@ -49,13 +49,19 @@ returning *;
 -- :result :many
 select username, first_name, last_name, email, roles, active, created_at
 from end_user
+where 1=1
+--~ (when (:q params) " and (username ilike '%' || :q || '%' or last_name ilike '%' || :q || '%' or first_name ilike '%' || :q || '%')")
 --~ (when (:limit params) "limit :limit")
 --~ (when (:offset params) "offset :offset")
 order by last_name, first_name;
 
 -- :name get-users-count
 -- :result :one
-select count(*) from users;
+select count(*)
+from users
+where 1=1
+--~ (when (:q params) " and (username ilike '%' || :q || '%' or last_name ilike '%' || :q || '%' or first_name ilike '%' || :q || '%')")
+;
 
 -- :name get-user-by-username*
 -- :result :one
