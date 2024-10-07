@@ -51,3 +51,15 @@
 (s/def ::q (s/nilable string?))
 (s/def ::get-users-request
   (s/keys :opt-un [::q ::limit ::offset]))
+
+(defn is-admin?
+  [user-info]
+  (contains? (:roles user-info) "admin"))
+
+(defn is-user?
+  [user-info]
+  (contains? (:roles user-info) "user"))
+
+(defn is-current-user?
+  [user-info username]
+  (= (:username user-info) username))

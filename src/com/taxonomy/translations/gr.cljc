@@ -17,6 +17,10 @@
    :user-already-active               "Ο χρήστης είναι ήδη ενεργός"
    :user-provides-different-passwords "Ο χρήστης έδωσε διαφορετικούς κωδικούς"
    :user-provides-wrong-password      "Ο χρήστης έδωσε λάθος κωδικό"
+   :wrong-credentials                 "Λάθος διαπιστευτήρια"
+   :user-is-inactive                  "Ο χρήστης δεν είναι ενεργός"
+   :user-deactivated                  "Ο χρήστης απενεργοποιήθηκε"
+   :invalid-user                      "Μη έγκυρος χρήστης"
    :invalid-token                     "Μη έγκυρο token"
    :valid-token-exists                "Υπάρχει έγκυρο token"})
 

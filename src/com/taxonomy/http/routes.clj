@@ -86,7 +86,8 @@
              :reitit.coercion/response-coercion (coercion-error-handler 500)}))
    coercion/coerce-request-middleware
    coercion/coerce-response-middleware
-   multipart/multipart-middleware])
+   multipart/multipart-middleware
+   mw/resource-authorization])
 
 (defn router
   [service-map]

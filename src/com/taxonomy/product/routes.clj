@@ -1,10 +1,16 @@
 (ns com.taxonomy.product.routes
-  (:require [com.taxonomy.http.middleware :as mw]
-            [com.taxonomy.product :as product]
+  (:require [com.taxonomy.product :as product]
             [com.taxonomy.product.api :as api]))
 
 (def routes
-  [["/products-classification"
+  [["/products-match"
+    {:swagger {:tags ["products"]}
+     :name    ::product/products-match
+     :get     {:summary    "Products match"
+               :parameters {:query ::product/get-products-request}
+               :handler    api/products-match}}]
+
+   ["/products-classification"
     {:swagger {:tags ["products"]}
      :name    ::product/products-classification
      :get     {:summary    "Products classification"
@@ -23,11 +29,8 @@
      {:swagger {:tags ["products"]}
       :name    ::product/products
       :post    {:summary    "Create product"
-                :middleware []
-                :handler    api/create-product}
-      :get     {:summary    "Get products"
-                :parameters {:query ::product/get-products-request}
-                :handler    api/get-products}}]
+                :parameters {:body ::product/create-product-request}
+                :handler    api/create-product}}]
     ["/:id"
      {:swagger {:tags ["products"]}
       :name    ::product/product
@@ -41,13 +44,11 @@
      {:swagger {:tags ["products"]}
       :name    ::product/publish
       :put     {:summary    "Publish product"
-                :middleware []
                 :parameters {:path {:id ::product/id}}
                 :handler    api/publish-product}}]
     ["/:id/unpublish"
      {:swagger {:tags ["products"]}
       :name    ::product/unpublish
       :put     {:summary    "Unpublish product"
-                :middleware []
                 :parameters {:path {:id ::product/id}}
                 :handler    api/unpublish-product}}]]])

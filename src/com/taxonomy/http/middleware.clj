@@ -13,6 +13,4 @@
     (let [token     (or (get-in cookies ["X-Auth-Token" :value])
                         (get-in headers ["x-auth-token"]))
           user-info (http.token/unsign token auth-keys)]
-      (if user-info
-        (handler (assoc request :user-info user-info))
-        {:status 401 :body {:result :unauthorized}}))))
+      (handler (assoc request :user-info user-info)))))

@@ -1,10 +1,9 @@
 (ns com.taxonomy.end-user.routes
-  (:require [com.taxonomy.http.middleware :as mw]
-            [com.taxonomy.end-user :as end-user]
+  (:require [com.taxonomy.end-user :as end-user]
             [com.taxonomy.end-user.api :as api]))
 
 (def routes
-  [["/login"
+  [["/login/:username"
     {:swagger {:tags ["users"]}
      :name    ::end-user/login-user
      :post    {:summary    "Login user"
@@ -24,6 +23,7 @@
      {:swagger {:tags ["users"]}
       :name    ::end-user/users
       :post    {:summary    "Create user"
+                :parameters {:body ::end-user/create-user-request}
                 :handler    api/create-user}
       :get     {:summary    "Get all users"
                 :parameters {:query ::end-user/get-users-request}
@@ -41,14 +41,12 @@
      {:swagger {:tags ["users"]}
       :name    ::end-user/activate-user
       :put     {:summary    "Activate user"
-                :middleware []
                 :parameters {:path {:username ::end-user/username}}
                 :handler    api/activate-user}}]
     ["/:username/deactivate"
      {:swagger {:tags ["users"]}
       :name    ::end-user/deactivate-user
       :put     {:summary    "Deactivate user"
-                :middleware []
                 :parameters {:path {:username ::end-user/username}}
                 :handler    api/deactivate-user}}]
     ["/:username/resend-email-activation-account"
@@ -61,7 +59,6 @@
      {:swagger {:tags ["users"]}
       :name    ::end-user/change-user-password
       :put     {:summary    "Change user password"
-                :middleware []
                 :parameters {:path {:username ::end-user/username}
                              :body ::end-user/change-user-password-request}
                 :handler    api/change-user-password}}]
@@ -69,7 +66,6 @@
      {:swagger {:tags ["users"]}
       :name    ::end-user/reset-user-password
       :put     {:summary    "Reset user password"
-                :middleware []
                 :parameters {:path {:username ::end-user/username}
                              :body {:email ::end-user/email}}
                 :handler    api/reset-user-password}}]
@@ -77,7 +73,6 @@
      {:swagger {:tags ["users"]}
       :name    ::end-user/update-user-info
       :put     {:summary    "Update user info"
-                :middleware []
                 :parameters {:path {:username ::end-user/username}
                              :body ::end-user/update-user-info-request}
                 :handler    api/update-user-info}}]]])

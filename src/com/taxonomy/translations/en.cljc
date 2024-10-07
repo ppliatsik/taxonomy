@@ -17,6 +17,10 @@
    :user-already-active               "User already active"
    :user-provides-different-passwords "User provides different password"
    :user-provides-wrong-password      "User provides wrong password"
+   :wrong-credentials                 "Wrong credentials"
+   :user-is-inactive                  "User is inactive"
+   :user-deactivated                  "User has been deactivated"
+   :invalid-user                      "Invalid user"
    :invalid-token                     "Invalid token"
    :valid-token-exists                "Valid token exists"})
 

@@ -39,9 +39,25 @@ returning *;
 
 -- :name update-user-info*
 -- :command :returning-execute
--- -- :result :one
+-- :result :one
 update end_user
 set first_name = :first-name, last_name = :last-name, email = :email
+where username = :username
+returning *;
+
+-- :name increase-login-fails*
+-- :command :returning-execute
+-- :result :one
+update end_user
+set login_fails = login_fails + 1
+where username = :username
+returning *;
+
+-- :name reset-login-fails*
+-- :command :returning-execute
+-- :result :one
+update end_user
+set login_fails = 0
 where username = :username
 returning *;
 
