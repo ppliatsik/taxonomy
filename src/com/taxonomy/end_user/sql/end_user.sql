@@ -124,7 +124,8 @@ where token = :token and valid_to > now();
 -- :result :one
 select *
 from confirmation_token
-where username = :username;
+where username = :username
+order by valid_to desc;
 
 -- :name delete-invalid-user-confirmation-token :! :n
 delete from confirmation_token where valid_to < now();

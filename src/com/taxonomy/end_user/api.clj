@@ -65,7 +65,9 @@
   (let [token (-> parameters :query :token)
         ck    (data/get-valid-confirmation-token-by-token db {:token token})
         user  (data/get-user-by-username* db ck)]
-    (cond (nil? user)
+    (cond (or (nil? user)
+              (jt/before? (jt/local-date-time (:valid-to ck))
+                          (jt/local-date-time)))
           (http-response/invalid {:result :failure
                                   :reason ::end-user/invalid-token})
 
