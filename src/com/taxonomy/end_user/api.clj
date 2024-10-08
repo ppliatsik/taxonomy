@@ -199,10 +199,10 @@
                                   :reason ::end-user/user-not-exists})
 
           :else
-          (let [password (-> util/create-password util/string->md5)
+          (let [password (util/create-password)
                 email    (-> parameters :body :email)
                 params   {:username (-> parameters :path :username)
-                          :password password}
+                          :password (util/string->md5 password)}
                 _        (data/change-user-password db params)]
             (email/send {:to      [email]
                          :subject "New account password"
@@ -256,7 +256,11 @@
            (not (end-user/is-current-user? user-info (-> parameters :path :username))))
     (http-response/invalid {:result :failure
                             :reason ::end-user/invalid-user})
-    (http-response/one-or-404 (data/get-user-by-username db (:path parameters)))))
+    (let [user (data/get-user-by-username db (:path parameters))]
+      (if user
+        (http-response/ok user)
+        (http-response/not-found {:result :failure
+                                  :reason ::end-user/user-not-exists})))))
 
 (defn delete-user
   [{:keys [db parameters user-info] :as request}]

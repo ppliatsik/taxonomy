@@ -32,20 +32,6 @@ services:
     networks:
       - tnet
 
-  tax-neo4j:
-    image: bitnami/neo4j:latest
-    container_name: tax-neo4j
-    volumes:
-      - ./graph-data:/data
-    ports:
-      - '7474:7474'
-      - '7473:7473'
-      - '7687:7687'
-    environment:
-      NEO4J_PASSWORD: bitnami1
-    networks:
-      - tnet
-
 networks:
   tnet:
     driver: bridge

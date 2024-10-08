@@ -31,9 +31,19 @@
 
 (defn create-password
   ([n]
-   (str (apply str (take (quot n 4) (repeatedly #(rand-nth password-lower-chars))))
-        (apply str (take (quot n 4) (repeatedly #(rand-nth password-capital-chars))))
-        (apply str (take (quot n 4) (repeatedly #(rand-nth password-symbols))))
-        (apply str (take (quot n 4) (repeatedly #(rand-nth password-numbers))))))
+   (let [remain (mod n 4)
+         nums   (into [] (for [i (range 4)]
+                           (if (= 3 i)
+                             (+ (quot n 4) remain)
+                             (quot n 4))))
+
+         password (str (apply str (take (quot n (first nums)) (repeatedly #(rand-nth password-lower-chars))))
+                       (apply str (take (quot n (second nums)) (repeatedly #(rand-nth password-capital-chars))))
+                       (apply str (take (quot n (nth nums 2)) (repeatedly #(rand-nth password-symbols))))
+                       (apply str (take (quot n (last nums)) (repeatedly #(rand-nth password-numbers)))))]
+     (-> password
+         vec
+         shuffle
+         clj.str/join)))
   ([]
    (create-password 16)))

@@ -11,7 +11,7 @@
   [{:keys [db parameters user-info] :as request}]
   (let [product (data/get-product-by-name db (:body parameters))]
     (cond (and (not (end-user/is-admin? user-info))
-               (not (end-user/is-current-user? user-info (:created-by product))))
+               (not (end-user/is-user? user-info)))
           (http-response/invalid {:result :failure
                                   :reason ::end-user/invalid-user})
 
@@ -82,7 +82,10 @@
 (defn get-product
   [{:keys [db parameters] :as request}]
   (let [product (data/get-product-by-id db (:path parameters))]
-    (http-response/one-or-404 product)))
+    (if product
+      (http-response/ok product)
+      (http-response/not-found {:result :failure
+                                :reason ::product/product-not-exists}))))
 
 (defn delete-product
   [{:keys [db parameters user-info] :as request}]
