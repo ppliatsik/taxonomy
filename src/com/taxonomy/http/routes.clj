@@ -87,7 +87,7 @@
    coercion/coerce-request-middleware
    coercion/coerce-response-middleware
    multipart/multipart-middleware
-   mw/resource-authorization])
+   mw/inject-user])
 
 (defn router
   [service-map]

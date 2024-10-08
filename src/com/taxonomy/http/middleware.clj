@@ -7,10 +7,11 @@
     (fn [req]
       (h (merge req system)))))
 
-(defn resource-authorization
-  [handler]
-  (fn [{:keys [cookies headers auth-keys] :as request}]
-    (let [token     (or (get-in cookies ["X-Auth-Token" :value])
-                        (get-in headers ["x-auth-token"]))
-          user-info (http.token/unsign token auth-keys)]
-      (handler (assoc request :user-info user-info)))))
+(defn inject-user
+  []
+  (fn [handler]
+    (fn [{:keys [cookies headers auth-keys] :as request}]
+      (let [token     (or (get-in cookies ["X-Auth-Token" :value])
+                          (get-in headers ["x-auth-token"]))
+            user-info (http.token/unsign token auth-keys)]
+        (handler (assoc request :user-info user-info))))))
