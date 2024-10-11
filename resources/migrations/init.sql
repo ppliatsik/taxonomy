@@ -19,9 +19,9 @@ create table if not exists confirmation_token (
 );
 
 insert into end_user (username, password, first_name, last_name, email, roles, active, created_at, email_activation, login_fails)
-values ('panos', md5('Pan_pan7'), 'Panagiotis', 'Pliatsikas', 'icsdm322017@icsd.aegean.gr', '{admin, user}', true, now(), false, 0);
+values ('panos', md5('Pan=pan7'), 'Panagiotis', 'Pliatsikas', 'icsdm322017@icsd.aegean.gr', '{admin, user}', true, now(), false, 0);
 
 insert into end_user (username, password, first_name, last_name, email, roles, active, created_at, email_activation, login_fails)
-values ('user1', md5('User_1'), 'Jim', 'Adams', 'icsdm322017@icsd.aegean.gr', '{user}', false, now(), false, 0);
+values ('user1', md5('User=1'), 'Jim', 'Adams', 'icsdm322017@icsd.aegean.gr', '{user}', false, now(), false, 0);
 
 create index if not exists idx_end_user_username on end_user(username);

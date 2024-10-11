@@ -13,7 +13,7 @@
 
 (defn create-token-and-send-email-account-activation
   [{:keys [db server-address activation-token-valid-time]}
-   username email]
+   {:keys [username email]}]
   (let [token (str (UUID/randomUUID))
         _     (data/create-confirmation-token* db {:username username
                                                    :token    token
@@ -60,6 +60,13 @@
             (http-response/ok {:result  :success
                                :payload (assoc user :token (token/sign user auth-keys token-valid-time))})))))
 
+(defn logout
+  [{:keys [user-info cookies] :as req}]
+  (if (and user-info (get-in cookies ["X-Auth-Token" :value]))
+    (http-response/ok {:result :success})
+    (http-response/invalid {:result :failure
+                            :reason ::end-user/user-is-not-login})))
+
 (defn email-activate-account
   [{:keys [db parameters] :as request}]
   (let [token (-> parameters :query :token)
@@ -99,7 +106,7 @@
           :else
           (do
             (data/delete-user-confirmation-token db (:path parameters))
-            (create-token-and-send-email-account-activation request (:username user) (:email user))
+            (create-token-and-send-email-account-activation request user)
             (http-response/ok {:result :success})))))
 
 (defn create-user
@@ -118,7 +125,7 @@
                        (update :password util/string->md5)
                        (assoc :roles (into-array String ["user"])))
               user (data/create-user db data)]
-          (create-token-and-send-email-account-activation request (:username user) (:email user))
+          (create-token-and-send-email-account-activation request user)
           (http-response/ok {:result  :success
                              :payload user}))))
 
@@ -228,7 +235,7 @@
             (when (and (not= (:email old-user) (:email user))
                        (:email-activation user))
               (data/deactivate-user db user)
-              (create-token-and-send-email-account-activation request (:username user) (:email user)))
+              (create-token-and-send-email-account-activation request user))
             (http-response/ok {:result  :success
                                :payload user})))))
 

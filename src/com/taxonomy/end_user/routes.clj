@@ -3,13 +3,19 @@
             [com.taxonomy.end-user.api :as api]))
 
 (def routes
-  [["/login/:username"
+  [["/login"
     {:swagger {:tags ["users"]}
      :name    ::end-user/login-user
      :post    {:summary    "Login user"
-               :parameters {:path {:username ::end-user/username}
-                            :body {:password ::end-user/password}}
+               :parameters {:body {:username ::end-user/username
+                                   :password ::end-user/password}}
                :handler    api/login}}]
+
+   ["/logout"
+    {:swagger {:tags ["users"]}
+     :name    ::end-user/logout-user
+     :post    {:summary    "Logout user"
+               :handler    api/logout}}]
 
    ["/email-activate-account"
     {:swagger {:tags ["users"]}
