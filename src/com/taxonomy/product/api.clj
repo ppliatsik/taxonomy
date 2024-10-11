@@ -4,12 +4,9 @@
             [com.taxonomy.product.data :as data]
             [com.taxonomy.end-user :as end-user]))
 
-(def default-limit 10)
-(def default-offset 0)
-
 (defn create-product
-  [{:keys [db parameters user-info] :as request}]
-  (let [product (data/get-product-by-name db (:body parameters))]
+  [{:keys [products parameters user-info] :as request}]
+  (let [product (data/get-product-by-name products (:body parameters))]
     (cond (and (not (end-user/is-admin? user-info))
                (not (end-user/is-user? user-info)))
           (http-response/invalid {:result :failure
@@ -21,11 +18,11 @@
 
           :else
           (http-response/ok {:result  :success
-                             :payload (data/create-product db (:body parameters))}))))
+                             :payload (data/create-product products (:body parameters))}))))
 
 (defn publish-product
-  [{:keys [db parameters user-info] :as request}]
-  (let [product (data/get-product-by-id db (:path parameters))]
+  [{:keys [products parameters user-info] :as request}]
+  (let [product (data/get-product-by-id products (:path parameters))]
     (cond (and (not (end-user/is-admin? user-info))
                (not (end-user/is-current-user? user-info (:created-by product))))
           (http-response/invalid {:result :failure
@@ -37,11 +34,11 @@
 
           :else
           (http-response/ok {:result  :success
-                             :payload (data/publish-product db product)}))))
+                             :payload (data/publish-product products product)}))))
 
 (defn unpublish-product
-  [{:keys [db parameters user-info] :as request}]
-  (let [product (data/get-product-by-id db (:path parameters))]
+  [{:keys [products parameters user-info] :as request}]
+  (let [product (data/get-product-by-id products (:path parameters))]
     (cond (and (not (end-user/is-admin? user-info))
                (not (end-user/is-current-user? user-info (:created-by product))))
           (http-response/invalid {:result :failure
@@ -53,43 +50,35 @@
 
           :else
           (http-response/ok {:result  :success
-                             :payload (data/unpublish-product db product)}))))
+                             :payload (data/unpublish-product products product)}))))
 
 (defn products-match
-  [{:keys [db parameters] :as request}]
-  (let [limit  (or (-> parameters :query :limit) default-limit)
-        offset (or (-> parameters :query :offset) default-offset)
-        params (merge (:query parameters)
-                      {:limit  limit
-                       :offset offset})
-
-        products     (data/get-products db params)
-        products-cnt (data/get-products-count db)]
-    {:status     200
-     :body       products
-     :pagination {:limit       limit
-                  :offset      offset
-                  :total-count (:count products-cnt)}}))
+  [{:keys [products parameters] :as request}]
+  (let [products (data/search-products products (:query parameters))]
+    (http-response/ok products)))
 
 (defn products-classification
-  [{:keys [db parameters] :as request}]
+  [{:keys [products parameters] :as request}]
+  ;; classification of products
   )
 
 (defn products-discovery
-  [{:keys [db parameters] :as request}]
-  )
+  [{:keys [products parameters] :as request}]
+  (let [products (data/search-products products (:query parameters))]
+    ;; classification of products
+    (http-response/ok products)))
 
 (defn get-product
-  [{:keys [db parameters] :as request}]
-  (let [product (data/get-product-by-id db (:path parameters))]
+  [{:keys [products parameters] :as request}]
+  (let [product (data/get-product-by-id products (:path parameters))]
     (if product
       (http-response/ok product)
       (http-response/not-found {:result :failure
                                 :reason ::product/product-not-exists}))))
 
 (defn delete-product
-  [{:keys [db parameters user-info] :as request}]
-  (let [product (data/get-product-by-id db (:path parameters))]
+  [{:keys [products parameters user-info] :as request}]
+  (let [product (data/get-product-by-id products (:path parameters))]
     (cond (and (not (end-user/is-admin? user-info))
                (not (end-user/is-current-user? user-info (:created-by product))))
           (http-response/invalid {:result :failure
@@ -101,5 +90,5 @@
 
           :else
           (do
-            (data/delete-product db (:path parameters))
+            (data/delete-product-by-id products (:path parameters))
             (http-response/ok {:result :success})))))

@@ -5,7 +5,8 @@
                 :token-valid-time            180 ;; in minutes
                 :activation-token-valid-time 10 ;; in minutes
                 :host                           "0.0.0.0"
-                :server-address                 "http://localhost:8888"}
+                :server-address                 "http://localhost:8888"
+                :products                    #ig/ref :graph/products}
 
  :db/pg {:server-name       "localhost"
          :database-name     "taxonomy"
@@ -22,4 +23,6 @@
                            :enable true}
 
  :auth/keys {:public-key-file  "resources/public-key.pem"
-             :private-key-file "resources/private-key.pem"}}
+             :private-key-file "resources/private-key.pem"}
+
+ :graph/products {:products-file "resources/products.edn"}}

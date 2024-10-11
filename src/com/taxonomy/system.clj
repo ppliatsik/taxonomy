@@ -5,6 +5,7 @@
             [buddy.core.keys :as bk]
             [java-time :as jt]
             [chime.core :as chime]
+            [clojure.edn :as edn]
             [com.taxonomy.end-user.data :as end-user.data])
   (:import [java.lang AutoCloseable]))
 
@@ -47,3 +48,14 @@
 (defmethod ig/halt-key! :invalid-token/scheduler [_ {:keys [scheduler]}]
   (when scheduler
     (.close ^AutoCloseable scheduler)))
+
+(defmethod ig/init-key :graph/products [_ {:keys [products-file] :as cfg}]
+  (let [products      (->> products-file
+                           slurp
+                           (edn/read-string {:readers *data-readers*}))
+        products-atom (atom {})]
+    (reset! products-atom products)
+    products-atom))
+
+(defmethod ig/halt-key! :graph/products [_ _]
+  )
