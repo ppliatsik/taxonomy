@@ -43,16 +43,15 @@
 (rf/reg-event-fx
   ::logout
   (fn [_ _]
-    {:db {}
-     :fx [[:dispatch [:ajax/post {:uri     "/api/logout"
+    {:fx [[:dispatch [:ajax/post {:uri     "/api/logout"
                                   :success ::logout-success
                                   :failure ::logout-failure}]]]}))
 
 (rf/reg-event-fx
   ::logout-success
-  (fn [{:keys [db]} _]
+  (fn [_ _]
     (cookies/clear!)
-    {:db (dissoc db :ui/user :token)
+    {:db {}
      :fx [[:url (routes/main-view)]]}))
 
 (rf/reg-event-fx

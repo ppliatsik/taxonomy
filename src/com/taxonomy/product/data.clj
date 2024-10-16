@@ -10,7 +10,9 @@
     [[:db/add (:id product) :created-by (:created-by product)]
      [:db/add (:id product) :name (:name product)]
      [:db/add (:id product) :name-q name-q]
-     [:db/add (:id product) :is-published false]]))
+     [:db/add (:id product) :is-published false]
+     [:db/add (:id product) :product-company (:product-company product)]
+     ]))
 
 (defn create-product
   [graph product]
@@ -38,6 +40,11 @@
                      (clj.str/replace #"\s" ""))]
     (d/q '[:find  (pull ?e [*])
            :where [?e :name-q name]] graph)))
+
+(defn get-my-products
+  [graph {:keys [username]}]
+  (d/q '[:find  (pull ?e [*])
+         :where [?e :created-by username]] graph))
 
 (defn get-product-by-id
   [graph {:keys [id]}]

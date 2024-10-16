@@ -72,13 +72,24 @@
       (http-response/ok products)
       (http-response/ok (filter #(:is-published %) products)))))
 
+(defn get-my-products
+  [{:keys [graph user-info] :as request}]
+  (if (and (not (end-user/is-admin? user-info))
+           (not (end-user/is-user? user-info)))
+    (http-response/invalid {:result :failure
+                            :reason ::end-user/invalid-user})
+    (http-response/ok (data/get-my-products graph user-info))))
+
 (defn get-product
-  [{:keys [graph parameters] :as request}]
+  [{:keys [graph parameters user-info] :as request}]
   (let [product (data/get-product-by-id graph (:path parameters))]
-    (if product
-      (http-response/ok product)
+    (if (or (not product)
+            (and (not (:is-published product))
+                 (not (end-user/is-admin? user-info))
+                 (not (end-user/is-user? user-info))))
       (http-response/not-found {:result :failure
-                                :reason ::product/product-not-exists}))))
+                                :reason ::product/product-not-exists})
+      (http-response/ok product))))
 
 (defn delete-product
   [{:keys [graph parameters user-info] :as request}]

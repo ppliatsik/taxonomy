@@ -24,6 +24,12 @@
                :parameters {:query ::product/get-products-request}
                :handler    api/products-discovery}}]
 
+   ["/my-products"
+    {:swagger {:tags ["products"]}
+     :name    ::product/my-products
+     :get     {:summary "My products"
+               :handler api/get-my-products}}]
+
    ["/products"
     [""
      {:swagger {:tags ["products"]}
