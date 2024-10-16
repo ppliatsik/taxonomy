@@ -1,55 +1,48 @@
 (ns com.taxonomy.product.data
-  (:require [clojure.string :as clj.str]))
+  (:require [clojure.string :as clj.str]
+            [datascript.core :as d]))
+
+(defn product->entity
+  [product]
+  (let [name-q (some-> (:name product)
+                       clj.str/lower-case
+                       (clj.str/replace #"\s" ""))]
+    [[:db/add (:id product) :created-by (:created-by product)]
+     [:db/add (:id product) :name (:name product)]
+     [:db/add (:id product) :name-q name-q]
+     [:db/add (:id product) :is-published false]]))
 
 (defn create-product
-  [products data]
-  (swap! products assoc data)
-  data)
+  [graph product]
+  (let [entity (product->entity product)]
+    (d/transact! graph entity)))
 
 (defn publish-product
-  [products {:keys [id] :as product}]
-  (let [new-products (->> @products
-                          (map (fn [p]
-                                 (if (= (:id p) id)
-                                   (assoc p :is-published? true)
-                                   p))))]
-    (reset! products new-products)
-    (->> @products
-         (filter #(= id (:id %)))
-         first)))
+  [graph {:keys [id] :as product}]
+  (d/transact! graph [{:db/id        id
+                       :is-published true}]))
 
 (defn unpublish-product
-  [products {:keys [id] :as product}]
-  (let [new-products (->> @products
-                          (map (fn [p]
-                                 (if (= (:id p) id)
-                                   (assoc p :is-published? false)
-                                   p))))]
-    (reset! products new-products)
-    (->> @products
-         (filter #(= id (:id %)))
-         first)))
+  [graph {:keys [id] :as product}]
+  (d/transact! graph [{:db/id        id
+                       :is-published false}]))
 
 (defn search-products
-  [products params]
+  [graph params]
   )
 
 (defn get-product-by-name
-  [products {:keys [name]}]
+  [graph {:keys [name]}]
   (let [name (some-> name
                      clj.str/lower-case
                      (clj.str/replace #"\s" ""))]
-    (->> @products
-         (filter #(= name (:name %)))
-         first)))
+    (d/q '[:find  (pull ?e [*])
+           :where [?e :name-q name]] graph)))
 
 (defn get-product-by-id
-  [products {:keys [id]}]
-  (->> @products
-       (filter #(= id (:id %)))
-       first))
+  [graph {:keys [id]}]
+  (d/entity graph id))
 
 (defn delete-product-by-id
-  [products {:keys [id]}]
-  (let [new-products (remove #(= id (:id %)) @products)]
-    (reset! products new-products)))
+  [graph {:keys [id]}]
+  (d/transact! graph [[:db.fn/retractEntity id]]))

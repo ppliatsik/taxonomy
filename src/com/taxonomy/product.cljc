@@ -73,9 +73,6 @@
 (s/def ::product-support-packets (s/nilable pos-int?))
 (s/def ::product-support-time (s/nilable pos-int?))
 
-(s/def ::limit (s/nilable nat-int?))
-(s/def ::offset (s/nilable nat-int?))
-
 (s/def ::create-product-request
   (s/keys :req-un [::name ::delivery-methods ::layout-models ::product-categories ::protection-types
                    ::security-features ::protected-items ::product-usages ::product-company
@@ -84,4 +81,4 @@
                    ::minimum-cost ::product-support-type ::product-support-packets ::product-support-time]))
 
 (s/def ::get-products-request
-  (s/keys :opt-un [::limit ::offset]))
+  (s/keys :opt-un []))

@@ -6,7 +6,10 @@
             [java-time :as jt]
             [chime.core :as chime]
             [clojure.edn :as edn]
-            [com.taxonomy.end-user.data :as end-user.data])
+            [datascript.core :as d]
+            [datascript.db :as db]
+            [com.taxonomy.end-user.data :as end-user.data]
+            [com.taxonomy.product.data :as product.data])
   (:import [java.lang AutoCloseable]))
 
 (defmethod ac/reader 'ig/ref
@@ -50,12 +53,18 @@
     (.close ^AutoCloseable scheduler)))
 
 (defmethod ig/init-key :graph/products [_ {:keys [products-file] :as cfg}]
-  (let [products      (->> products-file
-                           slurp
-                           (edn/read-string {:readers *data-readers*}))
-        products-atom (atom {})]
-    (reset! products-atom products)
-    products-atom))
+  (let [products     (->> products-file
+                          slurp
+                          (edn/read-string {:readers *data-readers*}))
+        initial-data (->> products
+                          (map-indexed (fn [i product]
+                                         (assoc product :id (+ i 1))))
+                          (mapcat (fn [product]
+                                    (product.data/product->entity product)))
+                          vec)
+        graph        (-> (d/empty-db)
+                         (d/db-with initial-data))]
+    graph))
 
 (defmethod ig/halt-key! :graph/products [_ _]
   )

@@ -44,6 +44,9 @@
         ;;mail
         com.draines/postal {:mvn/version "2.0.5"}
 
+        ;;datascript
+        datascript/datascript {:mvn/version "1.7.3"}
+
         ;;postgres
         org.postgresql/postgresql        {:mvn/version "42.6.0"}
         net.postgis/postgis-jdbc         {:mvn/version "2.5.0"}

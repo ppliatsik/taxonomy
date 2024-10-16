@@ -6,7 +6,7 @@
                 :activation-token-valid-time 10 ;; in minutes
                 :host                           "0.0.0.0"
                 :server-address                 "http://localhost:8888"
-                :products                    #ig/ref :graph/products}
+                :graph                       #ig/ref :graph/products}
 
  :db/pg {:server-name       "localhost"
          :database-name     "taxonomy"
