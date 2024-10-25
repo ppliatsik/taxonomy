@@ -2,23 +2,26 @@
   (:require [com.taxonomy.http.http-response :as http-response]
             [com.taxonomy.product :as product]
             [com.taxonomy.product.data :as data]
-            [com.taxonomy.end-user :as end-user]))
+            [com.taxonomy.end-user :as end-user])
+  (:import [java.util UUID]))
 
 (defn create-product
   [{:keys [graph parameters user-info] :as request}]
-  (let [product (data/get-product-by-name graph (:body parameters))]
-    (cond (and (not (end-user/is-admin? user-info))
-               (not (end-user/is-user? user-info)))
-          (http-response/invalid {:result :failure
-                                  :reason ::end-user/invalid-user})
+  (cond (and (not (end-user/is-admin? user-info))
+             (not (end-user/is-user? user-info)))
+        (http-response/invalid {:result :failure
+                                :reason ::end-user/invalid-user})
 
-          product
-          (http-response/invalid {:result :failure
-                                  :reason ::product/product-already-exists})
+        (data/get-product-by-name graph (:body parameters))
+        (http-response/invalid {:result :failure
+                                :reason ::product/product-already-exists})
 
-          :else
+        :else
+        (let [data (-> (:body parameters)
+                       (assoc :id (str (UUID/randomUUID)))
+                       (assoc :created-by (:username user-info)))]
           (http-response/ok {:result  :success
-                             :payload (data/create-product graph (:body parameters))}))))
+                             :payload (data/create-product graph data)}))))
 
 (defn publish-product
   [{:keys [graph parameters user-info] :as request}]

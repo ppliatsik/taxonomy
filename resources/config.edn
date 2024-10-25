@@ -4,8 +4,8 @@
                 :build                       :dev
                 :token-valid-time            180 ;; in minutes
                 :activation-token-valid-time 10 ;; in minutes
-                :host                           "0.0.0.0"
-                :server-address                 "http://localhost:8888"
+                :host                        "0.0.0.0"
+                :server-address              "http://localhost:8888"
                 :graph                       #ig/ref :graph/products}
 
  :db/pg {:server-name       "localhost"

@@ -10,7 +10,8 @@
             [datascript.db :as db]
             [com.taxonomy.end-user.data :as end-user.data]
             [com.taxonomy.product.data :as product.data])
-  (:import [java.lang AutoCloseable]))
+  (:import [java.lang AutoCloseable]
+           [java.util UUID]))
 
 (defmethod ac/reader 'ig/ref
   [opts tag value]
@@ -57,10 +58,10 @@
                           slurp
                           (edn/read-string {:readers *data-readers*}))
         initial-data (->> products
-                          (map-indexed (fn [i product]
-                                         (assoc product :id (+ i 1))))
                           (mapcat (fn [product]
-                                    (product.data/product->entity product)))
+                                    (product.data/product->entity (-> product
+                                                                      (assoc :id (str (UUID/randomUUID)))
+                                                                      (assoc :created-by "panos")))))
                           vec)
         graph        (-> (d/empty-db)
                          (d/db-with initial-data))]
