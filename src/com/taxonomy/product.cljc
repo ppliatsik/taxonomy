@@ -1,7 +1,7 @@
 (ns com.taxonomy.product
   (:require [clojure.spec.alpha :as s]))
 
-(s/def ::id nat-int?)
+(s/def ::id string?)
 (s/def ::name string?)
 
 (def delivery-methods-set #{"SaaS" "IaaS" "DaaS" "CaaS" "VMM"})

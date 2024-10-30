@@ -5,6 +5,16 @@
             [com.taxonomy.end-user :as end-user])
   (:import [java.util UUID]))
 
+(defn- classify-products
+  [products weights]
+  (->> products
+       (map (fn [product]
+              (let [score 0]
+                (assoc product :score score))))
+       (sort-by :score)
+       reverse
+       vec))
+
 (defn create-product
   [{:keys [graph parameters user-info] :as request}]
   (cond (and (not (end-user/is-admin? user-info))
@@ -56,24 +66,28 @@
                              :payload (data/unpublish-product products product)}))))
 
 (defn products-match
-  [{:keys [graph parameters user-info] :as request}]
+  [{:keys [graph parameters user-info guest-products-limit] :as request}]
   (let [products (data/search-products graph (:query parameters))]
     (if user-info
       (http-response/ok products)
-      (http-response/ok (filter #(:is-published %) products)))))
+      (http-response/ok (->> products (take guest-products-limit) vec)))))
 
 (defn products-classification
-  [{:keys [graph parameters user-info] :as request}]
-  ;; classification of products
-  )
-
-(defn products-discovery
-  [{:keys [graph parameters user-info] :as request}]
-  (let [products (data/search-products graph (:query parameters))]
-    ;; classification of products
+  [{:keys [graph parameters user-info guest-products-limit] :as request}]
+  (let [products (or (-> parameters :body :products)
+                     (data/search-products graph (:query parameters)))
+        products (classify-products products (-> parameters :body :weights))]
     (if user-info
       (http-response/ok products)
-      (http-response/ok (filter #(:is-published %) products)))))
+      (http-response/ok (->> products (take guest-products-limit) vec)))))
+
+(defn products-discovery
+  [{:keys [graph parameters user-info guest-products-limit] :as request}]
+  (let [products (data/search-products graph (:query parameters))
+        products (classify-products products (-> parameters :body :weights))]
+    (if user-info
+      (http-response/ok products)
+      (http-response/ok (->> products (take guest-products-limit) vec)))))
 
 (defn get-my-products
   [{:keys [graph user-info] :as request}]

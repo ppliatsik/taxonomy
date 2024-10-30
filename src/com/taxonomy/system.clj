@@ -61,7 +61,7 @@
                           (mapcat (fn [product]
                                     (product.data/product->entity (-> product
                                                                       (assoc :id (str (UUID/randomUUID)))
-                                                                      (assoc :created-by "panos")))))
+                                                                      (assoc :created-by "admin")))))
                           vec)
         graph        (-> (d/empty-db)
                          (d/db-with initial-data))]
