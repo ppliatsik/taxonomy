@@ -27,7 +27,7 @@
 (s/def ::security-features (s/coll-of ::security-feature :kind vector? :min-count 0))
 
 (def protected-items-set #{"data" "everything" "network" "infrastructure" "applications" "hosts"
-                           "VMs" "containers" "databases" "files" "vpc" ""})
+                           "VMs" "containers" "databases" "files" "vpc"})
 (s/def ::protected-item (s/and string? protected-items-set))
 (s/def ::protected-items (s/coll-of ::protected-item :kind vector? :min-count 0))
 
@@ -50,7 +50,8 @@
 (s/def ::free-version-details
   (s/map-of ::free-version-type ::free-version-counter))
 
-(def cost-model-types-set #{"per-users" "per-features" "per-sub-features" "unknown" "per-work-load"})
+(def cost-model-types-set #{"per-users" "per-features" "per-sub-features" "unknown" "per-nodes"
+                            "per-work-load" "per-hardware-resources" "per-packets"})
 (s/def ::cost-model-type (s/and string? cost-model-types-set))
 (s/def ::cost-model-types (s/coll-of ::cost-model-type :kind vector? :min-count 0))
 (s/def ::cost-model-packets (s/nilable pos-int?))
