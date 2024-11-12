@@ -3,83 +3,108 @@
 
 (s/def ::id string?)
 (s/def ::name string?)
+(s/def ::published boolean?)
+(s/def ::description (s/nilable string?))
+(s/def ::created-by string?)
 
-(def delivery-methods-set #{"SaaS" "IaaS" "DaaS" "CaaS" "VMM"})
+(def delivery-methods-set #{"SAAS" "IAAS" "DAAS" "CAAS"})
 (s/def ::delivery-method (s/and string? delivery-methods-set))
-(s/def ::delivery-methods (s/coll-of ::delivery-methods :kind vector? :min-count 0))
+(s/def ::delivery-methods (s/nilable (s/coll-of ::delivery-methods :kind vector? :min-count 0)))
 
-(def layout-models-set #{"public" "private" "hybrid"})
-(s/def ::layout-model (s/and string? layout-models-set))
-(s/def ::layout-models (s/coll-of ::layout-model :kind vector? :min-count 0))
+(def deployment-models-set #{"PUBLIC" "PRIVATE" "HYBRID"})
+(s/def ::deployment-model (s/and string? deployment-models-set))
+(s/def ::deployment-models (s/nilable (s/coll-of ::deployment-model :kind vector? :min-count 0)))
 
-(def product-categories-set #{"SIEM" "BCDR" "IDS" "IAM" "DLP" "crypto" "email-security"
-                              "network-security" "security-evaluation" "web-security"})
+(def product-categories-set #{"SIEM" "BCDR" "INTRUSION_MANAGEMENT" "IAM" "DLP" "ENCRYPTION"
+                              "EMAIL_SECURITY" "NETWORK_SECURITY" "SECURITY_ASSESSMENT" "WEB_SECURITY"})
 (s/def ::product-category (s/and string? product-categories-set))
-(s/def ::product-categories (s/coll-of ::product-category :kind vector? :min-count 0))
+(s/def ::product-categories	(s/nilable (s/coll-of ::product-category :kind vector? :min-count 0)))
 
-(def protection-types-set #{"proactive" "detective" "reactive"})
+(def cost-model-types-set #{"PER_USER" "PER_FEATURE" "PER_SUB_FEATURE" "UNKNOWN"
+                            "PER_WORKLOAD" "PER_HARDWARE_RESOURCE" "PER_PACKET" "PER_NODE"})
+(s/def ::cost-model-type (s/and string? cost-model-types-set))
+(s/def ::cost-model-types (s/coll-of ::cost-model-type :kind vector? :min-count 0))
+(s/def ::charge-packets nat-int?)
+(def time-charge-type-set #{"MONTHLY" "QUARTERLY" "YEARLY"})
+(s/def ::time-charge-type (s/and string? time-charge-type-set))
+(s/def ::cost-model-map
+  (s/keys :opt-un [::cost-model-types ::charge-packets ::time-charge-type]))
+(s/def ::cost-model	(s/nilable (s/coll-of ::cost-model-map :kind vector? :min-count 0)))
+
+(s/def ::security-mechanism string?)
+(s/def ::security-mechanisms ::security-mechanism)
+
+(s/def ::property	(s/nilable string?))
+(s/def ::operator	(s/nilable string?))
+(s/def ::value
+  #?(:clj (s/nilable decimal?))
+  #?(:cljs (s/nilable number?)))
+(s/def ::metric	(s/nilable string?))
+
+(s/def ::non-functional-guarantees-map
+  (s/keys :opt-un [::property ::operator ::value ::metric]))
+(s/def ::non-functional-guarantees (s/nilable (s/coll-of ::non-functional-guarantees-map :kind vector? :min-count 0)))
+
+(def protection-types-set #{"PROACTIVE" "DETECTIVE" "REACTIVE"})
 (s/def ::protection-type (s/and string? protection-types-set))
-(s/def ::protection-types (s/coll-of ::protection-type :kind vector? :min-count 0))
+(s/def ::protection-types	(s/nilable (s/coll-of ::protection-type :kind vector? :min-count 0)))
 
-(def security-features-set #{"integrity" "availability" "non-repudiation" "confidentiality"
-                             "privacy" "authentication" "authorization" "access-control"})
-(s/def ::security-feature (s/and string? security-features-set))
-(s/def ::security-features (s/coll-of ::security-feature :kind vector? :min-count 0))
+(def security-properties-set #{"INTEGRITY" "AVAILABILITY" "NON_REPUDIATION" "CONFIDENTIALITY" "PRIVACY"})
+(s/def ::security-property (s/and string? security-properties-set))
+(s/def ::security-properties (s/nilable (s/coll-of ::security-property :kind vector? :min-count 0)))
 
-(def protected-items-set #{"data" "everything" "network" "infrastructure" "applications" "hosts"
-                           "VMs" "containers" "databases" "files" "vpc"})
+(def protected-items-set #{"DATA" "EVERYTHING" "NETWORK" "INFRASTRUCTURE" "APPLICATIONS" "ENDPOINT_DEVICE"
+                           "VMs" "CONTAINERS" "DATABASES" "FILES" "VPC" "SERVICES" "HYPERVISOR"
+                           "CONTAINER_ORCHESTRATOR" "OS" "DEVICES"})
 (s/def ::protected-item (s/and string? protected-items-set))
-(s/def ::protected-items (s/coll-of ::protected-item :kind vector? :min-count 0))
+(s/def ::protected-items (s/nilable (s/coll-of ::protected-item :kind vector? :min-count 0)))
 
-(def product-usages-set #{"Rest-API" "Cli" "Web-GUI"})
-(s/def ::product-usage (s/and string? product-usages-set))
-(s/def ::product-usages (s/coll-of ::product-usage :kind vector? :min-count 0))
+(s/def ::threat string?)
+(s/def ::threats ::threat)
+
+(s/def ::restrictions-map
+  (s/keys :opt-un [::property ::operator ::value ::metric]))
+(s/def ::restrictions (s/nilable (s/coll-of ::restrictions-map :kind vector? :min-count 0)))
+
+(s/def ::open-source (s/nilable boolean?))
+(s/def ::freely-available (s/nilable boolean?))
+(s/def ::test-version (s/nilable boolean?))
+(s/def ::test-duration (s/nilable nat-int?))
+
+(def product-interfaces-set #{"Rest_API" "CLI" "Web_UI" "GUI"})
+(s/def ::product-interface (s/and string? product-interfaces-set))
+(s/def ::product-interfaces	(s/nilable (s/coll-of ::product-interface :kind vector? :min-count 0)))
 
 (s/def ::product-company string?)
 
-(def marketplaces-set #{"AWS" "GCP" "Azure" "Google"})
-(s/def ::marketplace (s/nilable (s/and string? marketplaces-set)))
-(s/def ::marketplaces (s/coll-of ::marketplace :kind vector? :min-count 0))
+(def marketplaces-set #{"AWS" "GCP" "AZURE" "SEARCH_ENGINE"})
+(s/def ::marketplace (s/and string? marketplaces-set))
+(s/def ::marketplaces (s/nilable (s/coll-of ::marketplace :kind vector? :min-count 0)))
 
-(def version-types-set #{"non-free" "free-without-restrictions"
-                         "free-with-restrictions" "free-unlimited"})
-(def free-version-type-set #{"days" "months" "users" "devices"})
-(s/def ::version-type (s/and string? version-types-set))
-(s/def ::free-version-counter (s/nilable (s/or zero? pos-int?)))
-(s/def ::free-version-type (s/nilable (s/and string? free-version-type-set)))
-(s/def ::free-version-details
-  (s/map-of ::free-version-type ::free-version-counter))
-
-(def cost-model-types-set #{"per-users" "per-features" "per-sub-features" "unknown" "per-nodes"
-                            "per-work-load" "per-hardware-resources" "per-packets"})
-(s/def ::cost-model-type (s/and string? cost-model-types-set))
-(s/def ::cost-model-types (s/coll-of ::cost-model-type :kind vector? :min-count 0))
-(s/def ::cost-model-packets (s/nilable pos-int?))
-(s/def ::cost-model-time (s/nilable (s/coll-of pos-int?)))
-(s/def ::cost-model-time-type (s/nilable (s/and string? #{"monthly" "yearly"})))
-(s/def ::cost-model-charge (s/map-of ::cost-model-time ::cost-model-time-type))
-(s/def ::minimum-cost
-  #?(:clj (s/and decimal? #(>= % 0.0M)))
-  #?(:cljs (s/and number? #(>= % 0.0))))
-
-(s/def ::implemented-security-mechanisms string?)
-(s/def ::non-functional-guarantees string?)
-(s/def ::threats-faced string?)
-(s/def ::restrictions (s/nilable string?))
-
-(def product-support-type-set #{"phone" "email" "faq" "documentation" "portal" "video"
-                                "twitter" "troubleshooting-center" "software-versions"
-                                "chat" "forum" "tickets" "community" "notifications" "blog"})
-(s/def ::product-support-type (s/and string? product-support-type-set))
-(s/def ::product-support-packets (s/nilable pos-int?))
-(s/def ::product-support-time (s/nilable pos-int?))
+(def support-type-set #{"PHONE" "EMAIL" "FAQ_DOCUMENTATION" "PORTAL" "VIDEO" "TWITTER" "TROUBLESHOOTING_CENTER"
+                        "SOFTWARE_VERSIONS" "CHAT" "FORUM" "TICKETS" "COMMUNITY" "NOTIFICATIONS" "BLOG"})
+(s/def ::support-type (s/and string? support-type-set))
+(s/def ::support-types (s/coll-of ::support-type :kind vector? :min-count 0))
+(s/def ::support-daily-duration integer?)
+(s/def ::support-package-number integer?)
+(s/def ::support-map
+  (s/keys :opt-un [::support-types ::support-daily-duration ::support-package-number]))
+(s/def ::support (s/nilable (s/coll-of ::support-map :kind vector? :min-count 0)))
 
 (s/def ::create-product-request
-  (s/keys :req-un [::name ::delivery-methods ::layout-models ::product-categories ::protection-types
-                   ::security-features ::protected-items ::product-usages ::product-company
-                   ::marketplaces ::version-type ::cost-model]
-          :opt-un [::free-version-details ::cost-model-types ::cost-model-packets ::cost-model-charge
-                   ::minimum-cost ::product-support-type ::product-support-packets ::product-support-time]))
+  (s/keys :req-un [::name ::description ::delivery-methods ::deployment-models ::product-categories
+                   ::cost-model ::security-mechanisms ::non-functional-guarantees ::protection-types
+                   ::security-properties ::protected-items ::threats ::restrictions ::open-source
+                   ::freely-available ::test-version ::test-duration ::product-interfaces
+                   ::product-company ::marketplaces ::support]))
 
 (s/def ::get-products-request
-  (s/keys :opt-un []))
+  (s/keys :opt-un [::created-by]))
+
+(s/def ::weights map?)
+
+(s/def ::ids (s/coll-of ::id :kind vector? :min-count 0))
+
+(s/def ::classify-products
+  (s/keys :req-un [::weights]
+          :opt-un [:ids]))

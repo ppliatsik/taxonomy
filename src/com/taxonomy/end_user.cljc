@@ -24,7 +24,7 @@
 (s/def ::token string?)
 
 (s/def ::role
-  (s/and string? #{"admin" "user"}))
+  (s/and string? #{"ADMIN" "USER"}))
 
 (s/def ::username (s/and string? username-is-valid?))
 (s/def ::password (s/and string? password-is-valid?))
@@ -33,8 +33,8 @@
 (s/def ::email (s/and string? email-is-valid?))
 (s/def ::roles (s/coll-of ::role :into []))
 
-(s/def ::password-verification (s/and string? password-is-valid?))
-(s/def ::old-password (s/and string? password-is-valid?))
+(s/def ::password-verification ::password)
+(s/def ::old-password ::password)
 
 (s/def ::limit (s/nilable nat-int?))
 (s/def ::offset (s/nilable nat-int?))
@@ -54,11 +54,11 @@
 
 (defn is-admin?
   [user-info]
-  (contains? (:roles user-info) "admin"))
+  (contains? (:roles user-info) "ADMIN"))
 
 (defn is-user?
   [user-info]
-  (contains? (:roles user-info) "user"))
+  (contains? (:roles user-info) "USER"))
 
 (defn is-current-user?
   [user-info username]

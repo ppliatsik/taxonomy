@@ -13,15 +13,17 @@
    ["/products-classification"
     {:swagger {:tags ["products"]}
      :name    ::product/products-classification
-     :get     {:summary    "Products classification"
-               :parameters {:query ::product/get-products-request}
+     :put     {:summary    "Products classification"
+               :parameters {:query ::product/get-products-request
+                            :body  ::product/classify-products}
                :handler    api/products-classification}}]
 
    ["/products-discovery"
     {:swagger {:tags ["products"]}
      :name    ::product/products-discovery
-     :get     {:summary    "Products discovery"
-               :parameters {:query ::product/get-products-request}
+     :put     {:summary    "Products discovery"
+               :parameters {:query ::product/get-products-request
+                            :body  {:weights ::product/weights}}
                :handler    api/products-discovery}}]
 
    ["/my-products"

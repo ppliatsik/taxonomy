@@ -74,8 +74,9 @@
 
 (defn products-classification
   [{:keys [graph parameters user-info guest-products-limit] :as request}]
-  (let [products (or (-> parameters :body :products)
-                     (data/search-products graph (:query parameters)))
+  (let [products (if (seq (-> parameters :body :ids))
+                   (data/get-products-by-id graph (-> parameters :body :ids))
+                   (data/get-all-products graph))
         products (classify-products products (-> parameters :body :weights))]
     (if user-info
       (http-response/ok products)
@@ -83,8 +84,8 @@
 
 (defn products-discovery
   [{:keys [graph parameters user-info guest-products-limit] :as request}]
-  (let [products (data/search-products graph (:query parameters))
-        products (classify-products products (-> parameters :body :weights))]
+  (let [products (-> (data/search-products graph (:query parameters))
+                     (classify-products (-> parameters :body :weights)))]
     (if user-info
       (http-response/ok products)
       (http-response/ok (->> products (take guest-products-limit) vec)))))

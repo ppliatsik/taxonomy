@@ -10,3 +10,4 @@
 
 (defn sys [] integrant.repl.state/system)
 (defn db [] (:db/pg (sys)))
+(defn graph [] (:graph/products (sys)))

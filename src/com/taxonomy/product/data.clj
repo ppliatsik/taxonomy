@@ -2,17 +2,21 @@
   (:require [clojure.string :as clj.str]
             [datascript.core :as d]))
 
+(defn- ->tuple
+  [id attribute value]
+  [:db/add id attribute value])
+
 (defn product->entity
   [product]
   (let [name-q (some-> (:name product)
                        clj.str/lower-case
                        (clj.str/replace #"\s" ""))]
-    [[:db/add (:id product) :created-by (:created-by product)]
-     [:db/add (:id product) :name (:name product)]
-     [:db/add (:id product) :name-q name-q]
-     [:db/add (:id product) :is-published false]
-     [:db/add (:id product) :product-company (:product-company product)]
-     ]))
+    (as-> product $
+          (assoc $ :name-q name-q)
+          (assoc $ :published false)
+          (map (fn [[k v]]
+                 (->tuple (:id product) k v)))
+          (into []))))
 
 (defn create-product
   [graph product]
@@ -21,13 +25,13 @@
 
 (defn publish-product
   [graph {:keys [id] :as product}]
-  (d/transact! graph [{:db/id        id
-                       :is-published true}]))
+  (d/transact! graph [{:db/id     id
+                       :published true}]))
 
 (defn unpublish-product
   [graph {:keys [id] :as product}]
-  (d/transact! graph [{:db/id        id
-                       :is-published false}]))
+  (d/transact! graph [{:db/id     id
+                       :published false}]))
 
 (defn search-products
   [graph params]
@@ -49,7 +53,15 @@
 
 (defn get-product-by-id
   [graph {:keys [id]}]
-  (d/entity graph id))
+  (d/pull [graph '*' id]))
+
+(defn get-products-by-id
+  [graph ids]
+  (d/pull-many [graph '*' ids]))
+
+(defn get-all-products
+  [graph]
+  (d/pull [graph '*']))
 
 (defn delete-product-by-id
   [graph {:keys [id]}]
