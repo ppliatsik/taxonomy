@@ -35,14 +35,18 @@
 (s/def ::security-mechanisms ::security-mechanism)
 
 (s/def ::property	(s/nilable string?))
-(s/def ::operator	(s/nilable string?))
+(def operator-types #{"LESS_THAN" "LESS_EQUAL_THAN" "GREATER_THAN" "GREATER_EQUAL_THAN"
+                      "EQUAL" "DIFFERENT" "SUBSET" "SUPERSET" "INCLUDES" "NON_INCLUDES"})
+(s/def ::operator	(s/and string? operator-types))
 (s/def ::value
   #?(:clj (s/nilable decimal?))
   #?(:cljs (s/nilable number?)))
 (s/def ::metric	(s/nilable string?))
+(s/def ::direction-of-values (s/nilable string?))
+(s/def ::unit (s/nilable string?))
 
 (s/def ::non-functional-guarantees-map
-  (s/keys :opt-un [::property ::operator ::value ::metric]))
+  (s/keys :opt-un [::property ::operator ::value ::metric ::direction-of-values ::unit]))
 (s/def ::non-functional-guarantees (s/nilable (s/coll-of ::non-functional-guarantees-map :kind vector? :min-count 0)))
 
 (def protection-types-set #{"PROACTIVE" "DETECTIVE" "REACTIVE"})
@@ -63,7 +67,7 @@
 (s/def ::threats ::threat)
 
 (s/def ::restrictions-map
-  (s/keys :opt-un [::property ::operator ::value ::metric]))
+  (s/keys :opt-un [::property ::operator ::value ::metric ::direction-of-values ::unit]))
 (s/def ::restrictions (s/nilable (s/coll-of ::restrictions-map :kind vector? :min-count 0)))
 
 (s/def ::open-source (s/nilable boolean?))
