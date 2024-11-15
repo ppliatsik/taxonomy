@@ -5,14 +5,17 @@
             [com.taxonomy.end-user :as end-user])
   (:import [java.util UUID]))
 
+(defn- compute-score
+  [product weights]
+  0)
+
 (defn- classify-products
   [products weights]
   (->> products
        (map (fn [product]
-              (let [score 0]
+              (let [score (compute-score product weights)]
                 (assoc product :score score))))
        (sort-by :score)
-       reverse
        vec))
 
 (defn create-product

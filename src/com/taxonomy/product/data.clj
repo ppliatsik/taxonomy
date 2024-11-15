@@ -36,7 +36,7 @@
 (defn search-products
   [graph params]
   (let [products []]
-    (filter #(:is-published %) products)))
+    (filter #(:published %) products)))
 
 (defn get-product-by-name
   [graph {:keys [name]}]
