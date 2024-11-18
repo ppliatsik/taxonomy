@@ -7,7 +7,11 @@
             [com.taxonomy.ui.breadcrumb :as ui.breadcrumb]
             [com.taxonomy.ui.navbar :as ui.navbar]
             [com.taxonomy.ui.form :as form]
-            [com.taxonomy.ui.notifications-bar :as ui.notifications-bar]))
+            [com.taxonomy.ui.notifications-bar :as ui.notifications-bar]
+            [com.taxonomy.translations :as trans]
+            [com.taxonomy.end-user :as end-user]
+            [com.taxonomy.product :as product]
+            [com.taxonomy.end-user.ui.login.view :as login.view]))
 
 (rf/reg-fx
   :page-title
@@ -36,28 +40,62 @@
 
 (defn main-view
   []
-  [:article.box
-   [ui.navbar/view]
-   [:div.icons-wrapper.columns.is-multiline
-    ]])
+  (let [user @(rf/subscribe [:ui/user])
+        lang @(rf/subscribe [:ui/language])]
+    [:article.box
+     [:div.icons-wrapper.columns.is-multiline
+      [:div.column.is-6
+       [:a.button.is-link.m-1.is-fullwidth
+        {:href (routes/products)}
+        [:span (trans/translate lang ::product/secaas-products-management)]]]
+      (when (end-user/is-admin? user)
+        [:div.column.is-6
+         [:a.button.is-link.m-1.is-fullwidth
+          {:href (routes/users)}
+          [:span (trans/translate lang ::end-user/users-management)]]])]]))
 
 (defn child-view []
   (fn []
     (let [current-view @(rf/subscribe [:ui/get-view])]
       (rf/dispatch [::ui.breadcrumb/set-breadcrumb current-view])
       (cond
+        (= :com.taxonomy.end-user/login current-view) [login.view/view]
+        (= :com.taxonomy.end-user/register current-view) [login.view/view]
+        (= :com.taxonomy.end-user/users current-view) [login.view/view]
+        (= :com.taxonomy.end-user/user current-view) [login.view/view]
+        (= :com.taxonomy.end-user/create-product current-view) [login.view/view]
+        (= :com.taxonomy.end-user/products current-view) [login.view/view]
+        (= :com.taxonomy.end-user/product current-view) [login.view/view]
         :else [main-view]))))
 
 (defn app []
   (fn []
-    [:div
-     [:div.container
-      [ui.notifications-bar/global-notifications-bar]
-      [child-view]
-      [:footer
-       [:div.content.has-text-centered.mt-4
-        [:div.content.has-text-centered.m-2.p-2
-         [:span ""]]]]]]))
+    (let [user @(rf/subscribe [:ui/user])
+          lang @(rf/subscribe [:ui/language])]
+      [:div
+       [:div.container
+        (if user
+          [:div
+           {:style {:float "right"}}
+           [:a.button
+            {:href (routes/user {:username (:username user)})}
+            [form/icons {:icon     :user
+                         :icon-css "fa-2x"}]]]
+          [:div.columns
+           {:style {:float "right"}}
+           [:div.column
+            [:a {:href (routes/login)}
+             (trans/translate lang ::end-user/login)]]
+           [:div.column
+            [:a {:href (routes/register)}
+             (trans/translate lang ::end-user/register)]]])
+        [ui.notifications-bar/global-notifications-bar]
+        [ui.navbar/view]
+        [child-view]
+        [:footer
+         [:div.content.has-text-centered.mt-4
+          [:div.content.has-text-centered.m-2.p-2
+           [:span "Master Thesis of Panagiotis Pliatsikas, 2024 - 2025"]]]]]])))
 
 (rf/reg-fx
   ::visit-current-url

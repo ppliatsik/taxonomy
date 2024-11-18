@@ -8,8 +8,9 @@
    :failure             "Αποτυχία"})
 
 (def product
-  {:product-not-exists     "Το προϊόν δεν υπάρχει"
-   :product-already-exists "Το προϊόν υπάρχει ήδη"})
+  {:product-not-exists         "Το προϊόν δεν υπάρχει"
+   :product-already-exists     "Το προϊόν υπάρχει ήδη"
+   :secaas-products-management "Διαχείριση προϊόντων SecaaS"})
 
 (def end-user
   {:user-not-exists                   "Ο χρήστης δεν υπάρχει"
@@ -23,7 +24,12 @@
    :user-deactivated                  "Ο χρήστης απενεργοποιήθηκε"
    :invalid-user                      "Μη έγκυρος χρήστης"
    :invalid-token                     "Μη έγκυρο token"
-   :valid-token-exists                "Υπάρχει έγκυρο token"})
+   :valid-token-exists                "Υπάρχει έγκυρο token"
+   :login                             "Σύνδεση"
+   :register                          "Εγγραφή"
+   :username                          "Όνομα Χρήστη"
+   :password                          "Κωδικός"
+   :users-management                  "Διαχείριση χρηστών"})
 
 (def translations
   {:com.taxonomy.ui       taxonomy-ui

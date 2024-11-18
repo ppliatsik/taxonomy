@@ -11,7 +11,7 @@
        (re-find #"^[a-zA-Z_]+$" username)))
 
 (defn password-is-valid?
-  "Minimum eight and maximum 10 characters, at least one uppercase letter,
+  "Minimum eight characters, at least one uppercase letter,
   one lowercase letter, one number and one special character"
   [password]
   (re-find #"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{8,}$"

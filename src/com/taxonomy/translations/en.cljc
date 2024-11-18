@@ -8,8 +8,9 @@
    :failure             "Failure"})
 
 (def product
-  {:product-not-exists     "Product does not exists"
-   :product-already-exists "Product already exists"})
+  {:product-not-exists         "Product does not exists"
+   :product-already-exists     "Product already exists"
+   :secaas-products-management "SecaaS products management"})
 
 (def end-user
   {:user-not-exists                   "User does not exists"
@@ -23,7 +24,12 @@
    :user-deactivated                  "User has been deactivated"
    :invalid-user                      "Invalid user"
    :invalid-token                     "Invalid token"
-   :valid-token-exists                "Valid token exists"})
+   :valid-token-exists                "Valid token exists"
+   :login                             "Login"
+   :register                          "Register"
+   :username                          "Username"
+   :password                          "Password"
+   :users-management                  "Users management"})
 
 (def translations
   {:com.taxonomy.ui       taxonomy-ui

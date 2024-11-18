@@ -19,7 +19,7 @@ services:
     container_name: tax-db
     volumes:
       #- ./db-init:/docker-entrypoint-initdb.d
-      - ./dbdata:/var/lib/postgresql/data
+      - "dbdata:/var/lib/postgresql/data"
     ports:
       - '15432:5432'
     expose:
@@ -31,6 +31,9 @@ services:
     command: [ "postgres", "-c", "wal_level=logical" ]
     networks:
       - tnet
+
+volumes:
+  dbdata:
 
 networks:
   tnet:

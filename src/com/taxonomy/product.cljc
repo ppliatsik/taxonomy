@@ -111,4 +111,4 @@
 
 (s/def ::classify-products
   (s/keys :req-un [::weights]
-          :opt-un [:ids]))
+          :opt-un [::ids]))

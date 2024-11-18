@@ -1,6 +1,7 @@
 (ns com.taxonomy.ui.auth
   (:require [re-frame.core :as rf]
             [reagent.cookies :as cookies]
+            [com.taxonomy.ui.ajax]
             [com.taxonomy.ui.routes :as routes]))
 
 (rf/reg-sub
@@ -27,16 +28,16 @@
 (rf/reg-event-fx
   ::login-success
   (fn [{:keys [db]} [_ {:keys [token] :as user-info}]]
-    {:db        (assoc db :ui/user (dissoc user-info :token)
-                          :token   token)
-     :ui/cookie {"X-Auth-Token" token}
-     :fx        [[:url (routes/main-view)]]}))
+    (let [user-info (update user-info :roles set)]
+      {:db        (assoc db :ui/user (dissoc user-info :token)
+                            :token   token)
+       :ui/cookie {"X-Auth-Token" token}
+       :fx        [[:url (routes/main-view)]]})))
 
 (rf/reg-event-fx
   ::login-failure
   (fn [_ [_ {:keys [response]}]]
-    {:db {}
-     :fx [[:dispatch [:ui/push-notification {:title :com.taxonomy.ui/failure
+    {:fx [[:dispatch [:ui/push-notification {:title :com.taxonomy.ui/failure
                                              :body  (:reason response)
                                              :type  :error}]]]}))
 
