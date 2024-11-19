@@ -8,7 +8,7 @@
       (h (merge req system)))))
 
 (defn inject-user
-  [_]
+  []
   (fn [handler]
     (fn [{:keys [cookies headers auth-keys] :as request}]
       (let [token     (or (get-in cookies ["X-Auth-Token" :value])

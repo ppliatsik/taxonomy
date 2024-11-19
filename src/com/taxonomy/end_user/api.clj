@@ -26,7 +26,7 @@
 
 (defn login
   [{:keys [db parameters auth-keys token-valid-time] :as request}]
-  (let [username     (-> parameters :path :username)
+  (let [username     (-> parameters :body :username)
         password     (util/string->md5 (-> parameters :body :password))
         user         (data/get-user-by-username-and-password db {:username username
                                                                  :password password})

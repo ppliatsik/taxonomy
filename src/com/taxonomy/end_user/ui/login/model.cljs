@@ -43,6 +43,8 @@
 (rf/reg-sub
   ::ui-model
   :<- [::form-data]
-  (fn [[data] _]
+  :<- [:ui/language]
+  (fn [[data language] _]
     (-> metadata
+        (assoc :language language)
         (merge data))))

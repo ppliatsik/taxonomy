@@ -71,6 +71,7 @@
    cookies/wrap-cookies
    swagger/swagger-feature
    parameters/parameters-middleware
+   (mw/inject-user)
    muuntaja/format-negotiate-middleware
    muuntaja/format-response-middleware
    muuntaja/format-request-middleware
@@ -86,8 +87,7 @@
              :reitit.coercion/response-coercion (coercion-error-handler 500)}))
    coercion/coerce-request-middleware
    coercion/coerce-response-middleware
-   multipart/multipart-middleware
-   mw/inject-user])
+   multipart/multipart-middleware])
 
 (defn router
   [service-map]

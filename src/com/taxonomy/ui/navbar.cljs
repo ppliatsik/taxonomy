@@ -3,6 +3,7 @@
             [com.taxonomy.ui.breadcrumb :as ui.breadcrumb]))
 
 (defn view []
-  (let [breadcrumbs @(rf/subscribe [:ui/breadcrumbs])]
+  (let [breadcrumbs @(rf/subscribe [:ui/breadcrumbs])
+        language    @(rf/subscribe [:ui/language])]
     [:div.has-background-warning-light.p-0.m-2
-     [ui.breadcrumb/breadcrumb-list breadcrumbs]]))
+     [ui.breadcrumb/breadcrumb-list breadcrumbs language]]))

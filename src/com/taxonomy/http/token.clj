@@ -14,6 +14,6 @@
 (defn unsign
   [token auth-keys]
   (try
-    (jwt/unsign token (:public auth-keys) {:alg :rs256})
+    (jwt/unsign token (:public-key auth-keys) {:alg :rs256})
     (catch Exception ex
       (log/error "Error at token unsign" ex))))

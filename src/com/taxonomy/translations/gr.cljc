@@ -10,7 +10,10 @@
 (def product
   {:product-not-exists         "Το προϊόν δεν υπάρχει"
    :product-already-exists     "Το προϊόν υπάρχει ήδη"
-   :secaas-products-management "Διαχείριση προϊόντων SecaaS"})
+   :secaas-products-management "Διαχείριση προϊόντων SecaaS"
+   :create-product             "Δημιουργία προϊόντος SecaaS"
+   :products                   "Προϊόντα SecaaS"
+   :product                    "Προϊόν SecaaS"})
 
 (def end-user
   {:user-not-exists                   "Ο χρήστης δεν υπάρχει"
@@ -26,7 +29,10 @@
    :invalid-token                     "Μη έγκυρο token"
    :valid-token-exists                "Υπάρχει έγκυρο token"
    :login                             "Σύνδεση"
+   :logout                            "Αποσύνδεση"
    :register                          "Εγγραφή"
+   :users                             "Χρήστες"
+   :user                              "Χρήστης"
    :username                          "Όνομα Χρήστη"
    :password                          "Κωδικός"
    :users-management                  "Διαχείριση χρηστών"})

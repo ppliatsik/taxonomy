@@ -13,7 +13,7 @@
 
 (rf/reg-event-fx
   :ui/push-notification
-  (fn [{:keys [db]} [_ {:keys [type] :as   notification}]]
+  (fn [{:keys [db]} [_ {:keys [type] :as notification}]]
     (let [type      (get (-> notification-types keys set) type :warning)
           timeout   (get-in notification-types [type :timeout])
           className (get-in notification-types [type :className])

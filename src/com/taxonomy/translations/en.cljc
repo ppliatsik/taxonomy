@@ -10,7 +10,10 @@
 (def product
   {:product-not-exists         "Product does not exists"
    :product-already-exists     "Product already exists"
-   :secaas-products-management "SecaaS products management"})
+   :secaas-products-management "SecaaS products management"
+   :create-product             "Create SecaaS product"
+   :products                   "SecaaS products"
+   :product                    "SecaaS product"})
 
 (def end-user
   {:user-not-exists                   "User does not exists"
@@ -26,7 +29,10 @@
    :invalid-token                     "Invalid token"
    :valid-token-exists                "Valid token exists"
    :login                             "Login"
+   :logout                            "Logout"
    :register                          "Register"
+   :users                             "Users"
+   :user                              "User"
    :username                          "Username"
    :password                          "Password"
    :users-management                  "Users management"})

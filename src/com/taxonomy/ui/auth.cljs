@@ -20,18 +20,18 @@
   (fn [_ [_ username password]]
     (when (and username password)
       {:fx [[:dispatch [:ajax/post {:uri     "/api/login"
-                                    :params  {:username password
+                                    :params  {:username username
                                               :password password}
                                     :success ::login-success
                                     :failure ::login-failure}]]]})))
 
 (rf/reg-event-fx
   ::login-success
-  (fn [{:keys [db]} [_ {:keys [token] :as user-info}]]
-    (let [user-info (update user-info :roles set)]
-      {:db        (assoc db :ui/user (dissoc user-info :token)
-                            :token   token)
-       :ui/cookie {"X-Auth-Token" token}
+  (fn [{:keys [db]} [_ {:keys [payload]}]]
+    (let [user-info (update payload :roles set)]
+      {:ui/cookie {"X-Auth-Token" (:token user-info)}
+       :db        (assoc db :ui/user (dissoc user-info :token)
+                            :token   (:token user-info))
        :fx        [[:url (routes/main-view)]]})))
 
 (rf/reg-event-fx
