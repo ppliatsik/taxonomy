@@ -17,6 +17,8 @@
             [com.taxonomy.end-user.ui.create.view :as user.create.view]
             [com.taxonomy.end-user.ui.list.view :as user.list.view]
             [com.taxonomy.end-user.ui.edit.view :as user.edit.view]
+            [com.taxonomy.end-user.ui.change-password.view :as user.change-password]
+            [com.taxonomy.end-user.ui.reset-password.view :as user.reset-password]
 
             [com.taxonomy.product.ui.create.view :as product.create.view]
             [com.taxonomy.product.ui.list.view :as product.list.view]
@@ -75,6 +77,8 @@
         (= :com.taxonomy.end-user/register current-view) [user.create.view/view]
         (= :com.taxonomy.end-user/users current-view) [user.list.view/view]
         (= :com.taxonomy.end-user/user current-view) [user.edit.view/view]
+        (= :com.taxonomy.end-user/change-password current-view) [user.change-password/view]
+        (= :com.taxonomy.end-user/reset-password current-view) [user.reset-password/view]
         (= :com.taxonomy.product/create-product current-view) [product.create.view/view]
         (= :com.taxonomy.product/products current-view) [product.list.view/view]
         (= :com.taxonomy.product/product current-view) [product.show.view/view]

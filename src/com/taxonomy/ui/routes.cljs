@@ -23,14 +23,26 @@
                 (rf/dispatch [:com.taxonomy.end-user.ui.login.model/init]))
 
   (sec/defroute register "/register" []
-                (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.end-user/register]))
+                (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.end-user/register])
+                (rf/dispatch [:com.taxonomy.end-user.ui.create.model/init]))
 
   (sec/defroute users "/users" []
-                (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.end-user/users]))
+                (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.end-user/users])
+                (rf/dispatch [:com.taxonomy.end-user.ui.list.model/init]))
 
   (sec/defroute user "/users/:username" [username]
                 (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.end-user/user])
-                (rf/dispatch [:gt.podman.ui.breadcrumb/set-breadcrumb-params {:username username}]))
+                (rf/dispatch [:com.taxonomy.ui.breadcrumb/set-breadcrumb-params {:username username}])
+                (rf/dispatch [:com.taxonomy.end-user.ui.edit.model/init username]))
+
+  (sec/defroute change-password "/users/:username/change-password" [username]
+                (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.end-user/change-password])
+                (rf/dispatch [:com.taxonomy.ui.breadcrumb/set-breadcrumb-params {:username username}])
+                (rf/dispatch [:com.taxonomy.end-user.ui.change-password.model/init username]))
+
+  (sec/defroute reset-password "/reset-password" []
+                (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.end-user/reset-password])
+                (rf/dispatch [:com.taxonomy.end-user.ui.reset-password.model/init]))
 
   (sec/defroute create-product "/create-product" []
                 (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.product/create-product]))
@@ -40,7 +52,7 @@
 
   (sec/defroute product "/product/:id" [id]
                 (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.product/product])
-                (rf/dispatch [:gt.podman.ui.breadcrumb/set-breadcrumb-params {:product-id id}]))
+                (rf/dispatch [:com.taxonomy.ui.breadcrumb/set-breadcrumb-params {:product-id id}]))
 
   (sec/defroute main-view "/" []
                 (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.ui/main-view]))

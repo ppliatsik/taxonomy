@@ -195,20 +195,15 @@
 
 (defn reset-user-password
   [{:keys [db parameters user-info] :as request}]
-  (let [user (data/get-user-by-username-and-email db (merge (:path parameters)
-                                                            (:body parameters)))]
-    (cond (not (end-user/is-current-user? user-info (-> parameters :path :username)))
-          (http-response/invalid {:result :failure
-                                  :reason ::end-user/invalid-user})
-
-          (nil? user)
+  (let [user (data/get-user-by-email db (:body parameters))]
+    (cond (nil? user)
           (http-response/invalid {:result :failure
                                   :reason ::end-user/user-not-exists})
 
           :else
           (let [password (util/create-password)
                 email    (-> parameters :body :email)
-                params   {:username (-> parameters :path :username)
+                params   {:username (:username user)
                           :password (util/string->md5 password)}
                 _        (data/change-user-password db params)]
             (email/send {:to      [email]
@@ -271,7 +266,7 @@
 
 (defn delete-user
   [{:keys [db parameters user-info] :as request}]
-  (let [user (data/get-active-user-by-username db (:path parameters))]
+  (let [user (data/get-user-by-username db (:path parameters))]
     (cond (and (not (end-user/is-admin? user-info))
                (not (end-user/is-current-user? user-info (-> parameters :path :username))))
           (http-response/invalid {:result :failure

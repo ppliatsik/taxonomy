@@ -5,7 +5,9 @@
    :previous-page       "Previous page"
    :next-page           "Next page"
    :success             "Success"
-   :failure             "Failure"})
+   :failure             "Failure"
+   :submit              "Submit"
+   :main-view           "Taxonomy"})
 
 (def product
   {:product-not-exists         "Product does not exists"
@@ -35,7 +37,19 @@
    :user                              "User"
    :username                          "Username"
    :password                          "Password"
-   :users-management                  "Users management"})
+   :password-verification             "Verify password"
+   :first-name                        "First name"
+   :last-name                         "Last name"
+   :email                             "Email"
+   :old-password                      "Old password"
+   :users-management                  "Users management"
+   :edit                              "Edit"
+   :change-password                   "Change password"
+   :activate                          "Activate"
+   :deactivate                        "Deactivate"
+   :delete                            "Delete"
+   :reset-password                    "Reset password"
+   :wrong-input                       "Wrong input"})
 
 (def translations
   {:com.taxonomy.ui       taxonomy-ui

@@ -24,6 +24,13 @@
                :parameters {:query {:token ::end-user/token}}
                :handler    api/email-activate-account}}]
 
+   ["/reset-password"
+    {:swagger {:tags ["users"]}
+     :name    ::end-user/reset-user-password
+     :put     {:summary    "Reset user password"
+               :parameters {:body {:email ::end-user/email}}
+               :handler    api/reset-user-password}}]
+
    ["/users"
     [""
      {:swagger {:tags ["users"]}
@@ -68,13 +75,6 @@
                 :parameters {:path {:username ::end-user/username}
                              :body ::end-user/change-user-password-request}
                 :handler    api/change-user-password}}]
-    ["/:username/reset-password"
-     {:swagger {:tags ["users"]}
-      :name    ::end-user/reset-user-password
-      :put     {:summary    "Reset user password"
-                :parameters {:path {:username ::end-user/username}
-                             :body {:email ::end-user/email}}
-                :handler    api/reset-user-password}}]
     ["/:username/update-info"
      {:swagger {:tags ["users"]}
       :name    ::end-user/update-user-info

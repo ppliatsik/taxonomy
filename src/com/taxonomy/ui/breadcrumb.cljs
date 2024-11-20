@@ -5,7 +5,7 @@
 
 (defn breadcrumbs-routes
   [route params]
-  (let [routes {:com.taxonomy.ui/main-view {:name-route   "Home"
+  (let [routes {:com.taxonomy.ui/main-view {:name-route   :com.taxonomy.ui/main-view
                                             :icon-route   "fas fa-home"
                                             :href         routes/main-view
                                             :parent-route nil}
@@ -25,6 +25,14 @@
                 :com.taxonomy.end-user/user {:name-route   :com.taxonomy.end-user/user
                                              :href         routes/user
                                              :parent-route :com.taxonomy.end-user/list-view}
+
+                :com.taxonomy.end-user/change-password {:name-route   :com.taxonomy.end-user/change-password
+                                                        :href         routes/change-password
+                                                        :parent-route :com.taxonomy.ui/main-view}
+
+                :com.taxonomy.end-user/reset-password {:name-route   :com.taxonomy.end-user/reset-password
+                                                       :href         routes/reset-password
+                                                       :parent-route :com.taxonomy.ui/main-view}
 
                 :com.taxonomy.product/create-product {:name-route   :com.taxonomy.product/create-product
                                                       :href         routes/create-product

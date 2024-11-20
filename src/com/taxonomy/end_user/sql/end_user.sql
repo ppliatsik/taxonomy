@@ -67,9 +67,10 @@ select username, first_name, last_name, email, roles, active, created_at
 from end_user
 where 1=1
 --~ (when (:q params) " and (username ilike '%' || :q || '%' or last_name ilike '%' || :q || '%' or first_name ilike '%' || :q || '%')")
+order by last_name, first_name
 --~ (when (:limit params) "limit :limit")
 --~ (when (:offset params) "offset :offset")
-order by last_name, first_name;
+;
 
 -- :name get-users-count
 -- :result :one
@@ -103,6 +104,12 @@ select username, first_name, last_name, email, roles, active, created_at
 from end_user
 where username = :username and email = :email and active = true;
 
+-- :name get-user-by-email
+-- :result :one
+select username, first_name, last_name, email, roles, active, created_at
+from end_user
+where email = :email and active = true;
+
 -- :name delete-user :! :n
 delete from end_user where username = :username;
 
@@ -110,7 +117,7 @@ delete from end_user where username = :username;
 -- :command :returning-execute
 -- :result :one
 insert into confirmation_token (username, token, valid_to)
-values (:username, :token, :valid_to)
+values (:username, :token, :valid-to)
 on conflict (username) do nothing
 returning *;
 

@@ -5,7 +5,9 @@
    :previous-page       "Προηγούμενη σελίδα"
    :next-page           "Επόμενη σελίδα"
    :success             "Επιτυχία"
-   :failure             "Αποτυχία"})
+   :failure             "Αποτυχία"
+   :submit              "Υποβολή"
+   :main-view           "Taxonomy"})
 
 (def product
   {:product-not-exists         "Το προϊόν δεν υπάρχει"
@@ -35,7 +37,19 @@
    :user                              "Χρήστης"
    :username                          "Όνομα Χρήστη"
    :password                          "Κωδικός"
-   :users-management                  "Διαχείριση χρηστών"})
+   :password-verification             "Επαλήθευση κωδικού"
+   :first-name                        "Όνομα"
+   :last-name                         "Επώνυμο"
+   :email                             "Email"
+   :old-password                      "Παλιός κωδικός"
+   :users-management                  "Διαχείριση χρηστών"
+   :edit                              "Επεξεργασία"
+   :change-password                   "Αλλαγή κωδικού"
+   :activate                          "Ενεργοποίηση"
+   :deactivate                        "Απενεργοποίηση"
+   :delete                            "Διαγραφή"
+   :reset-password                    "Επαναφορά κωδικού"
+   :wrong-input                       "Λάθος είσοδος"})
 
 (def translations
   {:com.taxonomy.ui       taxonomy-ui
