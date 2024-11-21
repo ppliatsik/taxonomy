@@ -20,8 +20,8 @@
    ["/email-activate-account"
     {:swagger {:tags ["users"]}
      :name    ::end-user/email-activate-account
-     :post    {:summary    "Activate account by email verification"
-               :parameters {:query {:token ::end-user/token}}
+     :put     {:summary    "Activate account by email verification"
+               :parameters {:body {:token ::end-user/token}}
                :handler    api/email-activate-account}}]
 
    ["/reset-password"
@@ -65,7 +65,7 @@
     ["/:username/resend-email-activation-account"
      {:swagger {:tags ["users"]}
       :name    ::end-user/resend-email-activation-account
-      :post    {:summary    "Resend email activation account"
+      :put     {:summary    "Resend email activation account"
                 :parameters {:path {:username ::end-user/username}}
                 :handler    api/resend-email-activation-account}}]
     ["/:username/change-password"

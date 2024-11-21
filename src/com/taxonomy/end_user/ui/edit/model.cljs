@@ -71,6 +71,29 @@
                                              :type  :error}]]]}))
 
 (rf/reg-event-fx
+  ::send-activation-link
+  [data-path]
+  (fn [{:keys [db]} _]
+    {:fx [[:dispatch [:ajax/put {:uri     (str "/api/users/" (:username db) "/resend-email-activation-account")
+                                 :success ::send-activation-link-success
+                                 :failure ::send-activation-link-failure}]]]}))
+(rf/reg-event-fx
+  ::send-activation-link-success
+  [data-path]
+  (fn [_ _]
+    {:fx [[:dispatch [:ui/push-notification {:title :com.taxonomy.ui/success
+                                             :body  ::end-user/activate-mail-link
+                                             :type  :success}]]]}))
+
+(rf/reg-event-fx
+  ::send-activation-link-failure
+  [data-path]
+  (fn [_ [_ {:keys [response]}]]
+    {:fx [[:dispatch [:ui/push-notification {:title :com.taxonomy.ui/failure
+                                             :body  (:reason response)
+                                             :type  :error}]]]}))
+
+(rf/reg-event-fx
   ::activate
   [data-path]
   (fn [{:keys [db]} _]

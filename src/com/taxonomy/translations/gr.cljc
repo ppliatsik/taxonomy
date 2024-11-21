@@ -53,7 +53,12 @@
    :deactivate                        "Απενεργοποίηση"
    :delete                            "Διαγραφή"
    :reset-password                    "Επαναφορά κωδικού"
-   :wrong-input                       "Λάθος είσοδος"})
+   :wrong-input                       "Λάθος είσοδος"
+   :new-password-sent                 "Ένας νέος κωδικός στάλθηκε στο email σας"
+   :activate-mail-link                "Email στάλθηκε στον χρήστη για να ενεργοποιήσει τον λογαριασμό του"
+   :send-activate-link                "Αποστολή συνδέσμου ενεργοποίησης"
+   :account-activated                 "Ο λογαριασμός ενεργοποιήθηκε"
+   :account-activation-problem        "Πρόβλημα στην ενεργοποίηση του λογαριασμού σας, παρακαλώ επικοινωνήστε με τον διαχειριστή"})
 
 (def translations
   {:com.taxonomy.ui       taxonomy-ui

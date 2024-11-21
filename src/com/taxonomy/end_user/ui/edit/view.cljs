@@ -31,10 +31,16 @@
         [:button.button.is-info
          {:on-click #(rf/dispatch [::model/deactivate])}
          [:span (trans/translate lang ::end-user/deactivate)]]]
-       [:div.column.is-2
-        [:button.button.is-info
-         {:on-click #(rf/dispatch [::model/activate])}
-         [:span (trans/translate lang ::end-user/activate)]]]))])
+       [:div.columns
+        {:style {:margin-top "0.3%"}}
+        [:div.column.is-4
+         [:button.button.is-info
+          {:on-click #(rf/dispatch [::model/activate])}
+          [:span (trans/translate lang ::end-user/activate)]]]
+        [:div.column.is-2
+         [:button.button.is-info
+          {:on-click #(rf/dispatch [::model/send-activation-link])}
+          [:span (trans/translate lang ::end-user/send-activate-link)]]]]))])
 
 (defn- user-fields
   [{:keys [user can-edit] :as model} lang]

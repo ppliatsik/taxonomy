@@ -35,7 +35,10 @@
   ::reset-password-success
   [data-path]
   (fn [_ _]
-    {:fx [[:url (routes/main-view)]]}))
+    {:fx [[:url (routes/main-view)]
+          [:dispatch [:ui/push-notification {:title :com.taxonomy.ui/success
+                                             :body  ::end-user/new-password-sent
+                                             :type  :success}]]]}))
 
 (rf/reg-event-fx
   ::reset-password-failure

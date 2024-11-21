@@ -1,6 +1,7 @@
 {:http/service {:port                        8082
                 :db                          #ig/ref :db/pg
                 :auth-keys                   #ig/ref :auth/keys
+                :email-host                  #ig/ref :email/host
                 :build                       :dev
                 :token-valid-time            180 ;; in minutes
                 :activation-token-valid-time 10 ;; in minutes
@@ -17,6 +18,11 @@
          :port-number       15432
          :minimum-idle      3
          :maximum-pool-size 15}
+
+ :email/host {:host "smtp.gmail.com"
+              :port 587
+              :user "ppliatsik@gmail.com"
+              :pass "qghuxqfqwbpjmauk"}
 
  :invalid-token/scheduler {:db     #ig/ref :db/pg
                            :hour   5

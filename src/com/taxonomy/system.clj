@@ -38,6 +38,12 @@
 (defmethod ig/halt-key! :auth/keys [_ _]
   )
 
+(defmethod ig/init-key :email/host [_ cfg]
+  cfg)
+
+(defmethod ig/halt-key! :email/host [_ _]
+  )
+
 (defmethod ig/init-key :invalid-token/scheduler [_ {:keys [db hour minute enable] :as cfg}]
   (when enable
     (let [times     (chime/periodic-seq (-> (jt/local-time hour minute)

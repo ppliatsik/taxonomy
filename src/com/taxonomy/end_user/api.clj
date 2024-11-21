@@ -12,20 +12,21 @@
 (def default-offset 0)
 
 (defn create-token-and-send-email-account-activation
-  [{:keys [db server-address activation-token-valid-time]}
+  [{:keys [db server-address activation-token-valid-time email-host]}
    {:keys [username email]}]
   (let [token (str (UUID/randomUUID))
         _     (data/create-confirmation-token* db {:username username
                                                    :token    token
                                                    :valid-to (-> (jt/local-date-time)
                                                                  (jt/plus (jt/minutes activation-token-valid-time)))})]
-    (email/send {:to      [email]
+    (email/send email-host
+                {:to      email
                  :subject "User account activation"
-                 :body    (str "<a href=" server-address "/email-activate-account?token="
+                 :body    (str "<a href=" server-address "/#/email-activate-account?token="
                                token ">Click to activate account</a>")})))
 
 (defn login
-  [{:keys [db parameters auth-keys token-valid-time] :as request}]
+  [{:keys [db parameters auth-keys token-valid-time email-host] :as request}]
   (let [username     (-> parameters :body :username)
         password     (util/string->md5 (-> parameters :body :password))
         user         (data/get-user-by-username-and-password db {:username username
@@ -44,17 +45,14 @@
           (and user-by-name (nil? user) (<= 3 (:login-fails user-by-name)))
           (do
             (data/deactivate-user db {:username username})
-            (email/send {:to      [(:email user-by-name)]
+            (email/send email-host
+                        {:to      (:email user-by-name)
                          :subject "User account deactivation"
                          :body    "Your account has been deactivated due to too many failed logins"})
             (http-response/invalid {:result :failure
                                     :reason ::end-user/user-deactivated}))
 
-          (not (:active user))
-          (http-response/invalid {:result :failure
-                                  :reason ::end-user/user-is-inactive})
-
-          (:active user)
+          :else
           (do
             (data/reset-login-fails* db {:username username})
             (http-response/ok {:result  :success
@@ -88,8 +86,7 @@
 
 (defn resend-email-activation-account
   [{:keys [db parameters] :as request}]
-  (let [user (data/get-user-by-username* db (:path parameters))
-        ck   (data/get-confirmation-token-by-username db (:path parameters))]
+  (let [user (data/get-user-by-username* db (:path parameters))]
     (cond (nil? user)
           (http-response/invalid {:result :failure
                                   :reason ::end-user/user-not-exists})
@@ -97,11 +94,6 @@
           (:active user)
           (http-response/invalid {:result :failure
                                   :reason ::end-user/user-already-active})
-
-          (jt/after? (jt/local-date-time (:valid-to ck))
-                     (jt/local-date-time))
-          (http-response/invalid {:result :failure
-                                  :reason ::end-user/valid-token-exists})
 
           :else
           (do
@@ -145,8 +137,10 @@
                                   :reason ::end-user/user-already-active})
 
           :else
-          (http-response/ok {:result  :success
-                             :payload (data/activate-user db user)}))))
+          (do
+            (data/reset-login-fails* db user)
+            (http-response/ok {:result  :success
+                               :payload (data/activate-user db user)})))))
 
 (defn deactivate-user
   [{:keys [db parameters user-info] :as request}]
@@ -194,7 +188,7 @@
                                :payload user})))))
 
 (defn reset-user-password
-  [{:keys [db parameters user-info] :as request}]
+  [{:keys [db parameters email-host] :as request}]
   (let [user (data/get-user-by-email db (:body parameters))]
     (cond (nil? user)
           (http-response/invalid {:result :failure
@@ -206,9 +200,10 @@
                 params   {:username (:username user)
                           :password (util/string->md5 password)}
                 _        (data/change-user-password db params)]
-            (email/send {:to      [email]
+            (email/send email-host
+                        {:to      email
                          :subject "New account password"
-                         :body    (str "Your new password is: " password ".\nChange it after login.")})
+                         :body    (str "Your new password is: " password "\nChange it after login.")})
             (http-response/ok {:result :success})))))
 
 (defn update-user-info
@@ -242,15 +237,16 @@
     (let [limit  (or (-> parameters :query :limit) default-limit)
           offset (or (-> parameters :query :offset) default-offset)
           params {:limit  limit
-                  :offset offset}
+                  :offset offset
+                  :q      (-> parameters :query :q)}
 
           users     (data/get-users db params)
           users-cnt (data/get-users-count db)]
-      {:status     200
-       :body       users
-       :pagination {:limit       limit
-                    :offset      offset
-                    :total-count (:count users-cnt)}})))
+      {:status 200
+       :body   {:results    users
+                :pagination {:limit  limit
+                             :offset offset
+                             :total  (:count users-cnt)}}})))
 
 (defn get-user
   [{:keys [db parameters user-info] :as request}]

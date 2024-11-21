@@ -53,7 +53,12 @@
    :deactivate                        "Deactivate"
    :delete                            "Delete"
    :reset-password                    "Reset password"
-   :wrong-input                       "Wrong input"})
+   :wrong-input                       "Wrong input"
+   :new-password-sent                 "A new password has been send to your email"
+   :activate-mail-link                "Email send to user to activate account"
+   :send-activate-link                "Send activation link"
+   :account-activated                 "Account has been activated"
+   :account-activation-problem        "Account activation problem, please contact with administrator"})
 
 (def translations
   {:com.taxonomy.ui       taxonomy-ui

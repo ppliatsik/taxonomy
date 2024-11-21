@@ -44,6 +44,10 @@
                 (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.end-user/reset-password])
                 (rf/dispatch [:com.taxonomy.end-user.ui.reset-password.model/init]))
 
+  (sec/defroute email-activate-account "/email-activate-account" [query-params]
+                (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.end-user/email-activate-account])
+                (rf/dispatch [:com.taxonomy.end-user.ui.email-activation.model/init query-params]))
+
   (sec/defroute create-product "/create-product" []
                 (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.product/create-product]))
 

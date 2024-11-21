@@ -20,6 +20,7 @@
             [com.taxonomy.end-user.ui.edit.view :as user.edit.view]
             [com.taxonomy.end-user.ui.change-password.view :as user.change-password]
             [com.taxonomy.end-user.ui.reset-password.view :as user.reset-password]
+            [com.taxonomy.end-user.ui.email-activation.view :as user.email-activation]
 
             [com.taxonomy.product.ui.create.view :as product.create.view]
             [com.taxonomy.product.ui.list.view :as product.list.view]
@@ -85,6 +86,7 @@
         (= :com.taxonomy.end-user/user current-view) [user.edit.view/view]
         (= :com.taxonomy.end-user/change-password current-view) [user.change-password/view]
         (= :com.taxonomy.end-user/reset-password current-view) [user.reset-password/view]
+        (= :com.taxonomy.end-user/email-activate-account current-view) [user.email-activation/view]
         (= :com.taxonomy.product/create-product current-view) [product.create.view/view]
         (= :com.taxonomy.product/products current-view) [product.list.view/view]
         (= :com.taxonomy.product/product current-view) [product.show.view/view]
