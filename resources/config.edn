@@ -21,8 +21,8 @@
 
  :email/host {:host "smtp.gmail.com"
               :port 587
-              :user "ppliatsik@gmail.com"
-              :pass "qghuxqfqwbpjmauk"}
+              :user ""
+              :pass ""}
 
  :invalid-token/scheduler {:db     #ig/ref :db/pg
                            :hour   5
