@@ -52,6 +52,10 @@
             (http-response/invalid {:result :failure
                                     :reason ::end-user/user-deactivated}))
 
+          (not (:active user))
+          (http-response/invalid {:result :failure
+                                  :reason ::end-user/user-is-inactive}))
+
           :else
           (do
             (data/reset-login-fails* db {:username username})
@@ -67,7 +71,7 @@
 
 (defn email-activate-account
   [{:keys [db parameters] :as request}]
-  (let [token (-> parameters :query :token)
+  (let [token (-> parameters :body :token)
         ck    (data/get-valid-confirmation-token-by-token db {:token token})
         user  (data/get-user-by-username* db ck)]
     (cond (or (nil? user)

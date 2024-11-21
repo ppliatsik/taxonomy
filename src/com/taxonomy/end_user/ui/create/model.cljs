@@ -46,7 +46,7 @@
 (rf/reg-event-fx
   ::register-success
   (fn [_ _]
-    {:fx [[:url (routes/main-view)]]}))
+    {:fx [[:dispatch [::send-activation-link]]]}))
 
 (rf/reg-event-fx
   ::register-failure
@@ -59,7 +59,8 @@
   ::send-activation-link
   [data-path]
   (fn [{:keys [db]} _]
-    {:fx [[:dispatch [:ajax/put {:uri     (str "/api/users/" (:username db) "/resend-email-activation-account")
+    {:fx [[:url (routes/main-view)]
+          [:dispatch [:ajax/put {:uri     (str "/api/users/" (:username db) "/resend-email-activation-account")
                                  :success ::send-activation-link-success
                                  :failure ::send-activation-link-failure}]]]}))
 (rf/reg-event-fx
