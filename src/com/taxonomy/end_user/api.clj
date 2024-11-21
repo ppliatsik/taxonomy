@@ -54,7 +54,7 @@
 
           (not (:active user))
           (http-response/invalid {:result :failure
-                                  :reason ::end-user/user-is-inactive}))
+                                  :reason ::end-user/user-is-inactive})
 
           :else
           (do
