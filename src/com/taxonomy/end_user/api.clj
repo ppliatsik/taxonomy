@@ -208,7 +208,7 @@
 
 (defn update-user-info
   [{:keys [db parameters user-info] :as request}]
-  (let [old-user (data/get-active-user-by-username db (:path parameters))]
+  (let [old-user (data/get-user-by-username db (:path parameters))]
     (cond (and (not (end-user/is-admin? user-info))
                (not (end-user/is-current-user? user-info (-> parameters :path :username))))
           (http-response/invalid {:result :failure

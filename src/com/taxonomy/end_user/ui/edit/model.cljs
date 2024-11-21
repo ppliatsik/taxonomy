@@ -60,7 +60,7 @@
   ::edit-success
   [data-path]
   (fn [_ _]
-    {:fx [[:url (routes/users)]]}))
+    {:fx [[:url (routes/main-view)]]}))
 
 (rf/reg-event-fx
   ::edit-failure
