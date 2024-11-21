@@ -15,7 +15,11 @@
    :secaas-products-management "SecaaS products management"
    :create-product             "Create SecaaS product"
    :products                   "SecaaS products"
-   :product                    "SecaaS product"})
+   :product                    "SecaaS product"
+   :my-products                "My SecaaS products"
+   :match                      "Match SecaaS products"
+   :classification             "Classify SecaaS products"
+   :discover                   "Discover SecaaS products"})
 
 (def end-user
   {:user-not-exists                   "User does not exists"

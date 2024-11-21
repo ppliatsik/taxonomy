@@ -15,7 +15,11 @@
    :secaas-products-management "Διαχείριση προϊόντων SecaaS"
    :create-product             "Δημιουργία προϊόντος SecaaS"
    :products                   "Προϊόντα SecaaS"
-   :product                    "Προϊόν SecaaS"})
+   :product                    "Προϊόν SecaaS"
+   :my-products                "Τα προϊόντα SecaaS μου"
+   :match                      "Ταίριασμα SecaaS προϊόντων"
+   :classification             "Ταξινόμηση SecaaS προϊόντων"
+   :discover                   "Ανακάλυψη SecaaS προϊόντων"})
 
 (def end-user
   {:user-not-exists                   "Ο χρήστης δεν υπάρχει"

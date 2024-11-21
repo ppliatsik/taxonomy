@@ -3,6 +3,7 @@
             [clojure.string :as clj.str]
             [com.taxonomy.ui.navbar :as ui.navbar]
             [com.taxonomy.translations :as trans]
+            [com.taxonomy.ui.routes :as routes]
             [com.taxonomy.end-user :as end-user]
             [com.taxonomy.end-user.ui.edit.model :as model]))
 
@@ -14,8 +15,8 @@
      {:on-click #(rf/dispatch [::model/toggle-edit])}
      [:span (trans/translate lang ::end-user/edit)]]]
    [:div.column.is-2
-    [:button.button.is-info
-     {:on-click #(rf/dispatch [::model/change-password])}
+    [:a.button.is-link.is-info
+     {:href (routes/change-password {:username username})}
      [:span (trans/translate lang ::end-user/change-password)]]]
    (when (or (end-user/is-admin? login-user)
              (end-user/is-current-user? login-user username))

@@ -3,6 +3,7 @@
             [re-frame.core :as rf]
             [secretary.core :as sec]
             [goog.object]
+
             [com.taxonomy.ui.routes :as routes]
             [com.taxonomy.ui.breadcrumb :as ui.breadcrumb]
             [com.taxonomy.ui.navbar :as ui.navbar]
@@ -23,12 +24,17 @@
             [com.taxonomy.product.ui.create.view :as product.create.view]
             [com.taxonomy.product.ui.list.view :as product.list.view]
             [com.taxonomy.product.ui.show.view :as product.show.view]
-            ))
+            [com.taxonomy.product.ui.my-products.view :as my-products.view]))
 
 (rf/reg-fx
   :page-title
   (fn [title]
     (set! window.document.title title)))
+
+(rf/reg-fx
+  :url
+  (fn [url]
+    (.assign window.location url)))
 
 (rf/reg-event-db
   ::set-view
@@ -82,6 +88,7 @@
         (= :com.taxonomy.product/create-product current-view) [product.create.view/view]
         (= :com.taxonomy.product/products current-view) [product.list.view/view]
         (= :com.taxonomy.product/product current-view) [product.show.view/view]
+        (= :com.taxonomy.product/my-products current-view) [my-products.view/view]
         :else [main-view]))))
 
 (defn app []

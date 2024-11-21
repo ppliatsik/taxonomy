@@ -1,6 +1,7 @@
 (ns com.taxonomy.end-user.ui.change-password.model
   (:require [re-frame.core :as rf]
             [clojure.string :as clj.str]
+            [com.taxonomy.ui.routes :as routes]
             [com.taxonomy.end-user :as end-user]))
 
 (def paths [:ui/forms ::end-user/change-password :data])
@@ -11,9 +12,8 @@
 (defn check-fields
   [data]
   (assoc data :correct-inputs
-              (and (or (and (not (clj.str/blank? (:old-password data)))
-                            (end-user/password-is-valid? (:old-password data)))
-                       (= (:old-password data) (:password data)))
+              (and (and (not (clj.str/blank? (:old-password data)))
+                        (end-user/password-is-valid? (:old-password data)))
                    (not (clj.str/blank? (:password data)))
                    (end-user/password-is-valid? (:password data))
                    (or (and (not (clj.str/blank? (:password-verification data)))

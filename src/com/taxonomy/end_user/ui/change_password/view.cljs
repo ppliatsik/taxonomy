@@ -19,9 +19,8 @@
                     :on-change (fn [e]
                                  (rf/dispatch [::model/set-old-password
                                                (-> e .-target .-value)]))}]
-     (when (or (and (not (clj.str/blank? (:old-password model)))
-                    (not (end-user/password-is-valid? (:old-password model))))
-               (not= (:old-password model) (:password model)))
+     (when (and (not (clj.str/blank? (:old-password model)))
+                (not (end-user/password-is-valid? (:old-password model))))
        [:p.help.is-danger (trans/translate lang ::end-user/wrong-input)])]]
    [:div.columns
     [:div.column.is-6

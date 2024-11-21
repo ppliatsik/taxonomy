@@ -44,7 +44,11 @@
 
                 :com.taxonomy.product/product {:name-route   :com.taxonomy.product/product
                                                :href         routes/product
-                                               :parent-route :com.taxonomy.product/list-view}}
+                                               :parent-route :com.taxonomy.product/list-view}
+
+                :com.taxonomy.product/my-products {:name-route   :com.taxonomy.product/my-products
+                                                   :href         routes/my-products
+                                                   :parent-route :com.taxonomy.ui/main-view}}
 
         default-route  (get routes :com.taxonomy.ui/main-view)
         returned-route (get routes route default-route)]

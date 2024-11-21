@@ -1,5 +1,6 @@
 (ns com.taxonomy.ui.notifications-bar
-  (:require [re-frame.core :as rf]))
+  (:require [re-frame.core :as rf]
+            [com.taxonomy.translations :as trans]))
 
 (def notification-types {:error   {:className "is-danger"}
                          :warning {:className "is-warning"}
@@ -39,7 +40,8 @@
 
 (defn global-notifications-bar
   []
-  (let [notifications @(rf/subscribe [:ui/notifications])]
+  (let [notifications @(rf/subscribe [:ui/notifications])
+        lang          @(rf/subscribe [:ui/language])]
     (when (seq notifications)
       (into [:aside]
             (map (fn [{:keys [uuid title body error className disposable] :as n}]
@@ -52,7 +54,7 @@
                                         :on-click   (fn [_]
                                                       (rf/dispatch [:ui/pop-notification n]))}])]
                     (when body
-                      [:div.message-body body
+                      [:div.message-body (trans/translate lang body)
                        (when error
                          [:p error])])]))
             notifications))))
