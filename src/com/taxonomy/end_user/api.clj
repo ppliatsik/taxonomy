@@ -204,6 +204,7 @@
                 params   {:username (:username user)
                           :password (util/string->md5 password)}
                 _        (data/change-user-password db params)]
+            (data/reset-login-fails* db user)
             (email/send email-host
                         {:to      email
                          :subject "New account password"
