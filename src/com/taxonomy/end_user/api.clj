@@ -107,7 +107,7 @@
 
 (defn create-user
   [{:keys [db parameters] :as request}]
-  (cond (data/get-user-by-username-and-email db (:body parameters))
+  (cond (data/get-user-by-username-or-email db (:body parameters))
         (http-response/invalid {:result :failure
                                 :reason ::end-user/user-already-exists})
 
