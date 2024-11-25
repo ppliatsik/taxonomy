@@ -17,9 +17,18 @@
    :products                   "SecaaS products"
    :product                    "SecaaS product"
    :my-products                "My SecaaS products"
+   :products-menu              "Products menu"
    :match                      "Match SecaaS products"
    :classification             "Classify SecaaS products"
-   :discover                   "Discover SecaaS products"})
+   :discovery                  "Discover SecaaS products"
+   :product-published          "Product published"
+   :product-unpublished        "Product unpublished"
+   :product-deleted            "Product deleted"
+   :product-created            "Product created"
+   :publish                    "Publish"
+   :unpublish                  "Unpublish"
+   :delete                     "Delete"
+   :name                       "Name"})
 
 (def end-user
   {:user-not-exists                   "User does not exists"
@@ -58,7 +67,10 @@
    :activate-mail-link                "Email send to user to activate account"
    :send-activate-link                "Send activation link"
    :account-activated                 "Account has been activated"
-   :account-activation-problem        "Account activation problem, please contact with administrator"})
+   :account-activation-problem        "Account activation problem, please contact with administrator"
+   :password-changed                  "Password changed"
+   :user-registered                   "User registered"
+   :user-edited                       "User information changed"})
 
 (def translations
   {:com.taxonomy.ui       taxonomy-ui

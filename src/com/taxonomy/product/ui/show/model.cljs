@@ -40,15 +40,18 @@
   ::publish
   [data-path]
   (fn [{:keys [db]} _]
-    {:fx [[:dispatch [:ajax/put {:uri     (str "/api/products/" (:id db))
+    {:fx [[:dispatch [:ajax/put {:uri     (str "/api/products/" (:id db) "/publish")
                                  :success ::publish-success
                                  :failure ::publish-failure}]]]}))
 
-(rf/reg-event-db
+(rf/reg-event-fx
   ::publish-success
   [data-path]
-  (fn [db [_ response]]
-    {:db (assoc db :product response)}))
+  (fn [{:keys [db]} [_ response]]
+    {:db (assoc db :product response)
+     :fx [[:dispatch [:ui/push-notification {:title :com.taxonomy.ui/success
+                                             :body  ::product/product-published
+                                             :type  :success}]]]}))
 
 (rf/reg-event-fx
   ::publish-failure
@@ -62,15 +65,18 @@
   ::unpublish
   [data-path]
   (fn [{:keys [db]} _]
-    {:fx [[:dispatch [:ajax/delete {:uri     (str "/api/products/" (:id db))
-                                    :success ::unpublish-success
-                                    :failure ::unpublish-failure}]]]}))
+    {:fx [[:dispatch [:ajax/put {:uri     (str "/api/products/" (:id db) "/unpublish")
+                                 :success ::unpublish-success
+                                 :failure ::unpublish-failure}]]]}))
 
-(rf/reg-event-db
+(rf/reg-event-fx
   ::unpublish-success
   [data-path]
-  (fn [db [_ response]]
-    {:db (assoc db :product response)}))
+  (fn [{:keys [db]} [_ response]]
+    {:db (assoc db :product response)
+     :fx [[:dispatch [:ui/push-notification {:title :com.taxonomy.ui/success
+                                             :body  ::product/product-unpublished
+                                             :type  :success}]]]}))
 
 (rf/reg-event-fx
   ::unpublish-failure
@@ -84,15 +90,18 @@
   ::delete
   [data-path]
   (fn [{:keys [db]} _]
-    {:fx [[:dispatch [:ajax/put {:uri     (str "/api/products/" (:id db))
-                                 :success ::delete-success
-                                 :failure ::delete-failure}]]]}))
+    {:fx [[:dispatch [:ajax/delete {:uri     (str "/api/products/" (:id db))
+                                    :success ::delete-success
+                                    :failure ::delete-failure}]]]}))
 
 (rf/reg-event-fx
   ::delete-success
   [data-path]
   (fn [_ _]
-    {:fx [[:url (routes/main-view)]]}))
+    {:fx [[:url (routes/main-view)]
+          [:dispatch [:ui/push-notification {:title :com.taxonomy.ui/success
+                                             :body  ::product/product-deleted
+                                             :type  :success}]]]}))
 
 (rf/reg-event-fx
   ::delete-failure

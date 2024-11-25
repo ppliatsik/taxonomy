@@ -22,6 +22,7 @@
             [com.taxonomy.end-user.ui.reset-password.view :as user.reset-password]
             [com.taxonomy.end-user.ui.email-activation.view :as user.email-activation]
 
+            [com.taxonomy.product.ui.view :as product.view]
             [com.taxonomy.product.ui.create.view :as product.create.view]
             [com.taxonomy.product.ui.list.view :as product.list.view]
             [com.taxonomy.product.ui.show.view :as product.show.view]
@@ -66,7 +67,7 @@
      [:div.icons-wrapper.columns.is-multiline
       [:div.column.is-6
        [:a.button.is-link.m-1.is-fullwidth
-        {:href (routes/products)}
+        {:href (routes/products-menu)}
         [:span (trans/translate lang ::product/secaas-products-management)]]]
       (when (end-user/is-admin? user)
         [:div.column.is-6
@@ -91,6 +92,7 @@
         (= :com.taxonomy.product/products current-view) [product.list.view/view]
         (= :com.taxonomy.product/product current-view) [product.show.view/view]
         (= :com.taxonomy.product/my-products current-view) [my-products.view/view]
+        (= :com.taxonomy.product/products-menu current-view) [product.view/view]
         :else [main-view]))))
 
 (defn app []

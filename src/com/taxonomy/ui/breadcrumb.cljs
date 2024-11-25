@@ -36,19 +36,23 @@
 
                 :com.taxonomy.product/create-product {:name-route   :com.taxonomy.product/create-product
                                                       :href         routes/create-product
-                                                      :parent-route :com.taxonomy.ui/main-view}
+                                                      :parent-route :com.taxonomy.product/products-menu}
 
                 :com.taxonomy.product/products {:name-route   :com.taxonomy.product/products
                                                 :href         routes/products
-                                                :parent-route :com.taxonomy.ui/main-view}
+                                                :parent-route :com.taxonomy.product/products-menu}
 
                 :com.taxonomy.product/product {:name-route   :com.taxonomy.product/product
                                                :href         routes/product
-                                               :parent-route :com.taxonomy.product/list-view}
+                                               :parent-route :com.taxonomy.product/products-menu}
 
                 :com.taxonomy.product/my-products {:name-route   :com.taxonomy.product/my-products
                                                    :href         routes/my-products
-                                                   :parent-route :com.taxonomy.ui/main-view}}
+                                                   :parent-route :com.taxonomy.product/products-menu}
+
+                :com.taxonomy.product/products-menu {:name-route   :com.taxonomy.product/products-menu
+                                                     :href         routes/products-menu
+                                                     :parent-route :com.taxonomy.ui/main-view}}
 
         default-route  (get routes :com.taxonomy.ui/main-view)
         returned-route (get routes route default-route)]

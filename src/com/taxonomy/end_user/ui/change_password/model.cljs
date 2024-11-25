@@ -44,7 +44,10 @@
   ::change-password-success
   [data-path]
   (fn [_ _]
-    {:fx [[:url (routes/users)]]}))
+    {:fx [[:url (routes/users)]
+          [:dispatch [:ui/push-notification {:title :com.taxonomy.ui/success
+                                             :body  ::end-user/password-changed
+                                             :type  :success}]]]}))
 
 (rf/reg-event-fx
   ::change-password-failure

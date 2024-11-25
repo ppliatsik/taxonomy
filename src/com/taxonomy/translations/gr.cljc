@@ -17,9 +17,18 @@
    :products                   "Προϊόντα SecaaS"
    :product                    "Προϊόν SecaaS"
    :my-products                "Τα προϊόντα SecaaS μου"
+   :products-menu              "Μενού προϊόντων"
    :match                      "Ταίριασμα SecaaS προϊόντων"
    :classification             "Ταξινόμηση SecaaS προϊόντων"
-   :discover                   "Ανακάλυψη SecaaS προϊόντων"})
+   :discovery                  "Ανακάλυψη SecaaS προϊόντων"
+   :product-published          "Το προϊόν δημοσιεύτηκε"
+   :product-unpublished        "Το προϊόν από-δημοσιεύτηκε"
+   :product-deleted            "Το προϊόν διαγράφηκε"
+   :product-created            "Το προϊόν δημιουργήθηκε"
+   :publish                    "Δημοσίευση"
+   :unpublish                  "Από-δημοσίευση"
+   :delete                     "Διαγραφή"
+   :name                       "Όνομα"})
 
 (def end-user
   {:user-not-exists                   "Ο χρήστης δεν υπάρχει"
@@ -58,7 +67,10 @@
    :activate-mail-link                "Email στάλθηκε στον χρήστη για να ενεργοποιήσει τον λογαριασμό του"
    :send-activate-link                "Αποστολή συνδέσμου ενεργοποίησης"
    :account-activated                 "Ο λογαριασμός ενεργοποιήθηκε"
-   :account-activation-problem        "Πρόβλημα στην ενεργοποίηση του λογαριασμού σας, παρακαλώ επικοινωνήστε με τον διαχειριστή"})
+   :account-activation-problem        "Πρόβλημα στην ενεργοποίηση του λογαριασμού σας, παρακαλώ επικοινωνήστε με τον διαχειριστή"
+   :password-changed                  "Ο κωδικός άλλαξε"
+   :user-registered                   "Η εγγραφή ολοκληρώθηκε"
+   :user-edited                       "Οι πληροφορίες του χρήστη άλλαξαν"})
 
 (def translations
   {:com.taxonomy.ui       taxonomy-ui

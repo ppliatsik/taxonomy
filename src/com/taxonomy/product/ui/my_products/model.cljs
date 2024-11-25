@@ -10,8 +10,9 @@
 (rf/reg-event-fx
   ::init
   [data-path]
-  (fn [{:keys [db]} _]
-    {:fx [[:dispatch [:ajax/get {:uri     "/api/my-products"
+  (fn [_ _]
+    {:db {}
+     :fx [[:dispatch [:ajax/get {:uri     "/api/my-products"
                                  :success ::init-success
                                  :failure ::init-failure}]]]}))
 

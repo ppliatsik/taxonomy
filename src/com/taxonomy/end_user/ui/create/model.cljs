@@ -46,7 +46,10 @@
 (rf/reg-event-fx
   ::register-success
   (fn [_ _]
-    {:fx [[:dispatch [::send-activation-link]]]}))
+    {:fx [[:dispatch [::send-activation-link]]
+          [:dispatch [:ui/push-notification {:title :com.taxonomy.ui/success
+                                             :body  ::end-user/user-registered
+                                             :type  :success}]]]}))
 
 (rf/reg-event-fx
   ::register-failure

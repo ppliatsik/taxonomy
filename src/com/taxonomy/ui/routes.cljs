@@ -49,19 +49,24 @@
                 (rf/dispatch [:com.taxonomy.end-user.ui.email-activation.model/init query-params]))
 
   (sec/defroute create-product "/create-product" []
-                (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.product/create-product]))
+                (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.product/create-product])
+                (rf/dispatch [:com.taxonomy.product.ui.create.model/init]))
 
   (sec/defroute products "/products" []
-                (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.product/products]))
+                (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.product/products])
+                (rf/dispatch [:com.taxonomy.product.ui.list.model/init]))
 
   (sec/defroute product "/product/:id" [id]
                 (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.product/product])
-                (rf/dispatch [:com.taxonomy.ui.breadcrumb/set-breadcrumb-params {:product-id id}])
+                (rf/dispatch [:com.taxonomy.ui.breadcrumb/set-breadcrumb-params {:id id}])
                 (rf/dispatch [:com.taxonomy.product.ui.show.model/init id]))
 
   (sec/defroute my-products "/my-products" []
                 (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.product/my-products])
                 (rf/dispatch [:com.taxonomy.product.ui.my-products.model/init]))
+
+  (sec/defroute products-menu "/products-menu" []
+                (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.product/products-menu]))
 
   (sec/defroute main-view "/" []
                 (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.ui/main-view]))

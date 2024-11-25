@@ -60,7 +60,10 @@
   ::edit-success
   [data-path]
   (fn [_ _]
-    {:fx [[:url (routes/main-view)]]}))
+    {:fx [[:url (routes/main-view)]
+          [:dispatch [:ui/push-notification {:title :com.taxonomy.ui/success
+                                             :body  ::end-user/user-edited
+                                             :type  :success}]]]}))
 
 (rf/reg-event-fx
   ::edit-failure

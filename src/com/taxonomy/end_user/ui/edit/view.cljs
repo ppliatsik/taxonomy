@@ -21,7 +21,7 @@
    (when (or (end-user/is-admin? login-user)
              (end-user/is-current-user? login-user username))
      [:div.column.is-2
-      [:button.button.is-info
+      [:button.button.is-danger
        {:on-click #(rf/dispatch [::model/delete])
         :style    {:margin-right "2%"}}
        [:span (trans/translate lang ::end-user/delete)]]])
