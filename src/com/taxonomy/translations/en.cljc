@@ -1,13 +1,17 @@
 (ns com.taxonomy.translations.en)
 
 (def taxonomy-ui
-  {:missing-translation "Missing translation"
-   :previous-page       "Previous page"
-   :next-page           "Next page"
-   :success             "Success"
-   :failure             "Failure"
-   :submit              "Submit"
-   :main-view           "Taxonomy"})
+  {:missing-translation                "Missing translation"
+   :previous-page                      "Previous page"
+   :next-page                          "Next page"
+   :success                            "Success"
+   :failure                            "Failure"
+   :submit                             "Submit"
+   :main-view                          "Taxonomy"
+   :yes                                "Yes"
+   :no                                 "No"
+   :delete-dialog-box                  "Delete request"
+   :delete-dialog-box-confirmation-msg "Are you sure you want to proceed the deletion?"})
 
 (def product
   {:product-not-exists         "Product does not exists"
@@ -17,7 +21,6 @@
    :products                   "SecaaS products"
    :product                    "SecaaS product"
    :my-products                "My SecaaS products"
-   :products-menu              "Products menu"
    :match                      "Match SecaaS products"
    :classification             "Classify SecaaS products"
    :discovery                  "Discover SecaaS products"
@@ -28,6 +31,8 @@
    :publish                    "Publish"
    :unpublish                  "Unpublish"
    :delete                     "Delete"
+   :choose-criteria            "Choose criteria to match SecaaS products"
+   :choose-weights             "Choose weights to classify the SecaaS products"
    :name                       "Name"})
 
 (def end-user

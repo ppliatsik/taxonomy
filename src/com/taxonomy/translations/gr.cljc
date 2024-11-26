@@ -1,13 +1,17 @@
 (ns com.taxonomy.translations.gr)
 
 (def taxonomy-ui
-  {:missing-translation "Λείπει η μετάφραση"
-   :previous-page       "Προηγούμενη σελίδα"
-   :next-page           "Επόμενη σελίδα"
-   :success             "Επιτυχία"
-   :failure             "Αποτυχία"
-   :submit              "Υποβολή"
-   :main-view           "Taxonomy"})
+  {:missing-translation                "Λείπει η μετάφραση"
+   :previous-page                      "Προηγούμενη σελίδα"
+   :next-page                          "Επόμενη σελίδα"
+   :success                            "Επιτυχία"
+   :failure                            "Αποτυχία"
+   :submit                             "Υποβολή"
+   :main-view                          "Taxonomy"
+   :yes                                "Ναι"
+   :no                                 "Όχι"
+   :delete-dialog-box                  "Αίτημα διαγραφής"
+   :delete-dialog-box-confirmation-msg "Είστε σίγουρος/η ότι θέλετε να προχωρήσετε με τη διαγραφή;"})
 
 (def product
   {:product-not-exists         "Το προϊόν δεν υπάρχει"
@@ -17,7 +21,6 @@
    :products                   "Προϊόντα SecaaS"
    :product                    "Προϊόν SecaaS"
    :my-products                "Τα προϊόντα SecaaS μου"
-   :products-menu              "Μενού προϊόντων"
    :match                      "Ταίριασμα SecaaS προϊόντων"
    :classification             "Ταξινόμηση SecaaS προϊόντων"
    :discovery                  "Ανακάλυψη SecaaS προϊόντων"
@@ -28,6 +31,8 @@
    :publish                    "Δημοσίευση"
    :unpublish                  "Από-δημοσίευση"
    :delete                     "Διαγραφή"
+   :choose-criteria            "Επιλέξτε κριτήρια για ταίριασμα SecaaS προϊόντων"
+   :choose-weights             "Επιλέξτε βάρη για ταξινόμηση των SecaaS προϊόντων"
    :name                       "Όνομα"})
 
 (def end-user

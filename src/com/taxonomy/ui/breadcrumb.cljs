@@ -36,23 +36,23 @@
 
                 :com.taxonomy.product/create-product {:name-route   :com.taxonomy.product/create-product
                                                       :href         routes/create-product
-                                                      :parent-route :com.taxonomy.product/products-menu}
+                                                      :parent-route :com.taxonomy.product/secaas-products-management}
 
                 :com.taxonomy.product/products {:name-route   :com.taxonomy.product/products
                                                 :href         routes/products
-                                                :parent-route :com.taxonomy.product/products-menu}
+                                                :parent-route :com.taxonomy.product/secaas-products-management}
 
                 :com.taxonomy.product/product {:name-route   :com.taxonomy.product/product
                                                :href         routes/product
-                                               :parent-route :com.taxonomy.product/products-menu}
+                                               :parent-route :com.taxonomy.product/secaas-products-management}
 
                 :com.taxonomy.product/my-products {:name-route   :com.taxonomy.product/my-products
                                                    :href         routes/my-products
-                                                   :parent-route :com.taxonomy.product/products-menu}
+                                                   :parent-route :com.taxonomy.product/secaas-products-management}
 
-                :com.taxonomy.product/products-menu {:name-route   :com.taxonomy.product/products-menu
-                                                     :href         routes/products-menu
-                                                     :parent-route :com.taxonomy.ui/main-view}}
+                :com.taxonomy.product/secaas-products-management {:name-route   :com.taxonomy.product/secaas-products-management
+                                                                  :href         routes/secaas-products-management
+                                                                  :parent-route :com.taxonomy.ui/main-view}}
 
         default-route  (get routes :com.taxonomy.ui/main-view)
         returned-route (get routes route default-route)]

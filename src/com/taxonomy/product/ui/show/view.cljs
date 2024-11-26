@@ -1,6 +1,7 @@
 (ns com.taxonomy.product.ui.show.view
   (:require [re-frame.core :as rf]
             [com.taxonomy.ui.navbar :as ui.navbar]
+            [com.taxonomy.ui.form :as form]
             [com.taxonomy.translations :as trans]
             [com.taxonomy.product :as product]
             [com.taxonomy.end-user :as end-user]
@@ -22,7 +23,7 @@
                (end-user/is-current-user? login-user (:created-by product)))
        [:div.column.is-2
         [:button.button.is-danger
-         {:on-click #(rf/dispatch [::model/delete])}
+         {:on-click #(rf/dispatch [::model/show-delete-confirmation-box])}
          [:span (trans/translate lang ::product/delete)]]])]))
 
 (defn- product-view
@@ -37,4 +38,6 @@
     [:article.box
      [ui.navbar/view]
      [control-buttons login-user model lang]
-     [product-view model lang]]))
+     [product-view model lang]
+     (when-not (:hide-delete-confirmation-box model)
+       (form/delete-confirmation-dialog ::model/delete ::model/hide-delete-confirmation-box lang))]))

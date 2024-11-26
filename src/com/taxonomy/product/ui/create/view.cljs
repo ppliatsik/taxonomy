@@ -5,6 +5,10 @@
             [com.taxonomy.product :as product]
             [com.taxonomy.product.ui.create.model :as model]))
 
+(defn- create-view
+  [model lang]
+  )
+
 (defn- create-button
   [lang]
   [:div.columns
@@ -19,4 +23,5 @@
         lang  (:language model)]
     [:article.box
      [ui.navbar/view]
+     [create-view model lang]
      [create-button lang]]))

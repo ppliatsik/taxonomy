@@ -65,8 +65,8 @@
                 (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.product/my-products])
                 (rf/dispatch [:com.taxonomy.product.ui.my-products.model/init]))
 
-  (sec/defroute products-menu "/products-menu" []
-                (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.product/products-menu]))
+  (sec/defroute secaas-products-management "/secaas-products-management" []
+                (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.product/secaas-products-management]))
 
   (sec/defroute main-view "/" []
                 (rf/dispatch [:com.taxonomy.ui/set-view :com.taxonomy.ui/main-view]))

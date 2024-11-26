@@ -102,10 +102,11 @@
     (http-response/ok (data/get-my-products graph user-info))))
 
 (defn get-product
-  [{:keys [graph parameters] :as request}]
+  [{:keys [graph parameters user-info] :as request}]
   (let [product (data/get-product-by-id graph (:path parameters))]
     (if (or (not product)
-            (not (:published product)))
+            (and (not (:published product))
+                 (not (end-user/is-current-user? user-info (:created-by product)))))
       (http-response/not-found {:result :failure
                                 :reason ::product/product-not-exists})
       (http-response/ok product))))

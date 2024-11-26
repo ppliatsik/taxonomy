@@ -67,7 +67,7 @@
      [:div.icons-wrapper.columns.is-multiline
       [:div.column.is-6
        [:a.button.is-link.m-1.is-fullwidth
-        {:href (routes/products-menu)}
+        {:href (routes/secaas-products-management)}
         [:span (trans/translate lang ::product/secaas-products-management)]]]
       (when (end-user/is-admin? user)
         [:div.column.is-6
@@ -92,7 +92,7 @@
         (= :com.taxonomy.product/products current-view) [product.list.view/view]
         (= :com.taxonomy.product/product current-view) [product.show.view/view]
         (= :com.taxonomy.product/my-products current-view) [my-products.view/view]
-        (= :com.taxonomy.product/products-menu current-view) [product.view/view]
+        (= :com.taxonomy.product/secaas-products-management current-view) [product.view/view]
         :else [main-view]))))
 
 (defn app []

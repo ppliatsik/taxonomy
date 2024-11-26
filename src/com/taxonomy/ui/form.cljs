@@ -53,3 +53,23 @@
               {:on-click (fn []
                            (rf/dispatch [pagination-event (:last-page pagination)]))}
               (str (:last-page pagination))])]]]]])
+
+(defn delete-confirmation-dialog
+  [delete-event hide-event language]
+  [:div.modal.is-active
+   [:div.modal-background
+    {:on-click #(rf/dispatch [hide-event])}]
+   [:div.modal-card
+    [:header.modal-card-head
+     [:p.modal-card-title
+      (trans/translate language :com.taxonomy.ui/delete-dialog-box)]]
+    [:section.modal-card-body
+     [:p (trans/translate language :com.taxonomy.ui/delete-dialog-box-confirmation-msg)]]
+    [:footer.modal-card-foot
+     [:div.buttons
+      [:button.button.is-success
+       {:on-click #(rf/dispatch [delete-event])}
+       (trans/translate language :com.taxonomy.ui/yes)]
+      [:button.button.is-danger
+       {:on-click #(rf/dispatch [hide-event])}
+       (trans/translate language :com.taxonomy.ui/no)]]]]])

@@ -2,7 +2,8 @@
   (:require [re-frame.core :as rf]
             [clojure.string :as clj.str]
             [com.taxonomy.ui.routes :as routes]
-            [com.taxonomy.end-user :as end-user]))
+            [com.taxonomy.end-user :as end-user]
+            [com.taxonomy.ui.auth :as auth]))
 
 (def paths [:ui/forms ::end-user/edit :data])
 (def data-path (rf/path [:ui/forms ::end-user/edit :data]))
@@ -24,7 +25,8 @@
   [data-path]
   (fn [{:keys [db]} [_ username]]
     {:db (assoc db :username username
-                   :can-edit false)
+                   :can-edit false
+                   :hide-delete-confirmation-box true)
      :fx [[:dispatch [:ajax/get {:uri     (str "/api/users/" username)
                                  :success ::init-success
                                  :failure ::init-failure}]]]}))
@@ -150,9 +152,10 @@
 
 (rf/reg-event-fx
   ::delete-success
-  [data-path]
-  (fn [_ _]
-    {:fx [[:url (routes/users)]]}))
+  (fn [{:keys [db]} _]
+    (if (end-user/is-admin? (:ui/user db))
+      {:fx [[:url (routes/users)]]}
+      {:fx [[:dispatch [::auth/logout]]]})))
 
 (rf/reg-event-fx
   ::delete-failure
@@ -191,6 +194,18 @@
   [data-path]
   (fn [db [_ v]]
     (assoc db :email v)))
+
+(rf/reg-event-db
+  ::show-delete-confirmation-box
+  [data-path]
+  (fn [db _]
+    (assoc db :hide-delete-confirmation-box false)))
+
+(rf/reg-event-db
+  ::hide-delete-confirmation-box
+  [data-path]
+  (fn [db _]
+    (assoc db :hide-delete-confirmation-box true)))
 
 (rf/reg-sub
   ::form-data

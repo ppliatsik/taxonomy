@@ -17,7 +17,8 @@
   ::init
   [data-path]
   (fn [{:keys [db]} [_ id]]
-    {:db (assoc db :id id)
+    {:db (assoc db :id id
+                   :hide-delete-confirmation-box true)
      :fx [[:dispatch [:ajax/get {:uri     (str "/api/products/" id)
                                  :success ::init-success
                                  :failure ::init-failure}]]]}))
@@ -47,8 +48,8 @@
 (rf/reg-event-fx
   ::publish-success
   [data-path]
-  (fn [{:keys [db]} [_ response]]
-    {:db (assoc db :product response)
+  (fn [{:keys [db]} [_ {:keys [payload]}]]
+    {:db (assoc db :product payload)
      :fx [[:dispatch [:ui/push-notification {:title :com.taxonomy.ui/success
                                              :body  ::product/product-published
                                              :type  :success}]]]}))
@@ -72,8 +73,8 @@
 (rf/reg-event-fx
   ::unpublish-success
   [data-path]
-  (fn [{:keys [db]} [_ response]]
-    {:db (assoc db :product response)
+  (fn [{:keys [db]} [_ {:keys [payload]}]]
+    {:db (assoc db :product payload)
      :fx [[:dispatch [:ui/push-notification {:title :com.taxonomy.ui/success
                                              :body  ::product/product-unpublished
                                              :type  :success}]]]}))
@@ -110,6 +111,18 @@
     {:fx [[:dispatch [:ui/push-notification {:title :com.taxonomy.ui/failure
                                              :body  (:reason response)
                                              :type  :error}]]]}))
+
+(rf/reg-event-db
+  ::show-delete-confirmation-box
+  [data-path]
+  (fn [db _]
+    (assoc db :hide-delete-confirmation-box false)))
+
+(rf/reg-event-db
+  ::hide-delete-confirmation-box
+  [data-path]
+  (fn [db _]
+    (assoc db :hide-delete-confirmation-box true)))
 
 (rf/reg-sub
   ::form-data

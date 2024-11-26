@@ -2,6 +2,7 @@
   (:require [re-frame.core :as rf]
             [clojure.string :as clj.str]
             [com.taxonomy.ui.navbar :as ui.navbar]
+            [com.taxonomy.ui.form :as form]
             [com.taxonomy.translations :as trans]
             [com.taxonomy.ui.routes :as routes]
             [com.taxonomy.end-user :as end-user]
@@ -22,7 +23,7 @@
              (end-user/is-current-user? login-user username))
      [:div.column.is-2
       [:button.button.is-danger
-       {:on-click #(rf/dispatch [::model/delete])
+       {:on-click #(rf/dispatch [::model/show-delete-confirmation-box])
         :style    {:margin-right "2%"}}
        [:span (trans/translate lang ::end-user/delete)]]])
    (when (end-user/is-admin? login-user)
@@ -112,4 +113,6 @@
      [ui.navbar/view]
      [control-buttons login-user model lang]
      [user-fields model lang]
-     [submit-button model lang]]))
+     [submit-button model lang]
+     (when-not (:hide-delete-confirmation-box model)
+       (form/delete-confirmation-dialog ::model/delete ::model/hide-delete-confirmation-box lang))]))
