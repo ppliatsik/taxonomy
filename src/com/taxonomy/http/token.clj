@@ -15,5 +15,5 @@
   [token auth-keys]
   (try
     (jwt/unsign token (:public-key auth-keys) {:alg :rs256})
-    (catch Exception _
-      (log/error "Error at token unsign for value:" token))))
+    (catch Exception ex
+      (log/error "Error at token unsign" (.getMessage ex)))))
