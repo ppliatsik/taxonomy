@@ -1,5 +1,6 @@
 (ns com.taxonomy.product.ui.create.model
   (:require [re-frame.core :as rf]
+            [com.taxonomy.ui.routes :as routes]
             [com.taxonomy.product :as product]))
 
 (def paths [:ui/forms ::product/create :data])

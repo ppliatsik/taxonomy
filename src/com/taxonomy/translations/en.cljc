@@ -11,7 +11,8 @@
    :yes                                "Yes"
    :no                                 "No"
    :delete-dialog-box                  "Delete request"
-   :delete-dialog-box-confirmation-msg "Are you sure you want to proceed the deletion?"})
+   :delete-dialog-box-confirmation-msg "Are you sure you want to proceed the deletion?"
+   :select-language                    "Select language"})
 
 (def product
   {:product-not-exists         "Product does not exists"

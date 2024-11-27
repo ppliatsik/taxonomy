@@ -50,15 +50,15 @@
 
 (rf/reg-event-fx
   ::logout-success
-  (fn [_ _]
+  (fn [{:keys [db]} _]
     (cookies/clear!)
-    {:db {}
+    {:db (dissoc db :ui/user :token)
      :fx [[:url (routes/main-view)]]}))
 
 (rf/reg-event-fx
   ::logout-failure
-  (fn [_ [_ {:keys [response]}]]
-    {:db {}
+  (fn [{:keys [db]} [_ {:keys [response]}]]
+    {:db db
      :fx [[:dispatch [:ui/push-notification {:title :com.taxonomy.ui/failure
                                              :body  (:reason response)
                                              :type  :error}]]]}))

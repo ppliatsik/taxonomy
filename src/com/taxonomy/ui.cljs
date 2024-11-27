@@ -28,6 +28,14 @@
             [com.taxonomy.product.ui.show.view :as product.show.view]
             [com.taxonomy.product.ui.my-products.view :as my-products.view]))
 
+(def languages
+  [{:src      "images/gr.gif"
+    :alt      "ελληνικά"
+    :language :gr}
+   {:src      "images/en.gif"
+    :alt      "english"
+    :language :en}])
+
 (rf/reg-fx
   :page-title
   (fn [title]
@@ -57,6 +65,18 @@
   :ui/language
   (fn [db _]
     (get db :language)))
+
+(defn language-selector
+  [language]
+  (let [l (->> languages
+               (remove #(= language (:language %)))
+               first)]
+    [:div
+     {:data-tooltip (trans/translate language :com.taxonomy.ui/select-language)}
+     [:img.button.is-ghost.pl-1
+      {:src (:src l)
+       :alt (:alt l)
+       :on-click  #(rf/dispatch [::set-language (:language l)])}]]))
 
 (defn main-view
   []
@@ -101,6 +121,11 @@
           lang @(rf/subscribe [:ui/language])]
       [:div
        [:div.container
+        [:div.navbar-menu
+         [:div.navbar-item
+          {:style {:position "fixed"
+                   :float    "right"}}
+          [language-selector lang]]]
         (if user
           [:div.columns
            {:style {:float "right"}}

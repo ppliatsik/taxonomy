@@ -11,7 +11,8 @@
    :yes                                "Ναι"
    :no                                 "Όχι"
    :delete-dialog-box                  "Αίτημα διαγραφής"
-   :delete-dialog-box-confirmation-msg "Είστε σίγουρος/η ότι θέλετε να προχωρήσετε με τη διαγραφή;"})
+   :delete-dialog-box-confirmation-msg "Είστε σίγουρος/η ότι θέλετε να προχωρήσετε με τη διαγραφή;"
+   :select-language                    "Επιλογή γλώσσας"})
 
 (def product
   {:product-not-exists         "Το προϊόν δεν υπάρχει"

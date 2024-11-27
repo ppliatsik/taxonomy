@@ -12,16 +12,23 @@
   (when product
     [:div.columns
      (when (end-user/is-current-user? login-user (:created-by product))
-       [:div.column.is-2
-        [:button.button.is-info
-         {:on-click #(rf/dispatch [::model/publish])}
-         [:span (trans/translate lang ::product/publish)]]
-        [:button.button.is-info
-         {:on-click #(rf/dispatch [::model/unpublish])}
-         [:span (trans/translate lang ::product/unpublish)]]])
+       [:div.columns
+        [:div.column.is-4
+         {:style {:margin-right "12%"
+                  :margin-top   "7%"}}
+         [:button.button.is-info
+          {:on-click #(rf/dispatch [::model/publish])}
+          [:span (trans/translate lang ::product/publish)]]]
+        [:div.column.is-4
+         {:style {:margin-top "7%"}}
+         [:button.button.is-info
+          {:on-click #(rf/dispatch [::model/unpublish])}
+          [:span (trans/translate lang ::product/unpublish)]]]])
      (when (or (end-user/is-admin? login-user)
                (end-user/is-current-user? login-user (:created-by product)))
        [:div.column.is-2
+        {:style {:margin-left "1.5%"
+                 :margin-top  "0.9%"}}
         [:button.button.is-danger
          {:on-click #(rf/dispatch [::model/show-delete-confirmation-box])}
          [:span (trans/translate lang ::product/delete)]]])]))

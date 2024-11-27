@@ -16,16 +16,10 @@
      {:on-click #(rf/dispatch [::model/toggle-edit])}
      [:span (trans/translate lang ::end-user/edit)]]]
    [:div.column.is-2
+    {:style {:margin-left "-2.5%"}}
     [:a.button.is-link.is-info
      {:href (routes/change-password {:username username})}
      [:span (trans/translate lang ::end-user/change-password)]]]
-   (when (or (end-user/is-admin? login-user)
-             (end-user/is-current-user? login-user username))
-     [:div.column.is-2
-      [:button.button.is-danger
-       {:on-click #(rf/dispatch [::model/show-delete-confirmation-box])
-        :style    {:margin-right "2%"}}
-       [:span (trans/translate lang ::end-user/delete)]]])
    (when (end-user/is-admin? login-user)
      (if (:active user)
        [:div.column.is-2
@@ -41,7 +35,13 @@
         [:div.column.is-2
          [:button.button.is-info
           {:on-click #(rf/dispatch [::model/send-activation-link])}
-          [:span (trans/translate lang ::end-user/send-activate-link)]]]]))])
+          [:span (trans/translate lang ::end-user/send-activate-link)]]]]))
+   (when (or (end-user/is-admin? login-user)
+             (end-user/is-current-user? login-user username))
+     [:div.column.is-2
+      [:button.button.is-danger
+       {:on-click #(rf/dispatch [::model/show-delete-confirmation-box])}
+       [:span (trans/translate lang ::end-user/delete)]]])])
 
 (defn- user-fields
   [{:keys [user can-edit] :as model} lang]

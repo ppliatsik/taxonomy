@@ -11,21 +11,21 @@
         lang       @(rf/subscribe [:ui/language])]
     [:article.box
      [ui.navbar/view]
-     [:div.columns
-      [:div.column.is-6
+     [:div.columns.is-centered
+      [:div.column.is-4
        [:a.button.is-link.m-1.is-fullwidth
         {:href (routes/products)}
-        [:span (trans/translate lang ::product/discovery)]]]]
+        [:span (trans/translate lang ::product/discovery)]]]
      (when (or (end-user/is-user? login-user)
                (end-user/is-admin? login-user))
-       [:div
-        [:div.columns
-         [:div.column.is-6
-          [:a.button.is-link.m-1.is-fullwidth
-           {:href (routes/my-products)}
-           [:span (trans/translate lang ::end-user/my-products)]]]]
-        [:div.columns
-         [:div.column.is-6
-          [:a.button.is-link.m-1.is-fullwidth
-           {:href (routes/create-product)}
-           [:span (trans/translate lang ::end-user/create-product)]]]]])]))
+       [:div.columns
+        {:style {:margin-top "0.01%"}}
+        [:div.column.is-8
+         {:style {:margin-left "2%"}}
+         [:a.button.is-link.m-1.is-fullwidth
+          {:href (routes/my-products)}
+          [:span (trans/translate lang ::product/my-products)]]]
+        [:div.column.is-8
+         [:a.button.is-link.m-1.is-fullwidth
+          {:href (routes/create-product)}
+          [:span (trans/translate lang ::product/create-product)]]]])]]))

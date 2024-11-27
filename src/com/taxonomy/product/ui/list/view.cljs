@@ -9,13 +9,13 @@
 (defn- criteria-view
   [model lang]
   [:div.box.has-background-success-light
-   [:h1.title.has-text-centered
+   [:span.is-large
     (trans/translate lang ::product/choose-criteria)]])
 
 (defn- weights-view
   [model lang]
   [:div.box.has-background-success-light
-   [:h1.title.has-text-centered
+   [:span.is-large
     (trans/translate lang ::product/choose-weights)]])
 
 (defn- submit-buttons
