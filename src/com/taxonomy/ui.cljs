@@ -74,9 +74,9 @@
     [:div
      {:data-tooltip (trans/translate language :com.taxonomy.ui/select-language)}
      [:img.button.is-ghost.pl-1
-      {:src (:src l)
-       :alt (:alt l)
-       :on-click  #(rf/dispatch [::set-language (:language l)])}]]))
+      {:src      (:src l)
+       :alt      (:alt l)
+       :on-click #(rf/dispatch [::set-language (:language l)])}]]))
 
 (defn main-view
   []

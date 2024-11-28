@@ -99,7 +99,7 @@
   ::delete-success
   [data-path]
   (fn [_ _]
-    {:fx [[:url (routes/main-view)]
+    {:fx [[:url (routes/secaas-products-management)]
           [:dispatch [:ui/push-notification {:title :com.taxonomy.ui/success
                                              :body  ::product/product-deleted
                                              :type  :success}]]]}))

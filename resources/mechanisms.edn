@@ -1,1 +1,112 @@
-{}
+{:threat-detection {:threat-detection-based-on-behavior nil
+                     :threat-detection-based-on-ai nil
+                     :threat-detection-based-on-logs nil
+                     :threat-detection-based-on-third-party-data nil
+                     :threat-detection-based-on-adapted-queries nil
+                     :threat-detection-in-real-time {:threat-detection-in-real-time-in-logs nil
+                                                     :threat-detection-in-real-time-based-on-machine-learning nil
+                                                     :threat-detection-in-real-time-base-on-rules {:threat-detection-in-real-time-base-on-rules-correlation nil
+                                                                                                    :threat-detection-in-real-time-base-on-rules-threshold-detection nil
+                                                                                                    :threat-detection-in-real-time-base-on-rules-anomaly-detection nil}}}
+
+ :response {:individual-response {:apply-security-fixes nil
+                                  :recovery-from-backups nil
+                                  :kill-malicious-processes nil
+                                  :user-logout nil
+                                  :revoke-user-permissions nil
+                                  :disable-user-account nil
+                                  :generate-alerts {:generate-rich-alerts  nil}
+                                  :malware-quarantine nil
+                                  :packet-expulsion nil
+                                  :apply-requests-flow-restriction-techniques nil
+                                  :regulation-of-firewall-rules nil
+                                  :activation-of-multi-factor-authentication nil
+                                  :network-segmentation nil
+                                  :isolation {:isolation-of-ip nil
+                                              :isolation-of-network nil
+                                              :isolation-of-infected-machines nil
+                                              :isolation-of-usb-devices nil}
+                                  :investigation-of-an-incident nil
+                                  :data-integrity-checks nil
+                                  :backup-encryption nil}
+            :complex-response {:non-automated-response {:apply-incident-response-plan nil}
+                               :automated-response {:execution-of-workflows nil}}}
+
+ :risk-management {:asset-discovery nil
+                   :identifying-common-threats-or-attacks-within-the-framework-miter-attack nil
+                   :gathering-and-correlating-suspected-or-confirmed-threats-with-incident-data nil
+                   :vulnerabilities-detection nil
+                   :quantification-prioritisation-of-potential-risks {:quantification-prioritisation-of-potential-risks-from-network-traffic-patterns nil}
+                   :risk-rating nil
+                   :monitoring {:combined-security-and-network-monitoring nil
+                                :monitoring-device-and-software-configuration-changes nil}}
+
+ :data-and-events-management {:logs-management {:insert-logs nil
+                                                :collect-logs nil
+                                                :normalization-logs nil
+                                                :enrichment-logs nil
+                                                :storage-logs nil
+                                                :analyze-logs nil
+                                                :monitor-logs nil
+                                                :digital-signature-logs nil
+                                                :encrypt-logs nil}
+                              :incidents-management {:collect-incidents {:collection-of-third-party-security-incidents nil}
+                                                     :enrichment-incidents {:enrichment-incidents-with-threat-information-flows nil}
+                                                     :correlation-incidents {:correlation-of-distributed-incidents nil}
+                                                     :storage-incidents {:long-term-storage-incidents nil}}
+                              :data-management {:historical-data-management {:collect-historical-data nil
+                                                                             :edit-historical-data nil
+                                                                             :analyze-historical-data nil
+                                                                             :storage-historical-data nil}
+                                                :smart-data-management {:analyze-smart-data nil
+                                                                        :correlate-smart-data nil}
+                                                :search-data {:search-for-normalised-data nil
+                                                              :raw-data-search nil}
+                                                :collect-data {:environmental-data-collection nil}
+                                                :edit-data nil
+                                                :analyze-data nil
+                                                :storage-data nil
+                                                :data-visualization nil
+                                                :update-data {:continuous-threat-intelligence-updates nil}}}
+
+ :reports-compliance {:reports {:normalised-data-reports nil
+                                :raw-data-reports nil
+                                :compliance-reports {:customisable-compliance-reports nil
+                                                     :prepared-compliance-reports nil}}
+                      :support-compliance-regulations {:basel-II nil
+                                                       :ffiec nil}
+                      :support-compliance-laws {:bill-198 nil
+                                                :ferpa nil
+                                                :fisma nil
+                                                :glba nil
+                                                :hipaa nil
+                                                :sox nil}
+                      :support-compliance-guidance {:gpg13 nil
+                                                    :nispom nil
+                                                    :ssae nil
+                                                    :disa-stig nil
+                                                    :nist-csf nil}
+                      :support-compliance-to-standards {:iso-27002 nil
+                                                        :nerc-cip nil
+                                                        :pci-dss nil}}
+
+ :integrations {:integrations-with-other-components-or-systems {:network nil
+                                                                :identity-providers nil
+                                                                :endpoints nil
+                                                                :applications nil
+                                                                :cloud-services {:iaas nil
+                                                                                 :paas nil
+                                                                                 :saas nil}
+                                                                :chat-systems nil
+                                                                :recovery-tools nil
+                                                                :security-ecosystems nil}}
+
+ :other-functions {:tool-tables {:predefined-tool-tables nil
+                                 :customizable-tool-tables nil}
+                   :rules-management {:rules-adaptation nil
+                                      :rules-validation nil
+                                      :rules-visualisation nil
+                                      :rules-grouping nil}
+                   :provision-of-content-packages nil
+                   :team-collaboration nil
+                   :diary-management-for-ongoing-compliance-investigations-and-forensics nil}}

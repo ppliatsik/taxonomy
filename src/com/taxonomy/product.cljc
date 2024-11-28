@@ -32,7 +32,7 @@
 (s/def ::cost-model	(s/nilable (s/coll-of ::cost-model-map :kind vector? :min-count 0)))
 
 (s/def ::security-mechanism string?)
-(s/def ::security-mechanisms ::security-mechanism)
+(s/def ::security-mechanisms (s/nilable (s/coll-of ::security-mechanism :kind vector? :min-count 0)))
 
 (s/def ::property	(s/nilable string?))
 (def operator-types #{"LESS_THAN" "LESS_EQUAL_THAN" "GREATER_THAN" "GREATER_EQUAL_THAN"
@@ -64,7 +64,7 @@
 (s/def ::protected-items (s/nilable (s/coll-of ::protected-item :kind vector? :min-count 0)))
 
 (s/def ::threat string?)
-(s/def ::threats ::threat)
+(s/def ::threats (s/nilable (s/coll-of ::threat :kind vector? :min-count 0)))
 
 (s/def ::restrictions-map
   (s/keys :opt-un [::property ::operator ::value ::metric ::direction-of-values ::unit]))

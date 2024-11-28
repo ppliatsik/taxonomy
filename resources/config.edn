@@ -8,6 +8,8 @@
                 :host                        "0.0.0.0"
                 :server-address              "http://localhost:8888"
                 :guest-products-limit        10
+                :security-mechanisms         #ig/ref :er/security-mechanisms
+                :threats                     #ig/ref :er/threats
                 :graph                       #ig/ref :graph/products}
 
  :db/pg {:server-name       "localhost"
@@ -32,4 +34,8 @@
  :auth/keys {:public-key-file  "resources/public-key.pem"
              :private-key-file "resources/private-key.pem"}
 
- :graph/products {:products-file "resources/products.edn"}}
+ :graph/products {:products-file "resources/products.edn"}
+
+ :er/security-mechanisms {:file "resources/mechanisms.edn"}
+
+ :er/threats {:file "resources/threats.edn"}}

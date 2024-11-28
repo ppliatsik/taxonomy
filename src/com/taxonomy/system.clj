@@ -75,3 +75,21 @@
 
 (defmethod ig/halt-key! :graph/products [_ _]
   )
+
+(defmethod ig/init-key :er/security-mechanisms [_ {:keys [file]}]
+  (let [sm (->> file
+                slurp
+                (edn/read-string {:readers *data-readers*}))]
+    sm))
+
+(defmethod ig/halt-key! :er/security-mechanisms [_ _]
+  )
+
+(defmethod ig/init-key :er/threats [_ {:keys [file]}]
+  (let [threats (->> file
+                     slurp
+                     (edn/read-string {:readers *data-readers*}))]
+    threats))
+
+(defmethod ig/halt-key! :er/threats [_ _]
+  )
