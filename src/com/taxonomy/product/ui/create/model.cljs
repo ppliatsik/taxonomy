@@ -8,6 +8,30 @@
 (def metadata
   {:data-path paths})
 
+(defn get-product-data
+  [db]
+  {:name                      (:name db)
+   :description               (:description db)
+   :delivery-methods          (:delivery-methods db)
+   :deployment-models         (:deployment-models db)
+   :product-categories        (:product-categories db)
+   :cost-model                (:cost-model db)
+   :security-mechanisms       (:selected-security-mechanisms db)
+   :non-functional-guarantees (:non-functional-guarantees db)
+   :protection-types          (:protection-types db)
+   :security-properties       (:security-properties db)
+   :protected-items           (:protected-items db)
+   :threats                   (:selected-threats db)
+   :restrictions              (:restrictions db)
+   :open-source               (:open-source db)
+   :freely-available          (:freely-available db)
+   :test-version              (:test-version db)
+   :test-duration             (:test-duration db)
+   :product-interfaces        (:product-interfaces db)
+   :product-company           (:product-company db)
+   :marketplaces              (:marketplaces db)
+   :support                   (:support db)})
+
 (rf/reg-event-fx
   ::init
   [data-path]
@@ -87,7 +111,7 @@
   ::create
   [data-path]
   (fn [{:keys [db]} _]
-    (let [params {}]
+    (let [params (get-product-data db)]
       {:fx [[:dispatch [:ajax/post {:uri     "/api/products"
                                     :params  params
                                     :success ::create-success
@@ -109,6 +133,24 @@
     {:fx [[:dispatch [:ui/push-notification {:title :com.taxonomy.ui/failure
                                              :body  (:reason response)
                                              :type  :error}]]]}))
+
+(rf/reg-event-db
+  ::set-name
+  [data-path]
+  (fn [db [_ v]]
+    (assoc db :name v)))
+
+(rf/reg-event-db
+  ::set-description
+  [data-path]
+  (fn [db [_ v]]
+    (assoc db :description v)))
+
+(rf/reg-event-db
+  ::set-product-company
+  [data-path]
+  (fn [db [_ v]]
+    (assoc db :product-company v)))
 
 (rf/reg-sub
   ::form-data
