@@ -39,8 +39,7 @@
 (defn publish-product
   [{:keys [graph parameters user-info] :as request}]
   (let [product (data/get-product-by-id graph (:path parameters))]
-    (cond (and (not (end-user/is-admin? user-info))
-               (not (end-user/is-current-user? user-info (:created-by product))))
+    (cond (not (end-user/is-current-user? user-info (:created-by product)))
           (http-response/invalid {:result :failure
                                   :reason ::end-user/invalid-user})
 
@@ -55,8 +54,7 @@
 (defn unpublish-product
   [{:keys [products parameters user-info] :as request}]
   (let [product (data/get-product-by-id products (:path parameters))]
-    (cond (and (not (end-user/is-admin? user-info))
-               (not (end-user/is-current-user? user-info (:created-by product))))
+    (cond (not (end-user/is-current-user? user-info (:created-by product)))
           (http-response/invalid {:result :failure
                                   :reason ::end-user/invalid-user})
 
@@ -95,8 +93,7 @@
 
 (defn get-my-products
   [{:keys [graph user-info] :as request}]
-  (if (and (not (end-user/is-admin? user-info))
-           (not (end-user/is-user? user-info)))
+  (if-not user-info
     (http-response/invalid {:result :failure
                             :reason ::end-user/invalid-user})
     (http-response/ok (data/get-my-products graph user-info))))

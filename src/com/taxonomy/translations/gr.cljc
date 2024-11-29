@@ -34,12 +34,18 @@
    :delete                     "Διαγραφή"
    :choose-criteria            "Επιλέξτε κριτήρια για ταίριασμα SecaaS προϊόντων"
    :choose-weights             "Επιλέξτε βάρη για ταξινόμηση των SecaaS προϊόντων"
-   :name                       "Όνομα"})
+   :name                       "Όνομα"
+   :delivery-methods           "Τρόποι παράδοσης"
+   :deployment-models          "Μοντέλο διάταξης"
+   :product-categories         "Κατηγορία προϊόντος"
+   :product-company            "Εταιρία προϊόντος"
+   :marketplaces               "Σημεία αγοράς"})
 
 (def end-user
   {:user-not-exists                   "Ο χρήστης δεν υπάρχει"
    :user-already-exists               "Ο χρήστης υπάρχει ήδη"
    :user-already-active               "Ο χρήστης είναι ήδη ενεργός"
+   :user-already-inactive             "Ο χρήστης είναι ήδη ανενεργός"
    :user-provides-different-passwords "Ο χρήστης έδωσε διαφορετικούς κωδικούς"
    :user-provides-wrong-password      "Ο χρήστης έδωσε λάθος κωδικό"
    :user-is-not-login                 "Ο χρήστης δεν έχει συνδεθεί"

@@ -34,12 +34,18 @@
    :delete                     "Delete"
    :choose-criteria            "Choose criteria to match SecaaS products"
    :choose-weights             "Choose weights to classify the SecaaS products"
-   :name                       "Name"})
+   :name                       "Name"
+   :delivery-methods           "Delivery methods"
+   :deployment-models          "Deployment models"
+   :product-categories         "Product categories"
+   :product-company            "Product company"
+   :marketplaces               "Marketplaces"})
 
 (def end-user
   {:user-not-exists                   "User does not exists"
    :user-already-exists               "User already exists"
    :user-already-active               "User already active"
+   :user-already-inactive             "User already inactive"
    :user-provides-different-passwords "User provides different password"
    :user-provides-wrong-password      "User provides wrong password"
    :user-is-not-login                 "User is not logged in"
