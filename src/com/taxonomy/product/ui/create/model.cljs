@@ -1,5 +1,6 @@
 (ns com.taxonomy.product.ui.create.model
   (:require [re-frame.core :as rf]
+            [clojure.string :as clj.str]
             [com.taxonomy.ui.routes :as routes]
             [com.taxonomy.product :as product]))
 
@@ -7,6 +8,10 @@
 (def data-path (rf/path [:ui/forms ::product/create :data]))
 (def metadata
   {:data-path paths})
+
+(defn check-fields
+  [data]
+  (assoc data :correct-inputs (not (clj.str/blank? (:name data)))))
 
 (defn get-product-data
   [db]
@@ -135,22 +140,10 @@
                                              :type  :error}]]]}))
 
 (rf/reg-event-db
-  ::set-name
+  ::set-input
   [data-path]
-  (fn [db [_ v]]
-    (assoc db :name v)))
-
-(rf/reg-event-db
-  ::set-description
-  [data-path]
-  (fn [db [_ v]]
-    (assoc db :description v)))
-
-(rf/reg-event-db
-  ::set-product-company
-  [data-path]
-  (fn [db [_ v]]
-    (assoc db :product-company v)))
+  (fn [db [_ k v]]
+    (assoc db k v)))
 
 (rf/reg-sub
   ::form-data
@@ -164,4 +157,5 @@
   (fn [[data language] _]
     (-> metadata
         (assoc :language language)
-        (merge data))))
+        (merge data)
+        (check-fields))))
