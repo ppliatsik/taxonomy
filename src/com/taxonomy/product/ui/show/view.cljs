@@ -1,5 +1,6 @@
 (ns com.taxonomy.product.ui.show.view
   (:require [re-frame.core :as rf]
+            [clojure.string :as clj.str]
             [com.taxonomy.ui.navbar :as ui.navbar]
             [com.taxonomy.ui.form :as form]
             [com.taxonomy.translations :as trans]
@@ -36,7 +37,85 @@
 (defn- product-view
   [{:keys [product]} lang]
   (when product
-    ))
+    [:table.table.is-fullwidth.is-stripped.is-hoverable.vertical-align-middle.fixed
+     [:tr
+      [:td (trans/translate lang ::product/name)]
+      [:td (:name product)]]
+     [:tr
+      [:td (trans/translate lang ::product/published)]
+      [:td (if (:published product)
+             (trans/translate lang :com.taxonomy.ui/yes)
+             (trans/translate lang :com.taxonomy.ui/no))]]
+     [:tr
+      [:td (trans/translate lang ::product/description)]
+      [:td (:description product)]]
+     [:tr
+      [:td (trans/translate lang ::product/created-by)]
+      [:td (:created-by product)]]
+     [:tr
+      [:td (trans/translate lang ::product/delivery-methods)]
+      [:td (clj.str/join (:delivery-methods product) ",")]]
+     [:tr
+      [:td (trans/translate lang ::product/deployment-models)]
+      [:td (clj.str/join (:deployment-models product) ",")]]
+     [:tr
+      [:td (trans/translate lang ::product/product-categories)]
+      [:td (clj.str/join (:product-categories product) ",")]]
+     [:tr
+      [:td (trans/translate lang ::product/cost-model)]
+      [:td (:cost-model product)]]
+     [:tr
+      [:td (trans/translate lang ::product/security-mechanisms)]
+      [:td (:security-mechanisms product)]]
+     [:tr
+      [:td (trans/translate lang ::product/non-functional-guarantees)]
+      [:td (:non-functional-guarantees product)]]
+     [:tr
+      [:td (trans/translate lang ::product/protection-types)]
+      [:td (clj.str/join (:product-categories product) ",")]]
+     [:tr
+      [:td (trans/translate lang ::product/security-properties)]
+      [:td (clj.str/join (:security-properties product) ",")]]
+     [:tr
+      [:td (trans/translate lang ::product/protected-items)]
+      [:td (clj.str/join (:protected-items product) ",")]]
+     [:tr
+      [:td (trans/translate lang ::product/threats)]
+      [:td (:threats product)]]
+     [:tr
+      [:td (trans/translate lang ::product/restrictions)]
+      [:td (:restrictions product)]]
+     [:tr
+      [:td (trans/translate lang ::product/open-source)]
+      [:td (if (:open-source product)
+             (trans/translate lang :com.taxonomy.ui/yes)
+             (trans/translate lang :com.taxonomy.ui/no))]]
+     [:tr
+      [:td (trans/translate lang ::product/freely-available)]
+      [:td (if (:freely-available product)
+             (trans/translate lang :com.taxonomy.ui/yes)
+             (trans/translate lang :com.taxonomy.ui/no))]]
+     [:tr
+      [:td (trans/translate lang ::product/test-version)]
+      [:td (if (:test-version product)
+             (trans/translate lang :com.taxonomy.ui/yes)
+             (trans/translate lang :com.taxonomy.ui/no))]]
+     [:tr
+      [:td (trans/translate lang ::product/test-duration)]
+      [:td (when (:test-duration product)
+             (str (:test-duration product) " " (trans/translate lang ::product/days)))]]
+     [:tr
+      [:td (trans/translate lang ::product/product-interfaces)]
+      [:td (clj.str/join (:product-interfaces product) ",")]]
+     [:tr
+      [:td (trans/translate lang ::product/product-company)]
+      [:td (:product-company product)]]
+     [:tr
+      [:td (trans/translate lang ::product/marketplaces)]
+      [:td (clj.str/join (:marketplaces product) ",")]]
+     [:tr
+      [:td (trans/translate lang ::product/support)]
+      [:td (:support product)]]]))
 
 (defn view []
   (let [login-user @(rf/subscribe [:ui/user])

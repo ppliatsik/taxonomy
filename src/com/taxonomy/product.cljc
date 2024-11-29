@@ -44,6 +44,7 @@
 (s/def ::metric	(s/nilable string?))
 (s/def ::direction-of-values (s/nilable string?))
 (s/def ::unit (s/nilable string?))
+
 (s/def ::non-functional-guarantees-map
   (s/keys :opt-un [::property ::operator ::value ::metric ::direction-of-values ::unit]))
 (s/def ::non-functional-guarantees (s/nilable (s/coll-of ::non-functional-guarantees-map :kind vector? :min-count 0)))

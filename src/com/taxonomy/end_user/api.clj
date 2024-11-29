@@ -158,6 +158,10 @@
           (http-response/not-found {:result :failure
                                     :reason ::end-user/user-not-exists})
 
+          (not (:active user))
+          (http-response/invalid {:result :failure
+                                  :reason ::end-user/user-already-inactive})
+
           :else
           (http-response/ok {:result  :success
                              :payload (data/deactivate-user db (:path parameters))}))))
