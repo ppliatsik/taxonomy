@@ -31,7 +31,7 @@
   (s/keys :opt-un [::cost-model-types ::charge-packets ::time-charge-type]))
 (s/def ::cost-model	(s/nilable (s/coll-of ::cost-model-map :kind vector? :min-count 0)))
 
-(s/def ::security-mechanism string?)
+(s/def ::security-mechanism keyword?)
 (s/def ::security-mechanisms (s/nilable (s/coll-of ::security-mechanism :kind vector? :min-count 0)))
 
 (s/def ::property	(s/nilable string?))
@@ -63,7 +63,7 @@
 (s/def ::protected-item (s/and string? protected-items-set))
 (s/def ::protected-items (s/nilable (s/coll-of ::protected-item :kind vector? :min-count 0)))
 
-(s/def ::threat string?)
+(s/def ::threat keyword?)
 (s/def ::threats (s/nilable (s/coll-of ::threat :kind vector? :min-count 0)))
 
 (s/def ::restrictions-map

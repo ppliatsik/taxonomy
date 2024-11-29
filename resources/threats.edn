@@ -1,1 +1,66 @@
-{}
+{:unintentional-damage {:damage-due-to-human-error nil
+                        :damage-due-to-software-error nil
+                        :damage-due-to-physical-disaster nil
+                        :damage-due-to-power-outages nil}
+
+ :failures-malfunction {:failures-of-devices-or-systems nil
+                        :failures-or-disruption-of-main-supply nil}
+
+ :data-threats {:data-lock-in nil
+                :data-remanence nil
+                :data-loss nil
+                :data-breach nil}
+
+ :application-threats {:injection {:sql-injection nil
+                                   :command-injection nil
+                                   :xss nil
+                                   :csrf nil}
+                       :xml-wrapper-attacks nil
+                       :bad-software-configuration nil
+                       :backdoor-debugging-options nil}
+
+ :nefarious-activity-abuse {:targeted-attacks nil
+                            :priviledge-exploitation {:abuse-of-authorizations nil
+                                                      :priviledge-escalation nil}
+                            :compromising-confidential-information {:information-modification nil
+                                                                    :information-loss nil
+                                                                    :information-leakage nil}
+                            :mitm {:eavesdropping nil
+                                   :account-hijacking nil
+                                   :identity-theft nil}
+                            :dos {:ddos nil
+                                  :flood-attack nil
+                                  :protocol-based-attack nil
+                                  :buffer-overflow-attack nil
+                                  :malformed-packet-attack nil
+                                  :rejection-attack nil
+                                  :amplification-attack nil}
+                            :malicious-code-software-activity {:viruses nil
+                                                               :trojan-horses nil
+                                                               :ransomware nil
+                                                               :worms nil
+                                                               :rootkits nil}
+                            :social-engineering {:baiting nil
+                                                 :impersonation nil
+                                                 :phishing-attacks nil
+                                                 :quid-pro-quo nil
+                                                 :popup-windows nil
+                                                 :scareware nil
+                                                 :pretexting nil
+                                                 :multimedia-peripheral-masquerading nil
+                                                 :typosquatting nil
+                                                 :receive-of-unsolicited-e-mail nil
+                                                 :piggybacking-tailgating nil
+                                                 :dumpster-diving nil
+                                                 :shoulder-surfing nil}}
+
+ :physical-attack {:theft nil
+                   :fraud nil
+                   :sabotage nil
+                   :vandalism nil
+                   :damage-from-the-warfare nil
+                   :coercion-extortion-or-corruption nil
+                   :terrorists-attack nil
+                   :piggybacking-tailgating nil
+                   :dumpster-diving nil
+                   :shoulder-surfing nil}}

@@ -18,6 +18,7 @@
             [clojure.stacktrace :as stacktrace]
             [clojure.tools.logging :as log]
             [com.taxonomy.http.middleware :as mw]
+            [com.taxonomy.config.routes :as config.routes]
             [com.taxonomy.end-user.routes :as end-user.routes]
             [com.taxonomy.product.routes :as product.routes])
   (:import [java.util Date]))
@@ -100,6 +101,7 @@
                :handler (swagger/create-swagger-handler)}}]
 
        ["/api" {:middleware (standard-middleware service-map)}
+        config.routes/routes
         end-user.routes/routes
         product.routes/routes]]
 
