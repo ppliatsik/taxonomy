@@ -7,6 +7,14 @@
 (def metadata
   {:data-path paths})
 
+(defn get-criteria
+  [db]
+  )
+
+(defn get-weights
+  [db]
+  )
+
 (rf/reg-event-fx
   ::init
   [data-path]
@@ -86,7 +94,7 @@
   ::match
   [data-path]
   (fn [{:keys [db]} _]
-    (let [params {}]
+    (let [params {:criteria (get-criteria db)}]
       {:fx [[:dispatch [:ajax/post {:uri     "/api/products-match"
                                     :params  params
                                     :success ::match-success
@@ -110,7 +118,8 @@
   ::classification
   [data-path]
   (fn [{:keys [db]} _]
-    (let [params {}]
+    (let [params {:weights (get-weights db)
+                  :ids     (->> db :products (map :id) vec)}]
       {:fx [[:dispatch [:ajax/post {:uri     "/api/products-classification"
                                     :params  params
                                     :success ::classification-success
@@ -134,7 +143,8 @@
   ::discovery
   [data-path]
   (fn [{:keys [db]} _]
-    (let [params {}]
+    (let [params {:criteria (get-criteria db)
+                  :weights  (get-weights db)}]
       {:fx [[:dispatch [:ajax/post {:uri     "/api/products-discovery"
                                     :params  params
                                     :success ::discovery-success
