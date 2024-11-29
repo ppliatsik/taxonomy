@@ -13,7 +13,8 @@
   (fn [_ _]
     {:db {}
      :fx [[::get-security-mechanisms]
-          [::get-threats]]}))
+          [::get-threats]
+          [::get-products-choices]]}))
 
 (rf/reg-event-fx
   ::get-security-mechanisms
@@ -53,6 +54,28 @@
 
 (rf/reg-event-fx
   ::get-threats-failure
+  [data-path]
+  (fn [_ [_ {:keys [response]}]]
+    {:fx [[:dispatch [:ui/push-notification {:title :com.taxonomy.ui/failure
+                                             :body  (:reason response)
+                                             :type  :error}]]]}))
+
+(rf/reg-event-fx
+  ::get-products-choices
+  [data-path]
+  (fn [_ _]
+    :fx [[:dispatch [:ajax/get {:uri     "/api/config/products-choices"
+                                :success ::get-products-choices-success
+                                :failure ::get-products-choices-failure}]]]))
+
+(rf/reg-event-db
+  ::get-products-choices-success
+  [data-path]
+  (fn [db [_ response]]
+    (assoc db :products-choices response)))
+
+(rf/reg-event-fx
+  ::get-products-choices-failure
   [data-path]
   (fn [_ [_ {:keys [response]}]]
     {:fx [[:dispatch [:ui/push-notification {:title :com.taxonomy.ui/failure

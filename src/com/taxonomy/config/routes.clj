@@ -11,4 +11,8 @@
     ["/threats"
      {:name ::config/threats
       :get  {:summary "Get threats"
-             :handler api/get-threats}}]]])
+             :handler api/get-threats}}]
+    ["/products-choices"
+     {:name ::config/products-choices
+      :get  {:summary "Get products choices"
+             :handler api/get-products-choices}}]]])
