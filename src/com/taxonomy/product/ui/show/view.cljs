@@ -6,8 +6,6 @@
             [com.taxonomy.translations :as trans]
             [com.taxonomy.product :as product]
             [com.taxonomy.end-user :as end-user]
-            [com.taxonomy.security-mechanisms :as security-mechanisms]
-            [com.taxonomy.threats :as threats]
             [com.taxonomy.product.ui.show.model :as model]))
 
 (defn- control-buttons
@@ -64,13 +62,15 @@
       [:td (trans/translate lang ::product/product-categories)]
       [:td (clj.str/join (:product-categories product) ",")]]
      [:tr
-      [:td (trans/translate lang ::product/cost-model)]
+      [:td (trans/translate lang ::product/cost-model)]     ;
       [:td (:cost-model product)]]
      [:tr
       [:td (trans/translate lang ::product/security-mechanisms)]
-      [:td (:security-mechanisms product)]]
+      [:td (as-> (model/get-all-keys (:security-mechanisms product)) $
+                 (map #(trans/translate lang (keyword "com.taxonomy.security-mechanisms" %)))
+                 (clj.str/join "\n" $))]]
      [:tr
-      [:td (trans/translate lang ::product/non-functional-guarantees)]
+      [:td (trans/translate lang ::product/non-functional-guarantees)] ;
       [:td (:non-functional-guarantees product)]]
      [:tr
       [:td (trans/translate lang ::product/protection-types)]
@@ -83,9 +83,11 @@
       [:td (clj.str/join (:protected-items product) ",")]]
      [:tr
       [:td (trans/translate lang ::product/threats)]
-      [:td (:threats product)]]
+      [:td (as-> (model/get-all-keys (:threats product)) $
+                 (map #(trans/translate lang (keyword "com.taxonomy.threats" %)))
+                 (clj.str/join "\n" $))]]
      [:tr
-      [:td (trans/translate lang ::product/restrictions)]
+      [:td (trans/translate lang ::product/restrictions)]   ;
       [:td (:restrictions product)]]
      [:tr
       [:td (trans/translate lang ::product/open-source)]
@@ -116,7 +118,7 @@
       [:td (trans/translate lang ::product/marketplaces)]
       [:td (clj.str/join (:marketplaces product) ",")]]
      [:tr
-      [:td (trans/translate lang ::product/support)]
+      [:td (trans/translate lang ::product/support)]        ;
       [:td (:support product)]]]))
 
 (defn view []

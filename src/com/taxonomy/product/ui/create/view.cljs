@@ -3,8 +3,6 @@
             [com.taxonomy.ui.navbar :as ui.navbar]
             [com.taxonomy.translations :as trans]
             [com.taxonomy.product :as product]
-            [com.taxonomy.security-mechanisms :as security-mechanisms]
-            [com.taxonomy.threats :as threats]
             [com.taxonomy.product.ui.create.model :as model]))
 
 (defn- create-view
