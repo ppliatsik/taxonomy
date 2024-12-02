@@ -6,6 +6,8 @@
             [com.taxonomy.translations :as trans]
             [com.taxonomy.product :as product]
             [com.taxonomy.end-user :as end-user]
+            [com.taxonomy.security-mechanisms :as security-mechanisms]
+            [com.taxonomy.threats :as threats]
             [com.taxonomy.product.ui.show.model :as model]))
 
 (defn- control-buttons
