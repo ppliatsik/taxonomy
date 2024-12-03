@@ -1,5 +1,6 @@
 (ns com.taxonomy.product.ui.list.model
   (:require [re-frame.core :as rf]
+            [clojure.spec.alpha :as s]
             [com.taxonomy.product :as product]))
 
 (def paths [:ui/forms ::product/list :data])
@@ -7,13 +8,25 @@
 (def metadata
   {:data-path paths})
 
+(defn check-fields
+  [data]
+  (assoc data :correct-inputs
+              (and (s/valid? ::product/weight-spec (:charge-packets-w data))
+                   (s/valid? ::product/weight-spec (:non-functional-guarantees-value-w data))
+                   (s/valid? ::product/weight-spec (:restrictions-value-w data))
+                   (s/valid? ::product/weight-spec (:test-duration-w data))
+                   (= 1.0 (+ (or (:charge-packets-w data) 0.0)
+                             (or (:non-functional-guarantees-value-w data) 0.0)
+                             (or (:restrictions-value-w data) 0.0)
+                             (or (:test-duration-w data) 0.0))))))
+
 (defn get-criteria
   [db]
   )
 
 (defn get-weights
   [db]
-  )
+  (select-keys db [:charge-packets-w :non-functional-guarantees-value-w :restrictions-value-w :test-duration-w]))
 
 (rf/reg-event-fx
   ::init
@@ -164,6 +177,12 @@
                                              :body  (:reason response)
                                              :type  :error}]]]}))
 
+(rf/reg-event-db
+  ::set-input
+  [data-path]
+  (fn [db [_ k v]]
+    (assoc db k v)))
+
 (rf/reg-sub
   ::form-data
   (fn [db _]
@@ -176,4 +195,5 @@
   (fn [[data language] _]
     (-> metadata
         (assoc :language language)
-        (merge data))))
+        (merge data)
+        (check-fields))))

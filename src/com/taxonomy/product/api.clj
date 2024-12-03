@@ -5,18 +5,97 @@
             [com.taxonomy.end-user :as end-user])
   (:import [java.util UUID]))
 
+(defn- get-min-max-values
+  [products]
+  (let [charge-packets                   (->> products
+                                              (map #(get-in % [:cost-model :charge-packets]))
+                                              sort)
+        non-functional-guarantees-values (->> products
+                                              (map #(get-in % [:non-functional-guarantees :value]))
+                                              sort)
+        restrictions-values              (->> products
+                                              (map #(get-in % [:restrictions :value]))
+                                              sort)
+        test-durations                   (->> products
+                                              (map #(:test-duration %))
+                                              sort)]
+    {:min-charge-packets                  (or (first charge-packets) 0M)
+     :max-charge-packets                  (or (last charge-packets) 0M)
+     :min-non-functional-guarantees-value (or (first non-functional-guarantees-values) 0M)
+     :max-non-functional-guarantees-value (or (last non-functional-guarantees-values) 0M)
+     :min-restrictions-value              (or (first restrictions-values) 0M)
+     :max-restrictions-value              (or (last restrictions-values) 0M)
+     :min-test-duration                   (or (first test-durations) 0M)
+     :max-test-duration                   (or (last test-durations) 0M)}))
+
+(defn- get-positive-direction-local-score
+  "Formula for positive local score is: (x_{ij} - min_k(x_{ik})) / (max_k(x_{ik}) - min_k(x_{ik}))"
+  [value min-value max-value]
+  (if value
+    (let [divisor (if (= 0M (- max-value min-value))
+                    1M
+                    (- max-value min-value))]
+      (- value (/ min-value divisor)))
+    0M))
+
+(defn- get-negative-direction-local-score
+  "Formula for negative local score is: (max_k(x_{ik}) - x_{ij}) / (max_k(x_{ik}) - min_k(x_{ik}))"
+  [value min-value max-value]
+  (if value
+    (let [divisor (if (= 0M (- max-value min-value))
+                    1M
+                    (- max-value min-value))]
+      (- (/ (- max-value value) divisor)))
+    0M))
+
 (defn- compute-score
-  [product weights]
-  0)
+  "Formula for score is: score_j = Sum_i (w_i * score_{ij}),
+  where score_{ij} is the score of each property and w_i its weight."
+  [product
+   {:keys [charge-packets-w non-functional-guarantees-value-w restrictions-value-w test-duration-w]
+    :or {charge-packets-w 0M non-functional-guarantees-value-w 0M restrictions-value-w 0M test-duration-w 0M}}
+   min-max-values]
+  (let [charge-packets-score            (* charge-packets-w
+                                           (get-positive-direction-local-score
+                                             (get-in product [:cost-model :charge-packets])
+                                             (:min-charge-packets min-max-values)
+                                             (:max-charge-packets min-max-values)))
+        non-functional-guarantees-score (* non-functional-guarantees-value-w
+                                           (if (get-in product [:non-functional-guarantees :direction-of-values])
+                                             (get-positive-direction-local-score
+                                               (get-in product [:non-functional-guarantees :value])
+                                               (:min-non-functional-guarantees-value min-max-values)
+                                               (:max-non-functional-guarantees-value min-max-values))
+                                             (get-negative-direction-local-score
+                                               (get-in product [:non-functional-guarantees :value])
+                                               (:min-non-functional-guarantees-value min-max-values)
+                                               (:max-non-functional-guarantees-value min-max-values))))
+        restrictions-score              (* restrictions-value-w
+                                           (if (get-in product [:restrictions :direction-of-values])
+                                             (get-positive-direction-local-score
+                                               (get-in product [:restrictions :value])
+                                               (:min-restrictions-value min-max-values)
+                                               (:max-restrictions-value min-max-values))
+                                             (get-negative-direction-local-score
+                                               (get-in product [:restrictions :value])
+                                               (:min-restrictions-value min-max-values)
+                                               (:max-restrictions-value min-max-values))))
+        test-duration-score             (* test-duration-w
+                                           (get-positive-direction-local-score
+                                             (:test-duration product)
+                                             (:min-test-duration min-max-values)
+                                             (:max-test-duration min-max-values)))]
+    (+ charge-packets-score non-functional-guarantees-score restrictions-score test-duration-score)))
 
 (defn- classify-products
   [products weights]
-  (->> products
-       (map (fn [product]
-              (let [score (compute-score product weights)]
-                (assoc product :score score))))
-       (sort-by :score)
-       vec))
+  (let [min-max-values (get-min-max-values products)]
+    (->> products
+         (map (fn [product]
+                (let [score (compute-score product weights min-max-values)]
+                  (assoc product :score score))))
+         (sort-by :score)
+         vec)))
 
 (defn create-product
   [{:keys [graph parameters user-info] :as request}]
@@ -75,21 +154,41 @@
 
 (defn products-classification
   [{:keys [graph parameters user-info guest-products-limit] :as request}]
-  (let [products (if (seq (-> parameters :body :ids))
-                   (data/get-products-by-id graph (-> parameters :body :ids))
-                   (data/get-all-products graph))
-        products (classify-products products (-> parameters :body :weights))]
-    (if user-info
-      (http-response/ok products)
-      (http-response/ok (->> products (take guest-products-limit) vec)))))
+  (let [weights (-> parameters :body :weights)
+        total-w (->> weights
+                     vals
+                     (remove nil?)
+                     (reduce +))]
+    (cond (not= 1M total-w)
+          (http-response/invalid {:result :failure
+                                  :reason ::product/wrong-weights})
+
+          :else
+          (let [products (if (seq (-> parameters :body :ids))
+                           (data/get-products-by-id graph (-> parameters :body :ids))
+                           (data/get-all-products graph))
+                products (classify-products products weights)]
+            (if user-info
+              (http-response/ok products)
+              (http-response/ok (->> products (take guest-products-limit) vec)))))))
 
 (defn products-discovery
   [{:keys [graph parameters user-info guest-products-limit] :as request}]
-  (let [products (-> (data/search-products graph (:query parameters))
-                     (classify-products (-> parameters :body :weights)))]
-    (if user-info
-      (http-response/ok products)
-      (http-response/ok (->> products (take guest-products-limit) vec)))))
+  (let [weights (-> parameters :body :weights)
+        total-w (->> weights
+                     vals
+                     (remove nil?)
+                     (reduce +))]
+    (cond (not= 1M total-w)
+          (http-response/invalid {:result :failure
+                                  :reason ::product/wrong-weights})
+
+          :else
+          (let [products (-> (data/search-products graph (:query parameters))
+                             (classify-products weights))]
+            (if user-info
+              (http-response/ok products)
+              (http-response/ok (->> products (take guest-products-limit) vec)))))))
 
 (defn get-my-products
   [{:keys [graph user-info] :as request}]

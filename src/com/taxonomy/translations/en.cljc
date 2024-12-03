@@ -69,7 +69,8 @@
    :unit                       "Unit"
    :support-types              "Support types"
    :support-daily-duration     "Support daily duration"
-   :support-package-number     "Support package number"})
+   :support-package-number     "Support package number"
+   :wrong-weights              "Wrong weights input"})
 
 (def end-user
   {:user-not-exists                   "User does not exists"

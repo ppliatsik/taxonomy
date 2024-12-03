@@ -69,7 +69,8 @@
    :unit                       "Μονάδα"
    :support-types              "Τύποι υποστήριξης"
    :support-daily-duration     "Υποστήριξη ημερήσιας διάρκειας"
-   :support-package-number     "Αριθμός πακέτων υποστήριξης"})
+   :support-package-number     "Αριθμός πακέτων υποστήριξης"
+   :wrong-weights              "Λανθασμένα βάρη εισόδου"})
 
 (def end-user
   {:user-not-exists                   "Ο χρήστης δεν υπάρχει"

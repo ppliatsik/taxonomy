@@ -42,7 +42,8 @@
   #?(:clj (s/nilable decimal?))
   #?(:cljs (s/nilable number?)))
 (s/def ::metric	(s/nilable string?))
-(s/def ::direction-of-values (s/nilable string?))
+(def direction-of-values-set #{"+" "-"})
+(s/def ::direction-of-values (s/and string? direction-of-values-set))
 (s/def ::unit (s/nilable string?))
 
 (s/def ::non-functional-guarantees-map
@@ -103,9 +104,23 @@
                    ::product-company ::marketplaces ::support]))
 
 (s/def ::get-products-request
-  (s/keys :opt-un [::created-by]))
+  (s/keys :opt-un [::name ::description ::delivery-methods ::deployment-models ::product-categories
+                   ::cost-model ::security-mechanisms ::non-functional-guarantees ::protection-types
+                   ::security-properties ::protected-items ::threats ::restrictions ::open-source
+                   ::freely-available ::test-version ::test-duration ::product-interfaces
+                   ::product-company ::marketplaces ::support]))
 
-(s/def ::weights map?)
+(s/def ::weight-spec
+  #?(:clj (s/nilable (s/and decimal? #(>= % 0.0M) #(<= % 1.0M))))
+  #?(:cljs (s/nilable (s/and number? #(>= % 0.0) #(<= % 1.0)))))
+
+(s/def ::charge-packets-w ::weight-spec)
+(s/def ::non-functional-guarantees-value-w ::weight-spec)
+(s/def ::restrictions-value-w ::weight-spec)
+(s/def ::test-duration-w ::weight-spec)
+
+(s/def ::weights
+  (s/keys :opt-un [::charge-packets-w ::non-functional-guarantees-value-w ::restrictions-value-w ::test-duration-w]))
 
 (s/def ::ids (s/coll-of ::id :kind vector? :min-count 0))
 
