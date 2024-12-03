@@ -42,8 +42,7 @@
   #?(:clj (s/nilable decimal?))
   #?(:cljs (s/nilable number?)))
 (s/def ::metric	(s/nilable string?))
-(def direction-of-values-set #{"+" "-"})
-(s/def ::direction-of-values (s/and string? direction-of-values-set))
+(s/def ::direction-of-values (s/nilable boolean?))
 (s/def ::unit (s/nilable string?))
 
 (s/def ::non-functional-guarantees-map
