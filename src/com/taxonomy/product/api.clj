@@ -184,7 +184,7 @@
                                   :reason ::product/wrong-weights})
 
           :else
-          (let [products (-> (data/search-products graph (:query parameters))
+          (let [products (-> (data/search-products graph (-> parameters :body :criteria))
                              (classify-products weights))]
             (if user-info
               (http-response/ok products)

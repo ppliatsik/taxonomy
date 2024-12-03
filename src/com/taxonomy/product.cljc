@@ -124,6 +124,16 @@
 
 (s/def ::ids (s/coll-of ::id :kind vector? :min-count 0))
 
-(s/def ::classify-products
+(s/def ::classify-products-request
   (s/keys :req-un [::weights]
           :opt-un [::ids]))
+
+(s/def ::criteria
+  (s/keys :opt-un [::name ::description ::delivery-methods ::deployment-models ::product-categories
+                   ::cost-model ::security-mechanisms ::non-functional-guarantees ::protection-types
+                   ::security-properties ::protected-items ::threats ::restrictions ::open-source
+                   ::freely-available ::test-version ::test-duration ::product-interfaces
+                   ::product-company ::marketplaces ::support]))
+
+(s/def ::discover-products-request
+  (s/keys :req-un [::weights ::criteria]))

@@ -14,16 +14,14 @@
     {:swagger {:tags ["products"]}
      :name    ::product/products-classification
      :post    {:summary    "Products classification"
-               :parameters {:query ::product/get-products-request
-                            :body  ::product/classify-products}
+               :parameters {:body ::product/classify-products-request}
                :handler    api/products-classification}}]
 
    ["/products-discovery"
     {:swagger {:tags ["products"]}
      :name    ::product/products-discovery
      :post    {:summary    "Products discovery"
-               :parameters {:query ::product/get-products-request
-                            :body  {:weights ::product/weights}}
+               :parameters {:body ::product/discover-products-request}
                :handler    api/products-discovery}}]
 
    ["/my-products"
