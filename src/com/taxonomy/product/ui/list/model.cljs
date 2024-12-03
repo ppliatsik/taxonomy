@@ -107,11 +107,11 @@
   ::match
   [data-path]
   (fn [{:keys [db]} _]
-    (let [params {:criteria (get-criteria db)}]
-      {:fx [[:dispatch [:ajax/post {:uri     "/api/products-match"
-                                    :params  params
-                                    :success ::match-success
-                                    :failure ::match-failure}]]]})))
+    (let [params (get-criteria db)]
+      {:fx [[:dispatch [:ajax/get {:uri     "/api/products-match"
+                                   :params  params
+                                   :success ::match-success
+                                   :failure ::match-failure}]]]})))
 
 (rf/reg-event-db
   ::match-success
