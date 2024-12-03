@@ -4,6 +4,7 @@
             [com.taxonomy.ui.navbar :as ui.navbar]
             [com.taxonomy.translations :as trans]
             [com.taxonomy.product :as product]
+            [com.taxonomy.end-user :as end-user]
             [com.taxonomy.product.ui.create.model :as model]))
 
 (defn- create-view
