@@ -1,6 +1,8 @@
 (ns com.taxonomy.product.ui.list.view
   (:require [re-frame.core :as rf]
             [clojure.spec.alpha :as s]
+            [spec-tools.core :as st]
+            [clojure.string :as clj.str]
             [com.taxonomy.ui.navbar :as ui.navbar]
             [com.taxonomy.translations :as trans]
             [com.taxonomy.product :as product]
@@ -8,60 +10,58 @@
             [com.taxonomy.product.ui.product-view :as product-view]
             [com.taxonomy.product.ui.list.model :as model]))
 
+(defn- multi-weights
+  [{:keys [products] :as model} lang product-key]
+  (->> products
+       (map #(get % product-key))
+       (map (fn [data]
+              (let [property (clj.str/replace (:property data) #"\s" "")]
+                [:div.column.is-3
+                 [:label.label.mb-0 {:htmlFor (str "non-functional-guarantees-w-" property)}
+                  (str (trans/translate lang (keyword "com.taxonomy.product" product-key)) "-" (:property data))]
+                 [:input.input {:key       (str "non-functional-guarantees-w-" property)
+                                :value     (get-in model [product-key property])
+                                :on-change (fn [e]
+                                             (rf/dispatch [::model/set-multi-weight-input
+                                                           product-key property (-> e .-target .-value)]))}]
+                 (when-not (s/valid? ::product/weight
+                                     (st/coerce ::product/weight (get-in model [product-key property]) st/string-transformer))
+                   [:p.help.is-danger (trans/translate lang ::end-user/wrong-input)])])))
+       (into [:div.columns])))
+
 (defn- criteria-view
-  [model lang]
+  [model lang login-user]
   [:div.box.has-background-success-light
    [:span.is-large
-    (trans/translate lang ::product/choose-criteria)]])
+    (trans/translate lang ::product/choose-criteria)]
+   [:div.columns
+    [:div.column.is-3
+     [:label.label.mb-0 {:htmlFor "name"}
+      (trans/translate lang ::product/name)]
+     [:input.input {:key       "name"
+                    :value     (:name model)
+                    :on-change (fn [e]
+                                 (rf/dispatch [::model/set-criterion
+                                               :name "EQUAL" (-> e .-target .-value)]))}]]]])
 
 (defn- weights-view
   [model lang]
   [:div.box.has-background-success-light
    [:span.is-large
     (trans/translate lang ::product/choose-weights)]
+   [multi-weights model lang :non-functional-guarantees]
+   [multi-weights model lang :restrictions]
    [:div.columns
-    [:div.column.is-6
-     [:label.label.mb-0 {:htmlFor "charge-packets-w"}
-      (trans/translate lang ::product/charge-packets)]
-     [:input.input {:key       "charge-packets-w"
-                    :value     (:charge-packets-w model)
-                    :on-change (fn [e]
-                                 (rf/dispatch [::model/set-input
-                                               :charge-packets-w (-> e .-target .-value)]))}]
-     (when-not (s/valid? ::product/weight-spec (:charge-packets-w model))
-       [:p.help.is-danger (trans/translate lang ::end-user/wrong-input)])]]
-   [:div.columns
-    [:div.column.is-6
-     [:label.label.mb-0 {:htmlFor "non-functional-guarantees-value-w"}
-      (str (trans/translate lang ::product/non-functional-guarantees) "-" (trans/translate lang ::product/value))]
-     [:input.input {:key       "non-functional-guarantees-value-w"
-                    :value     (:non-functional-guarantees-value-w model)
-                    :on-change (fn [e]
-                                 (rf/dispatch [::model/set-input
-                                               :non-functional-guarantees-value-w (-> e .-target .-value)]))}]
-     (when-not (s/valid? ::product/weight-spec (:non-functional-guarantees-value-w model))
-       [:p.help.is-danger (trans/translate lang ::end-user/wrong-input)])]]
-   [:div.columns
-    [:div.column.is-6
-     [:label.label.mb-0 {:htmlFor "restrictions-value-w"}
-      (str (trans/translate lang ::product/restrictions) "-" (trans/translate lang ::product/value))]
-     [:input.input {:key       "restrictions-value-w"
-                    :value     (:restrictions-value-w model)
-                    :on-change (fn [e]
-                                 (rf/dispatch [::model/set-input
-                                               :restrictions-value-w (-> e .-target .-value)]))}]
-     (when-not (s/valid? ::product/weight-spec (:restrictions-value-w model))
-       [:p.help.is-danger (trans/translate lang ::end-user/wrong-input)])]]
-   [:div.columns
-    [:div.column.is-6
+    [:div.column.is-3
      [:label.label.mb-0 {:htmlFor "test-duration-w"}
       (trans/translate lang ::product/test-duration)]
      [:input.input {:key       "test-duration-w"
-                    :value     (:test-duration-w model)
+                    :value     (:test-duration model)
                     :on-change (fn [e]
                                  (rf/dispatch [::model/set-input
-                                               :test-duration-w (-> e .-target .-value)]))}]
-     (when-not (s/valid? ::product/weight-spec (:test-duration-w model))
+                                               :test-duration (-> e .-target .-value)]))}]
+     (when-not (s/valid? ::product/weight
+                         (st/coerce ::product/weight (:test-duration model) st/string-transformer))
        [:p.help.is-danger (trans/translate lang ::end-user/wrong-input)])]]])
 
 (defn- submit-buttons
@@ -84,11 +84,12 @@
      [:span (trans/translate lang ::product/discovery)]]]])
 
 (defn view []
-  (let [model @(rf/subscribe [::model/ui-model])
-        lang  (:language model)]
+  (let [login-user @(rf/subscribe [:ui/user])
+        model      @(rf/subscribe [::model/ui-model])
+        lang       (:language model)]
     [:article.box
      [ui.navbar/view]
-     [criteria-view model lang]
+     [criteria-view model lang login-user]
      [weights-view model lang]
      [submit-buttons model lang]
      [product-view/list-products model lang]]))

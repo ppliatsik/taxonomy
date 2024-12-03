@@ -6,8 +6,8 @@
   [["/products-match"
     {:swagger {:tags ["products"]}
      :name    ::product/products-match
-     :get     {:summary    "Products match"
-               :parameters {:query ::product/get-products-request}
+     :post    {:summary    "Products match"
+               :parameters {:body ::product/match-products-request}
                :handler    api/products-match}}]
 
    ["/products-classification"

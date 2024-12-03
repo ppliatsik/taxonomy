@@ -12,7 +12,9 @@
    :no                                 "Όχι"
    :delete-dialog-box                  "Αίτημα διαγραφής"
    :delete-dialog-box-confirmation-msg "Είστε σίγουρος/η ότι θέλετε να προχωρήσετε με τη διαγραφή;"
-   :select-language                    "Επιλογή γλώσσας"})
+   :select-language                    "Επιλογή γλώσσας"
+   :positive                           "Θετική"
+   :negative                           "Αρνητική"})
 
 (def product
   {:product-not-exists         "Το προϊόν δεν υπάρχει"
@@ -66,11 +68,14 @@
    :value                      "Τιμή"
    :metric                     "Μετρική"
    :direction-of-values        "Κατεύθυνση τιμών"
+   :direction-of-values-msg    "Επιλογή για θετική"
    :unit                       "Μονάδα"
    :support-types              "Τύποι υποστήριξης"
    :support-daily-duration     "Υποστήριξη ημερήσιας διάρκειας"
    :support-package-number     "Αριθμός πακέτων υποστήριξης"
-   :wrong-weights              "Λανθασμένα βάρη εισόδου"})
+   :wrong-weights              "Λανθασμένα βάρη εισόδου"
+   :logical-operator           "Λογικός τελεστής"
+   :not                        "Προσθέστε τον λογικό τελεστή 'όχι'"})
 
 (def end-user
   {:user-not-exists                   "Ο χρήστης δεν υπάρχει"

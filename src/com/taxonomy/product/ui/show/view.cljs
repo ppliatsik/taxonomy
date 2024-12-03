@@ -28,7 +28,9 @@
                  [:td (:metric cur)]]
                 [:tr
                  [:td (trans/translate lang ::product/direction-of-values)]
-                 [:td (:direction-of-values cur)]]
+                 [:td (if (:direction-of-values cur)
+                        (trans/translate lang :com.taxonomy.ui/positive)
+                        (trans/translate lang :com.taxonomy.ui/negative))]]
                 [:tr
                  [:td (trans/translate lang ::product/unit)]
                  [:td (:unit cur)]]]]))

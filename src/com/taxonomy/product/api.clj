@@ -1,5 +1,6 @@
 (ns com.taxonomy.product.api
-  (:require [com.taxonomy.http.http-response :as http-response]
+  (:require [clojure.string :as clj.str]
+            [com.taxonomy.http.http-response :as http-response]
             [com.taxonomy.product :as product]
             [com.taxonomy.product.data :as data]
             [com.taxonomy.end-user :as end-user])
@@ -7,26 +8,22 @@
 
 (defn- get-min-max-values
   [products]
-  (let [charge-packets                   (->> products
-                                              (map #(get-in % [:cost-model :charge-packets]))
-                                              sort)
-        non-functional-guarantees-values (->> products
-                                              (map #(get-in % [:non-functional-guarantees :value]))
-                                              sort)
-        restrictions-values              (->> products
-                                              (map #(get-in % [:restrictions :value]))
-                                              sort)
-        test-durations                   (->> products
-                                              (map #(:test-duration %))
-                                              sort)]
-    {:min-charge-packets                  (or (first charge-packets) 0M)
-     :max-charge-packets                  (or (last charge-packets) 0M)
-     :min-non-functional-guarantees-value (or (first non-functional-guarantees-values) 0M)
-     :max-non-functional-guarantees-value (or (last non-functional-guarantees-values) 0M)
-     :min-restrictions-value              (or (first restrictions-values) 0M)
-     :max-restrictions-value              (or (last restrictions-values) 0M)
-     :min-test-duration                   (or (first test-durations) 0M)
-     :max-test-duration                   (or (last test-durations) 0M)}))
+  (let [property-fn (fn [prop]
+                      (->> products
+                           (map #(get % prop))
+                           (map #(select-keys % [:property :value]))
+                           (group-by :property)
+                           (reduce-kv (fn [m k v]
+                                        (let [new-v (->> v
+                                                         (map :value)
+                                                         sort)]
+                                          (assoc m (clj.str/replace k #"\s" "") new-v)))
+                                      {})))]
+    {:non-functional-guarantees-values (property-fn :non-functional-guarantees)
+     :restrictions-values              (property-fn :restrictions)
+     :test-durations                   (->> products
+                                            (map #(:test-duration %))
+                                            sort)}))
 
 (defn- get-positive-direction-local-score
   "Formula for positive local score is: (x_{ij} - min_k(x_{ik})) / (max_k(x_{ik}) - min_k(x_{ik}))"
@@ -52,40 +49,32 @@
   "Formula for score is: score_j = Sum_i (w_i * score_{ij}),
   where score_{ij} is the score of each property and w_i its weight."
   [product
-   {:keys [charge-packets-w non-functional-guarantees-value-w restrictions-value-w test-duration-w]
-    :or {charge-packets-w 0M non-functional-guarantees-value-w 0M restrictions-value-w 0M test-duration-w 0M}}
-   min-max-values]
-  (let [charge-packets-score            (* charge-packets-w
-                                           (get-positive-direction-local-score
-                                             (get-in product [:cost-model :charge-packets])
-                                             (:min-charge-packets min-max-values)
-                                             (:max-charge-packets min-max-values)))
-        non-functional-guarantees-score (* non-functional-guarantees-value-w
-                                           (if (get-in product [:non-functional-guarantees :direction-of-values])
-                                             (get-positive-direction-local-score
-                                               (get-in product [:non-functional-guarantees :value])
-                                               (:min-non-functional-guarantees-value min-max-values)
-                                               (:max-non-functional-guarantees-value min-max-values))
-                                             (get-negative-direction-local-score
-                                               (get-in product [:non-functional-guarantees :value])
-                                               (:min-non-functional-guarantees-value min-max-values)
-                                               (:max-non-functional-guarantees-value min-max-values))))
-        restrictions-score              (* restrictions-value-w
-                                           (if (get-in product [:restrictions :direction-of-values])
-                                             (get-positive-direction-local-score
-                                               (get-in product [:restrictions :value])
-                                               (:min-restrictions-value min-max-values)
-                                               (:max-restrictions-value min-max-values))
-                                             (get-negative-direction-local-score
-                                               (get-in product [:restrictions :value])
-                                               (:min-restrictions-value min-max-values)
-                                               (:max-restrictions-value min-max-values))))
+   {:keys [non-functional-guarantees-w restrictions-w test-duration-w]
+    :or {test-duration-w 0M}}
+   {:keys [non-functional-guarantees-values restrictions-values test-durations]}]
+  (let [score-fn (fn [data weights values]
+                   (->> data
+                        (map (fn [res]
+                               (when-let [w (get weights (clj.str/replace (:property res) #"\s" ""))]
+                                 (let [min-value (or (first (get values (clj.str/replace (:property res) #"\s" ""))) 0M)
+                                       max-value (or (last (get values (clj.str/replace (:property res) #"\s" ""))) 0M)
+                                       v         (if (:direction-of-values res)
+                                                   (get-positive-direction-local-score (:value res) min-value max-value)
+                                                   (get-negative-direction-local-score (:value res) min-value max-value))]
+                                   (* w v)))))
+                        (remove nil?)
+                        (reduce +)))
+
+        non-functional-guarantees-score (score-fn (:non-functional-guarantees product)
+                                                  non-functional-guarantees-w
+                                                  non-functional-guarantees-values)
+        restrictions-score              (score-fn (:restrictions product) restrictions-w restrictions-values)
         test-duration-score             (* test-duration-w
                                            (get-positive-direction-local-score
                                              (:test-duration product)
-                                             (:min-test-duration min-max-values)
-                                             (:max-test-duration min-max-values)))]
-    (+ charge-packets-score non-functional-guarantees-score restrictions-score test-duration-score)))
+                                             (or (first test-durations) 0M)
+                                             (or (last test-durations) 0M)))]
+    (+ non-functional-guarantees-score restrictions-score test-duration-score)))
 
 (defn- classify-products
   [products weights]
@@ -96,6 +85,18 @@
                   (assoc product :score score))))
          (sort-by :score)
          vec)))
+
+(defn get-total-weight
+  [weights]
+  (+ (as-> (:non-functional-guarantees-w weights) $
+           (map :value $)
+           (reduce + $)
+           (or $ 0M))
+     (as-> (:restrictions-w weights) $
+           (map :value $)
+           (reduce + $)
+           (or $ 0M))
+     (or (:test-duration-w weights) 0.0)))
 
 (defn create-product
   [{:keys [graph parameters user-info] :as request}]
@@ -147,7 +148,10 @@
 
 (defn products-match
   [{:keys [graph parameters user-info guest-products-limit] :as request}]
-  (let [products (data/search-products graph (:query parameters))]
+  (let [logical-operator (if (or (not user-info)
+                                 (not (-> parameters :body :logical-operator)))
+                           "AND" (-> parameters :body :logical-operator))
+        products         (data/search-products graph (-> parameters :body :criteria) logical-operator)]
     (if user-info
       (http-response/ok products)
       (http-response/ok (->> products (take guest-products-limit) vec)))))
@@ -155,10 +159,7 @@
 (defn products-classification
   [{:keys [graph parameters user-info guest-products-limit] :as request}]
   (let [weights (-> parameters :body :weights)
-        total-w (->> weights
-                     vals
-                     (remove nil?)
-                     (reduce +))]
+        total-w (get-total-weight weights)]
     (cond (not= 1M total-w)
           (http-response/invalid {:result :failure
                                   :reason ::product/wrong-weights})
@@ -175,17 +176,17 @@
 (defn products-discovery
   [{:keys [graph parameters user-info guest-products-limit] :as request}]
   (let [weights (-> parameters :body :weights)
-        total-w (->> weights
-                     vals
-                     (remove nil?)
-                     (reduce +))]
+        total-w (get-total-weight weights)]
     (cond (not= 1M total-w)
           (http-response/invalid {:result :failure
                                   :reason ::product/wrong-weights})
 
           :else
-          (let [products (-> (data/search-products graph (-> parameters :body :criteria))
-                             (classify-products weights))]
+          (let [logical-operator (if (or (not user-info)
+                                         (not (-> parameters :body :logical-operator)))
+                                   "AND" (-> parameters :body :logical-operator))
+                products         (-> (data/search-products graph (-> parameters :body :criteria) logical-operator)
+                                     (classify-products weights))]
             (if user-info
               (http-response/ok products)
               (http-response/ok (->> products (take guest-products-limit) vec)))))))

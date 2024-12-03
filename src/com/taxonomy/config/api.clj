@@ -23,4 +23,5 @@
                      :protected-items     product/protected-items-set
                      :product-interfaces  product/product-interfaces-set
                      :marketplaces        product/marketplaces-set
-                     :support-types       product/support-type-set}))
+                     :support-types       product/support-type-set
+                     :logical-operators   product/logical-operators}))

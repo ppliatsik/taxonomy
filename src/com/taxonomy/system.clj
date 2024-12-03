@@ -63,12 +63,14 @@
   (let [products     (->> products-file
                           slurp
                           (edn/read-string {:readers *data-readers*}))
+        _ (prn "products" products)
         initial-data (->> products
                           (mapcat (fn [product]
                                     (product.data/product->entity (-> product
-                                                                      (assoc :id (str (UUID/randomUUID)))
+                                                                      (assoc :id (str 1))
                                                                       (assoc :created-by "admin")))))
                           vec)
+        _ (prn "initial-data" initial-data)
         graph        (-> (d/empty-db)
                          (d/db-with initial-data))]
     graph))

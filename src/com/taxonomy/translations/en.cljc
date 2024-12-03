@@ -12,7 +12,9 @@
    :no                                 "No"
    :delete-dialog-box                  "Delete request"
    :delete-dialog-box-confirmation-msg "Are you sure you want to proceed the deletion?"
-   :select-language                    "Select language"})
+   :select-language                    "Select language"
+   :positive                           "Positive"
+   :negative                           "Negative"})
 
 (def product
   {:product-not-exists         "Product does not exists"
@@ -66,11 +68,14 @@
    :value                      "Value"
    :metric                     "Metric"
    :direction-of-values        "Direction of values"
+   :direction-of-values-msg    "Check for positive"
    :unit                       "Unit"
    :support-types              "Support types"
    :support-daily-duration     "Support daily duration"
    :support-package-number     "Support package number"
-   :wrong-weights              "Wrong weights input"})
+   :wrong-weights              "Wrong weights input"
+   :logical-operator           "Logical operator"
+   :not                        "Add 'not' logical operator"})
 
 (def end-user
   {:user-not-exists                   "User does not exists"

@@ -1,6 +1,7 @@
 (ns com.taxonomy.product.ui.list.model
   (:require [re-frame.core :as rf]
             [clojure.spec.alpha :as s]
+            [spec-tools.core :as st]
             [com.taxonomy.product :as product]))
 
 (def paths [:ui/forms ::product/list :data])
@@ -11,28 +12,39 @@
 (defn check-fields
   [data]
   (assoc data :correct-inputs
-              (and (s/valid? ::product/weight-spec (:charge-packets-w data))
-                   (s/valid? ::product/weight-spec (:non-functional-guarantees-value-w data))
-                   (s/valid? ::product/weight-spec (:restrictions-value-w data))
-                   (s/valid? ::product/weight-spec (:test-duration-w data))
-                   (= 1.0 (+ (or (:charge-packets-w data) 0.0)
-                             (or (:non-functional-guarantees-value-w data) 0.0)
-                             (or (:restrictions-value-w data) 0.0)
-                             (or (:test-duration-w data) 0.0))))))
+              (and (s/valid? ::product/non-functional-guarantees-w
+                             (st/coerce ::product/non-functional-guarantees-w (:non-functional-guarantees data) st/string-transformer))
+                   (s/valid? ::product/restrictions-w
+                             (st/coerce ::product/restrictions-w (:restrictions data) st/string-transformer))
+                   (s/valid? ::product/test-duration-w
+                             (st/coerce ::product/weight (:test-duration data) st/string-transformer))
+                   (= 1.0 (+ (as-> (:non-functional-guarantees data) $
+                                   (map :weight $)
+                                   (map #(st/coerce ::product/weight % st/string-transformer) $)
+                                   (reduce + $)
+                                   (or $ 0M))
+                             (as-> (:restrictions data) $
+                                   (map :weight $)
+                                   (map #(st/coerce ::product/weight % st/string-transformer) $)
+                                   (reduce + $)
+                                   (or $ 0M))
+                             (or (st/coerce ::product/weight (:test-duration data) st/string-transformer) 0.0))))))
 
 (defn get-criteria
   [db]
-  )
+  (-> db :criteria vals vec))
 
 (defn get-weights
   [db]
-  (select-keys db [:charge-packets-w :non-functional-guarantees-value-w :restrictions-value-w :test-duration-w]))
+  {:non-functional-guarantees-w (:non-functional-guarantees db)
+   :restrictions-w              (:restrictions db)
+   :test-duration-w             (:test-duration db)})
 
 (rf/reg-event-fx
   ::init
   [data-path]
   (fn [_ _]
-    {:db {}
+    {:db {:criteria {}}
      :fx [[::get-security-mechanisms]
           [::get-threats]
           [::get-products-choices]]}))
@@ -107,11 +119,11 @@
   ::match
   [data-path]
   (fn [{:keys [db]} _]
-    (let [params (get-criteria db)]
-      {:fx [[:dispatch [:ajax/get {:uri     "/api/products-match"
-                                   :params  params
-                                   :success ::match-success
-                                   :failure ::match-failure}]]]})))
+    (let [params {:criteria (get-criteria db)}]
+      {:fx [[:dispatch [:ajax/post {:uri     "/api/products-match"
+                                    :params  params
+                                    :success ::match-success
+                                    :failure ::match-failure}]]]})))
 
 (rf/reg-event-db
   ::match-success
@@ -178,10 +190,27 @@
                                              :type  :error}]]]}))
 
 (rf/reg-event-db
+  ::set-criterion
+  [data-path]
+  (fn [db [_ property operator value]]
+    (let [v {:property-name property
+             :operator      operator
+             :match-value   value}]
+      (-> db
+          (assoc-in [:criteria property] v)
+          (assoc property value)))))
+
+(rf/reg-event-db
   ::set-input
   [data-path]
   (fn [db [_ k v]]
     (assoc db k v)))
+
+(rf/reg-event-db
+  ::set-multi-weight-input
+  [data-path]
+  (fn [db [_ product-key property weight]]
+    (assoc-in db [product-key property] weight)))
 
 (rf/reg-sub
   ::form-data

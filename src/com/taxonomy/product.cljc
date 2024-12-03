@@ -34,13 +34,13 @@
 (s/def ::security-mechanism keyword?)
 (s/def ::security-mechanisms (s/nilable (s/coll-of ::security-mechanism :kind vector? :min-count 0)))
 
-(s/def ::property	(s/nilable string?))
+(s/def ::property	string?)
 (def operator-types #{"LESS_THAN" "LESS_EQUAL_THAN" "GREATER_THAN" "GREATER_EQUAL_THAN"
                       "EQUAL" "DIFFERENT" "SUBSET" "SUPERSET" "INCLUDES" "NON_INCLUDES"})
 (s/def ::operator	(s/and string? operator-types))
 (s/def ::value
-  #?(:clj (s/nilable decimal?))
-  #?(:cljs (s/nilable number?)))
+  #?(:clj decimal?)
+  #?(:cljs number?))
 (s/def ::metric	(s/nilable string?))
 (s/def ::direction-of-values (s/nilable boolean?))
 (s/def ::unit (s/nilable string?))
@@ -102,37 +102,43 @@
                    ::freely-available ::test-version ::test-duration ::product-interfaces
                    ::product-company ::marketplaces ::support]))
 
-(s/def ::get-products-request
-  (s/keys :opt-un [::name ::description ::delivery-methods ::deployment-models ::product-categories
-                   ::cost-model ::security-mechanisms ::non-functional-guarantees ::protection-types
-                   ::security-properties ::protected-items ::threats ::restrictions ::open-source
-                   ::freely-available ::test-version ::test-duration ::product-interfaces
-                   ::product-company ::marketplaces ::support]))
-
-(s/def ::weight-spec
+(s/def ::weight
   #?(:clj (s/nilable (s/and decimal? #(>= % 0.0M) #(<= % 1.0M))))
   #?(:cljs (s/nilable (s/and number? #(>= % 0.0) #(<= % 1.0)))))
 
-(s/def ::charge-packets-w ::weight-spec)
-(s/def ::non-functional-guarantees-value-w ::weight-spec)
-(s/def ::restrictions-value-w ::weight-spec)
-(s/def ::test-duration-w ::weight-spec)
+(s/def ::weight-map
+  (s/map-of ::property ::weight))
+
+(s/def ::non-functional-guarantees-w (s/nilable ::weight-map))
+(s/def ::restrictions-w (s/nilable ::weight-map))
+(s/def ::test-duration-w ::weight)
 
 (s/def ::weights
-  (s/keys :opt-un [::charge-packets-w ::non-functional-guarantees-value-w ::restrictions-value-w ::test-duration-w]))
+  (s/keys :opt-un [::non-functional-guarantees-w ::restrictions-w ::test-duration-w]))
 
-(s/def ::ids (s/coll-of ::id :kind vector? :min-count 0))
+(s/def ::ids (s/nilable (s/coll-of ::id :kind vector? :min-count 0)))
 
 (s/def ::classify-products-request
   (s/keys :req-un [::weights]
           :opt-un [::ids]))
 
-(s/def ::criteria
-  (s/keys :opt-un [::name ::description ::delivery-methods ::deployment-models ::product-categories
-                   ::cost-model ::security-mechanisms ::non-functional-guarantees ::protection-types
-                   ::security-properties ::protected-items ::threats ::restrictions ::open-source
-                   ::freely-available ::test-version ::test-duration ::product-interfaces
-                   ::product-company ::marketplaces ::support]))
+(def logical-operators #{"AND" "OR" "XOR"})
+(s/def ::logical-operator (s/and string? logical-operators))
+(s/def ::not (s/nilable boolean?))
+(s/def ::match-value
+  (s/or :string string?
+        :number number?))
+(s/def ::property-name keyword?)
+(s/def ::criterion
+  (s/keys :req-un [::property-name ::operator ::match-value]
+          :opt-un [::not]))
+
+(s/def ::criteria (s/nilable (s/coll-of ::criterion :kind vector? :min-count 0)))
+
+(s/def ::match-products-request
+  (s/keys :req-un [::criteria]
+          :opt-un [::logical-operator]))
 
 (s/def ::discover-products-request
-  (s/keys :req-un [::weights ::criteria]))
+  (s/keys :req-un [::weights ::criteria]
+          :opt-un [::logical-operator]))

@@ -15,8 +15,10 @@
           (assoc $ :name-q name-q)
           (assoc $ :published false)
           (map (fn [[k v]]
-                 (->tuple (:id product) k v)))
-          (into []))))
+                 (when v
+                   (->tuple (:id product) k v)))
+               $)
+          (into [] $))))
 
 (defn create-product
   [graph product]
@@ -34,7 +36,7 @@
                        :published false}]))
 
 (defn search-products
-  [graph params]
+  [graph params logical-operator]
   (let [products []]
     (filter #(:published %) products)))
 
@@ -48,20 +50,20 @@
 
 (defn get-my-products
   [graph {:keys [username]}]
-  (d/q '[:find  (pull ?e [*])
+  (d/q '[:find  (pull ?e '[*])
          :where [?e :created-by username]] graph))
 
 (defn get-product-by-id
   [graph {:keys [id]}]
-  (d/pull [graph '*' id]))
+  (d/pull graph '[*] id))
 
 (defn get-products-by-id
   [graph ids]
-  (d/pull-many [graph '*' ids]))
+  (d/pull-many graph '[*] ids))
 
 (defn get-all-products
   [graph]
-  (d/pull [graph '*']))
+  (d/pull graph '[*]))
 
 (defn delete-product-by-id
   [graph {:keys [id]}]
