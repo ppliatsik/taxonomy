@@ -5,12 +5,13 @@
             [com.taxonomy.ui.routes :as routes]))
 
 (defn- table-row
-  [{:keys [id name delivery-methods deployment-models
+  [{:keys [id name created-by delivery-methods deployment-models
            product-categories product-company marketplaces]}]
   [:tr {:key id}
    [:td.nowrap
     [:a {:href (routes/product {:id id})}
      name]]
+   [:td.nowrap created-by]
    [:td.nowrap (clj.str/join delivery-methods ",")]
    [:td.nowrap (clj.str/join deployment-models ",")]
    [:td.nowrap (clj.str/join product-categories ",")]
@@ -23,6 +24,7 @@
    [:thead.has-background-light
     [:tr
      [:td (trans/translate lang ::product/name)]
+     [:td (trans/translate lang ::product/created-by)]
      [:td (trans/translate lang ::product/delivery-methods)]
      [:td (trans/translate lang ::product/deployment-models)]
      [:td (trans/translate lang ::product/product-categories)]

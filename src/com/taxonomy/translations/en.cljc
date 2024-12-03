@@ -57,7 +57,19 @@
    :product-company            "Product company"
    :marketplaces               "Marketplaces"
    :support                    "Support"
-   :days                       "Days"})
+   :days                       "Days"
+   :cost-model-types           "Cost model types"
+   :charge-packets             "Charge packets"
+   :time-charge-types          "Time charge types"
+   :property                   "Property"
+   :operator                   "Operator"
+   :value                      "Value"
+   :metric                     "Metric"
+   :direction-of-values        "Direction of values"
+   :unit                       "Unit"
+   :support-types              "Support types"
+   :support-daily-duration     "Support daily duration"
+   :support-package-number     "Support package number"})
 
 (def end-user
   {:user-not-exists                   "User does not exists"

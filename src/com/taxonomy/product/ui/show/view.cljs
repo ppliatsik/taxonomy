@@ -8,6 +8,32 @@
             [com.taxonomy.end-user :as end-user]
             [com.taxonomy.product.ui.show.model :as model]))
 
+(defn- show-guarantees-restrictions
+  [data lang]
+  (->> data
+       (map (fn [cur]
+              [:div.column
+               [:table.table.is-fullwidth.is-stripped.is-hoverable.vertical-align-middle.fixed
+                [:tr
+                 [:td (trans/translate lang ::product/property)]
+                 [:td (:property cur)]]
+                [:tr
+                 [:td (trans/translate lang ::product/operator)]
+                 [:td (:operator cur)]]
+                [:tr
+                 [:td (trans/translate lang ::product/value)]
+                 [:td (:value cur)]]
+                [:tr
+                 [:td (trans/translate lang ::product/metric)]
+                 [:td (:metric cur)]]
+                [:tr
+                 [:td (trans/translate lang ::product/direction-of-values)]
+                 [:td (:direction-of-values cur)]]
+                [:tr
+                 [:td (trans/translate lang ::product/unit)]
+                 [:td (:unit cur)]]]]))
+       (into [:div.columns])))
+
 (defn- control-buttons
   [login-user {:keys [product]} lang]
   (when product
@@ -62,16 +88,29 @@
       [:td (trans/translate lang ::product/product-categories)]
       [:td (clj.str/join (:product-categories product) ",")]]
      [:tr
-      [:td (trans/translate lang ::product/cost-model)]     ;
-      [:td (:cost-model product)]]
+      [:td (trans/translate lang ::product/cost-model)]
+      [:td (->> (:cost-model product)
+                (map (fn [cm]
+                       [:div.column
+                        [:table.table.is-fullwidth.is-stripped.is-hoverable.vertical-align-middle.fixed
+                         [:tr
+                          [:td (trans/translate lang ::product/cost-model-types)]
+                          [:td (clj.str/join (:cost-model-types cm) ",")]]
+                         [:tr
+                          [:td (trans/translate lang ::product/charge-packets)]
+                          [:td (:charge-packets cm)]]
+                         [:tr
+                          [:td (trans/translate lang ::product/time-charge-types)]
+                          [:td (clj.str/join (:time-charge-types cm) ",")]]]]))
+                (into [:div.columns]))]]
      [:tr
       [:td (trans/translate lang ::product/security-mechanisms)]
       [:td (as-> (model/get-all-keys (:security-mechanisms product)) $
                  (map #(trans/translate lang (keyword "com.taxonomy.security-mechanisms" %)))
                  (clj.str/join "\n" $))]]
      [:tr
-      [:td (trans/translate lang ::product/non-functional-guarantees)] ;
-      [:td (:non-functional-guarantees product)]]
+      [:td (trans/translate lang ::product/non-functional-guarantees)]
+      [:td [show-guarantees-restrictions (:non-functional-guarantees product) lang]]]
      [:tr
       [:td (trans/translate lang ::product/protection-types)]
       [:td (clj.str/join (:product-categories product) ",")]]
@@ -87,8 +126,8 @@
                  (map #(trans/translate lang (keyword "com.taxonomy.threats" %)))
                  (clj.str/join "\n" $))]]
      [:tr
-      [:td (trans/translate lang ::product/restrictions)]   ;
-      [:td (:restrictions product)]]
+      [:td (trans/translate lang ::product/restrictions)]
+      [:td [show-guarantees-restrictions (:restrictions product) lang]]]
      [:tr
       [:td (trans/translate lang ::product/open-source)]
       [:td (if (:open-source product)
@@ -118,8 +157,21 @@
       [:td (trans/translate lang ::product/marketplaces)]
       [:td (clj.str/join (:marketplaces product) ",")]]
      [:tr
-      [:td (trans/translate lang ::product/support)]        ;
-      [:td (:support product)]]]))
+      [:td (trans/translate lang ::product/support)]
+      [:td (->> (:support product)
+                (map (fn [sup]
+                       [:div.column
+                        [:table.table.is-fullwidth.is-stripped.is-hoverable.vertical-align-middle.fixed
+                         [:tr
+                          [:td (trans/translate lang ::product/support-types)]
+                          [:td (clj.str/join (:support-types sup) ",")]]
+                         [:tr
+                          [:td (trans/translate lang ::product/support-daily-duration)]
+                          [:td (:support-daily-duration sup)]]
+                         [:tr
+                          [:td (trans/translate lang ::product/support-package-number)]
+                          [:td (:support-package-number sup)]]]]))
+                (into [:div.columns]))]]]))
 
 (defn view []
   (let [login-user @(rf/subscribe [:ui/user])

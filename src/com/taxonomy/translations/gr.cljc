@@ -57,7 +57,19 @@
    :product-company            "Εταιρεία που προσφέρει το προϊόν"
    :marketplaces               "Σημεία αγοράς"
    :support                    "Υποστήριξη"
-   :days                       "Ημέρες"})
+   :days                       "Ημέρες"
+   :cost-model-types           "Τύποι μοντέλων κόστους"
+   :charge-packets             "Πακέτα χρέωσης"
+   :time-charge-types          "Τύποι χρονοχρεώσεων"
+   :property                   "Ιδιότητα"
+   :operator                   "Τελεστής"
+   :value                      "Τιμή"
+   :metric                     "Μετρική"
+   :direction-of-values        "Κατεύθυνση τιμών"
+   :unit                       "Μονάδα"
+   :support-types              "Τύποι υποστήριξης"
+   :support-daily-duration     "Υποστήριξη ημερήσιας διάρκειας"
+   :support-package-number     "Αριθμός πακέτων υποστήριξης"})
 
 (def end-user
   {:user-not-exists                   "Ο χρήστης δεν υπάρχει"

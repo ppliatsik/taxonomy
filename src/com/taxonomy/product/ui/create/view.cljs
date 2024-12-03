@@ -1,5 +1,6 @@
 (ns com.taxonomy.product.ui.create.view
   (:require [re-frame.core :as rf]
+            [clojure.string :as clj.str]
             [com.taxonomy.ui.navbar :as ui.navbar]
             [com.taxonomy.translations :as trans]
             [com.taxonomy.product :as product]
@@ -16,7 +17,9 @@
                     :value     (:name model)
                     :on-change (fn [e]
                                  (rf/dispatch [::model/set-input
-                                               :name (-> e .-target .-value)]))}]]]
+                                               :name (-> e .-target .-value)]))}]
+     (when (clj.str/blank? (:name model))
+       [:p.help.is-danger (trans/translate lang ::end-user/wrong-input)])]]
    [:div.columns
     [:div.column.is-6
      [:label.label.mb-0 {:htmlFor "description"}
