@@ -67,6 +67,12 @@
    :operator                   "Operator"
    :value                      "Value"
    :metric                     "Metric"
+   :nfg-property               "Non functional guarantees property"
+   :nfg-value                  "Non functional guarantees value"
+   :nfg-metric                 "Non functional guarantees metric"
+   :res-property               "Restriction property"
+   :res-value                  "Restriction value"
+   :res-metric                 "Restriction metric"
    :direction-of-values        "Direction of values"
    :direction-of-values-msg    "Check for positive"
    :unit                       "Unit"
@@ -74,7 +80,8 @@
    :support-daily-duration     "Support daily duration"
    :support-package-number     "Support package number"
    :wrong-weights              "Wrong weights input"
-   :logical-operator           "Logical operator"
+   :logical-operators          "Logical operators"
+   :operators                  "Operators"
    :not                        "Add 'not' logical operator"})
 
 (def end-user

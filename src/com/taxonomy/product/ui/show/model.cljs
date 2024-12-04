@@ -8,15 +8,6 @@
 (def metadata
   {:data-path paths})
 
-(defn get-all-keys
-  [m]
-  (reduce (fn [acc [k v]]
-            (if (map? v)
-              (apply conj acc (name k) (get-all-keys v))
-              (conj acc (name k))))
-          []
-          m))
-
 (rf/reg-sub
   ::form-data
   (fn [db _]

@@ -130,8 +130,8 @@
         :number number?))
 (s/def ::property-name keyword?)
 (s/def ::criterion
-  (s/keys :req-un [::property-name ::operator ::match-value]
-          :opt-un [::not]))
+  (s/keys :req-un [::property-name ::match-value]
+          :opt-un [::operator ::not]))
 
 (s/def ::criteria (s/nilable (s/coll-of ::criterion :kind vector? :min-count 0)))
 

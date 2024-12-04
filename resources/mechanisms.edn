@@ -5,9 +5,9 @@
                      :threat-detection-based-on-adapted-queries nil
                      :threat-detection-in-real-time {:threat-detection-in-real-time-in-logs nil
                                                      :threat-detection-in-real-time-based-on-machine-learning nil
-                                                     :threat-detection-in-real-time-base-on-rules {:threat-detection-in-real-time-base-on-rules-correlation nil
-                                                                                                    :threat-detection-in-real-time-base-on-rules-threshold-detection nil
-                                                                                                    :threat-detection-in-real-time-base-on-rules-anomaly-detection nil}}}
+                                                     :threat-detection-in-real-time-based-on-rules {:threat-detection-in-real-time-based-on-rules-correlation nil
+                                                                                                    :threat-detection-in-real-time-based-on-rules-threshold-detection nil
+                                                                                                    :threat-detection-in-real-time-based-on-rules-anomaly-detection nil}}}
 
  :response {:individual-response {:apply-security-fixes nil
                                   :recovery-from-backups nil

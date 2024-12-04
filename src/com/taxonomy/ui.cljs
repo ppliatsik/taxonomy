@@ -123,8 +123,7 @@
        [:div.container
         [:div.navbar-menu
          [:div.navbar-item
-          {:style {:position "fixed"
-                   :float    "right"}}
+          {:style {:float "right"}}
           [language-selector lang]]]
         (if user
           [:div.columns

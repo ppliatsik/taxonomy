@@ -2,6 +2,7 @@
   (:require [re-frame.core :as rf]
             [clojure.spec.alpha :as s]
             [spec-tools.core :as st]
+            [com.taxonomy.ui.util :as util]
             [com.taxonomy.product :as product]))
 
 (def paths [:ui/forms ::product/list :data])
@@ -32,36 +33,39 @@
 
 (defn get-criteria
   [db]
-  (-> db :criteria vals vec))
+  (->> db
+       :criteria
+       vals
+       (remove #(nil? (-> % :match-value)))
+       vec))
 
 (defn get-weights
-  [db]
-  {:non-functional-guarantees-w (:non-functional-guarantees db)
-   :restrictions-w              (:restrictions db)
-   :test-duration-w             (:test-duration db)})
+  [{:keys [weights]}]
+  {:non-functional-guarantees-w (:non-functional-guarantees weights)
+   :restrictions-w              (:restrictions weights)
+   :test-duration-w             (:test-duration weights)})
 
 (rf/reg-event-fx
   ::init
   [data-path]
   (fn [_ _]
-    {:db {:criteria {}}
-     :fx [[::get-security-mechanisms]
-          [::get-threats]
-          [::get-products-choices]]}))
-
-(rf/reg-event-fx
-  ::get-security-mechanisms
-  [data-path]
-  (fn [_ _]
-    :fx [[:dispatch [:ajax/get {:uri     "/api/config/security-mechanisms"
-                                :success ::get-security-mechanisms-success
-                                :failure ::get-security-mechanisms-failure}]]]))
+    {:db {:criteria {}
+          :weights  {}}
+     :fx [[:dispatch [:ajax/get {:uri     "/api/config/security-mechanisms"
+                                 :success ::get-security-mechanisms-success
+                                 :failure ::get-security-mechanisms-failure}]]
+          [:dispatch [:ajax/get {:uri     "/api/config/threats"
+                                 :success ::get-threats-success
+                                 :failure ::get-threats-failure}]]
+          [:dispatch [:ajax/get {:uri     "/api/config/products-choices"
+                                 :success ::get-products-choices-success
+                                 :failure ::get-products-choices-failure}]]]}))
 
 (rf/reg-event-db
   ::get-security-mechanisms-success
   [data-path]
   (fn [db [_ response]]
-    (assoc db :security-mechanisms response)))
+    (assoc db :security-mechanisms (util/get-all-keys response))))
 
 (rf/reg-event-fx
   ::get-security-mechanisms-failure
@@ -71,19 +75,11 @@
                                              :body  (:reason response)
                                              :type  :error}]]]}))
 
-(rf/reg-event-fx
-  ::get-threats
-  [data-path]
-  (fn [_ _]
-    :fx [[:dispatch [:ajax/get {:uri     "/api/config/threats"
-                                :success ::get-threats-success
-                                :failure ::get-threats-failure}]]]))
-
 (rf/reg-event-db
   ::get-threats-success
   [data-path]
   (fn [db [_ response]]
-    (assoc db :threats response)))
+    (assoc db :threats (util/get-all-keys response))))
 
 (rf/reg-event-fx
   ::get-threats-failure
@@ -92,14 +88,6 @@
     {:fx [[:dispatch [:ui/push-notification {:title :com.taxonomy.ui/failure
                                              :body  (:reason response)
                                              :type  :error}]]]}))
-
-(rf/reg-event-fx
-  ::get-products-choices
-  [data-path]
-  (fn [_ _]
-    :fx [[:dispatch [:ajax/get {:uri     "/api/config/products-choices"
-                                :success ::get-products-choices-success
-                                :failure ::get-products-choices-failure}]]]))
 
 (rf/reg-event-db
   ::get-products-choices-success
@@ -190,27 +178,46 @@
                                              :type  :error}]]]}))
 
 (rf/reg-event-db
-  ::set-criterion
+  ::set-criterion-value
   [data-path]
-  (fn [db [_ property operator value]]
-    (let [v {:property-name property
-             :operator      operator
-             :match-value   value}]
-      (-> db
-          (assoc-in [:criteria property] v)
-          (assoc property value)))))
+  (fn [db [_ property value]]
+    (let [old-v (get-in db [:criteria property])
+          new-v (merge old-v
+                       {:property-name property
+                        :match-value   value})]
+      (assoc-in db [:criteria property] new-v))))
+
+(rf/reg-event-db
+  ::set-criterion-operator
+  [data-path]
+  (fn [db [_ property value]]
+    (let [old-v (get-in db [:criteria property])
+          new-v (merge old-v
+                       {:property-name property
+                        :operator      value})]
+      (assoc-in db [:criteria property] new-v))))
+
+(rf/reg-event-db
+  ::set-criterion-not
+  [data-path]
+  (fn [db [_ property value]]
+    (let [old-v (get-in db [:criteria property])
+          new-v (merge old-v
+                       {:property-name property
+                        :not           value})]
+      (assoc-in db [:criteria property] new-v))))
 
 (rf/reg-event-db
   ::set-input
   [data-path]
   (fn [db [_ k v]]
-    (assoc db k v)))
+    (assoc-in db [:weight k] v)))
 
 (rf/reg-event-db
   ::set-multi-weight-input
   [data-path]
   (fn [db [_ product-key property weight]]
-    (assoc-in db [product-key property] weight)))
+    (assoc-in db [:weights product-key property] weight)))
 
 (rf/reg-sub
   ::form-data

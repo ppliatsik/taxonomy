@@ -42,17 +42,15 @@
   [data-path]
   (fn [_ _]
     {:db {}
-     :fx [[::get-security-mechanisms]
-          [::get-threats]
-          [::get-products-choices]]}))
-
-(rf/reg-event-fx
-  ::get-security-mechanisms
-  [data-path]
-  (fn [_ _]
-    :fx [[:dispatch [:ajax/get {:uri     "/api/config/security-mechanisms"
-                                :success ::get-security-mechanisms-success
-                                :failure ::get-security-mechanisms-failure}]]]))
+     :fx [[:dispatch [:ajax/get {:uri     "/api/config/security-mechanisms"
+                                 :success ::get-security-mechanisms-success
+                                 :failure ::get-security-mechanisms-failure}]]
+          [:dispatch [:ajax/get {:uri     "/api/config/threats"
+                                 :success ::get-threats-success
+                                 :failure ::get-threats-failure}]]
+          [:dispatch [:ajax/get {:uri     "/api/config/products-choices"
+                                 :success ::get-products-choices-success
+                                 :failure ::get-products-choices-failure}]]]}))
 
 (rf/reg-event-db
   ::get-security-mechanisms-success
@@ -68,14 +66,6 @@
                                              :body  (:reason response)
                                              :type  :error}]]]}))
 
-(rf/reg-event-fx
-  ::get-threats
-  [data-path]
-  (fn [_ _]
-    :fx [[:dispatch [:ajax/get {:uri     "/api/config/threats"
-                                :success ::get-threats-success
-                                :failure ::get-threats-failure}]]]))
-
 (rf/reg-event-db
   ::get-threats-success
   [data-path]
@@ -89,14 +79,6 @@
     {:fx [[:dispatch [:ui/push-notification {:title :com.taxonomy.ui/failure
                                              :body  (:reason response)
                                              :type  :error}]]]}))
-
-(rf/reg-event-fx
-  ::get-products-choices
-  [data-path]
-  (fn [_ _]
-    :fx [[:dispatch [:ajax/get {:uri     "/api/config/products-choices"
-                                :success ::get-products-choices-success
-                                :failure ::get-products-choices-failure}]]]))
 
 (rf/reg-event-db
   ::get-products-choices-success

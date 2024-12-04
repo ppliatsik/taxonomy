@@ -67,6 +67,12 @@
    :operator                   "Τελεστής"
    :value                      "Τιμή"
    :metric                     "Μετρική"
+   :nfg-property               "Ιδιότητα μη λειτουργικής εγγύησης"
+   :nfg-value                  "Τιμή μη λειτουργικής εγγύησης"
+   :nfg-metric                 "Μετρική μη λειτουργικής εγγύησης"
+   :res-property               "Ιδιότητα περιορισμού"
+   :res-value                  "Τιμή περιορισμού"
+   :res-metric                 "Μετρική περιορισμού"
    :direction-of-values        "Κατεύθυνση τιμών"
    :direction-of-values-msg    "Επιλογή για θετική"
    :unit                       "Μονάδα"
@@ -74,7 +80,8 @@
    :support-daily-duration     "Υποστήριξη ημερήσιας διάρκειας"
    :support-package-number     "Αριθμός πακέτων υποστήριξης"
    :wrong-weights              "Λανθασμένα βάρη εισόδου"
-   :logical-operator           "Λογικός τελεστής"
+   :logical-operators          "Λογικοί τελεστές"
+   :operators                  "Τελεστές"
    :not                        "Προσθέστε τον λογικό τελεστή 'όχι'"})
 
 (def end-user
@@ -261,7 +268,7 @@
    :security-ecosystems                           "οικοσυστήματα ασφάλειας"
 
    :other-functions                                                      "Άλλες λειτουργίες (ασφάλειας)"
-   :tool-boards                                                          "Πίνακες εργαλείων"
+   :tool-tables                                                          "Πίνακες εργαλείων"
    :predefined-tool-tables                                               "Προκαθορισμένοι πίνακες εργαλείων"
    :customizable-tool-tables                                             "Προσαρμόσιμοι πίνακες εργαλείων"
    :rules-management                                                     "Διαχείριση κανόνων"
