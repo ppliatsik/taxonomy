@@ -1,18 +1,16 @@
 (ns com.taxonomy.product.ui.create.model
   (:require [re-frame.core :as rf]
-            [clojure.string :as clj.str]
+            [clojure.spec.alpha :as s]
+            [spec-tools.core :as st]
             [clojure.set :as clj.set]
             [com.taxonomy.ui.routes :as routes]
+            [com.taxonomy.ui.util :as util]
             [com.taxonomy.product :as product]))
 
 (def paths [:ui/forms ::product/create :data])
 (def data-path (rf/path [:ui/forms ::product/create :data]))
 (def metadata
   {:data-path paths})
-
-(defn check-fields
-  [data]
-  (assoc data :correct-inputs (not (clj.str/blank? (:name data)))))
 
 (defn get-product-data
   [db]
@@ -38,6 +36,12 @@
    :marketplaces              (:marketplaces db)
    :support                   (:support db)})
 
+(defn check-fields
+  [data]
+  (let [product (get-product-data data)]
+    (assoc data :correct-inputs (s/valid? ::product/create-product-request
+                                          (st/coerce ::product/create-product-request product st/string-transformer)))))
+
 (rf/reg-event-fx
   ::init
   [data-path]
@@ -57,7 +61,7 @@
   ::get-security-mechanisms-success
   [data-path]
   (fn [db [_ response]]
-    (assoc db :security-mechanisms response)))
+    (assoc db :security-mechanisms (util/get-all-keys response))))
 
 (rf/reg-event-fx
   ::get-security-mechanisms-failure
@@ -71,7 +75,7 @@
   ::get-threats-success
   [data-path]
   (fn [db [_ response]]
-    (assoc db :threats response)))
+    (assoc db :threats (util/get-all-keys response))))
 
 (rf/reg-event-fx
   ::get-threats-failure

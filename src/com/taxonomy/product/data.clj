@@ -2,7 +2,7 @@
   (:require [clojure.string :as clj.str]
             [datascript.core :as d]))
 
-(defn- ->tuple
+(defn- ->triple
   [id attribute value]
   [:db/add id attribute value])
 
@@ -16,7 +16,7 @@
           (assoc $ :published false)
           (map (fn [[k v]]
                  (when v
-                   (->tuple (:id product) k v)))
+                   (->triple (:id product) k v)))
                $)
           (into [] $))))
 
