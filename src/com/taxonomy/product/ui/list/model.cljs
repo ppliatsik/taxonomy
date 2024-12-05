@@ -2,6 +2,7 @@
   (:require [re-frame.core :as rf]
             [clojure.spec.alpha :as s]
             [spec-tools.core :as st]
+            [clojure.set :as clj.set]
             [com.taxonomy.ui.util :as util]
             [com.taxonomy.product :as product]))
 
@@ -36,6 +37,11 @@
   (->> db
        :criteria
        vals
+       (map (fn [{:keys [property-name] :as criterion}]
+              (if (or (= :security-mechanisms property-name)
+                      (= :threats property-name))
+                (update criterion :match-value #(->> % (map keyword) vec))
+                criterion)))
        (remove #(nil? (-> % :match-value)))
        vec))
 
@@ -206,6 +212,12 @@
                        {:property-name property
                         :not           value})]
       (assoc-in db [:criteria property] new-v))))
+
+(rf/reg-event-db
+  ::clear-criterion-value
+  [data-path]
+  (fn [db [_ property]]
+    (assoc-in db [:criteria property :match-value] [])))
 
 (rf/reg-event-db
   ::set-input

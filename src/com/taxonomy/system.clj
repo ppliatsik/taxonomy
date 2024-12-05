@@ -62,9 +62,10 @@
                       slurp
                       (edn/read-string {:readers *data-readers*}))]
     (doseq [product products]
-      (product.data/create-product couchbase (-> product
-                                                 (assoc :id (str (UUID/randomUUID)))
-                                                 (assoc :created-by "admin"))))))
+      ;(product.data/create-product couchbase (-> product
+      ;                                           (assoc :id (str (UUID/randomUUID)))
+      ;                                           (assoc :created-by "admin")))
+      )))
 
 (defmethod ig/halt-key! :taxonomy/products [_ _]
   )

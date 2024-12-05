@@ -86,7 +86,8 @@
    :logical-operators          "Logical operators"
    :operators                  "Operators"
    :not                        "Add 'not' logical operator"
-   :add                        "Add"})
+   :add                        "Add"
+   :clear                      "Clear"})
 
 (def end-user
   {:user-not-exists                   "User does not exists"

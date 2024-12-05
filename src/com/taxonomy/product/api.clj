@@ -148,6 +148,7 @@
 
 (defn products-match
   [{:keys [couchbase parameters user-info guest-products-limit] :as request}]
+  (prn "parameters" parameters)
   (let [logical-operator (if (or (not user-info)
                                  (not (-> parameters :body :logical-operator)))
                            "AND" (-> parameters :body :logical-operator))

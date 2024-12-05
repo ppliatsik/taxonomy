@@ -127,7 +127,8 @@
 (s/def ::not (s/nilable boolean?))
 (s/def ::match-value
   (s/or :string string?
-        :number number?))
+        :number number?
+        :vector vector?))
 (s/def ::property-name keyword?)
 (s/def ::criterion
   (s/keys :req-un [::property-name ::match-value]
