@@ -90,7 +90,7 @@
       [:td.nowrap [show-guarantees-restrictions (:non-functional-guarantees product) lang]]]
      [:tr
       [:td.nowrap (trans/translate lang ::product/protection-types)]
-      [:td.nowrap (clj.str/join (:product-categories product) ",")]]
+      [:td.nowrap (clj.str/join (:protection-types product) ",")]]
      [:tr
       [:td.nowrap (trans/translate lang ::product/security-properties)]
       [:td.nowrap (clj.str/join (:security-properties product) ",")]]

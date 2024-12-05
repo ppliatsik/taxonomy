@@ -61,8 +61,10 @@
    :support                    "Υποστήριξη"
    :days                       "Ημέρες"
    :cost-model-types           "Τύποι μοντέλων κόστους"
+   :cost-model-type            "Τύπος μοντέλου κόστους"
    :charge-packets             "Πακέτα χρέωσης"
    :time-charge-types          "Τύποι χρονοχρεώσεων"
+   :time-charge-type           "Τύπος χρονοχρέωσης"
    :property                   "Ιδιότητα"
    :operator                   "Τελεστής"
    :value                      "Τιμή"
@@ -77,12 +79,14 @@
    :direction-of-values-msg    "Επιλογή για θετική"
    :unit                       "Μονάδα"
    :support-types              "Τύποι υποστήριξης"
+   :support-type               "Τύπος υποστήριξης"
    :support-daily-duration     "Υποστήριξη ημερήσιας διάρκειας"
    :support-package-number     "Αριθμός πακέτων υποστήριξης"
    :wrong-weights              "Λανθασμένα βάρη εισόδου"
    :logical-operators          "Λογικοί τελεστές"
    :operators                  "Τελεστές"
-   :not                        "Προσθέστε τον λογικό τελεστή 'όχι'"})
+   :not                        "Προσθέστε τον λογικό τελεστή 'όχι'"
+   :add                        "Προσθήκη"})
 
 (def end-user
   {:user-not-exists                   "Ο χρήστης δεν υπάρχει"

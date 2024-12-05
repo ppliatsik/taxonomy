@@ -1,6 +1,7 @@
 (ns com.taxonomy.product.ui.create.model
   (:require [re-frame.core :as rf]
             [clojure.string :as clj.str]
+            [clojure.set :as clj.set]
             [com.taxonomy.ui.routes :as routes]
             [com.taxonomy.product :as product]))
 
@@ -126,6 +127,89 @@
   [data-path]
   (fn [db [_ k v]]
     (assoc db k v)))
+
+(rf/reg-event-db
+  ::set-line-field-input
+  [data-path]
+  (fn [db [_ property idx field value]]
+    (assoc-in db [property idx field] value)))
+
+(rf/reg-event-db
+  ::add-line
+  [data-path]
+  (fn [db [_ property]]
+    (cond (= :cost-model property)
+          (update db property conj {:cost-model-types nil
+                                    :charge-packets   nil
+                                    :time-charge-type nil})
+
+          (= :non-functional-guarantees property)
+          (update db property conj {:property            nil
+                                    :operator            nil
+                                    :value               nil
+                                    :metric              nil
+                                    :direction-of-values nil
+                                    :unit                nil})
+
+          (= :restrictions property)
+          (update db property conj {:property            nil
+                                    :operator            nil
+                                    :value               nil
+                                    :metric              nil
+                                    :direction-of-values nil
+                                    :unit                nil})
+
+          (= :support property)
+          (update db property conj {:support-types          nil
+                                    :support-daily-duration nil
+                                    :support-package-number nil}))))
+
+(rf/reg-event-db
+  ::remove-line
+  [data-path]
+  (fn [db [_ property idx]]
+    (update db property (fn [elements]
+                          (vec (concat (take idx elements)
+                                       (drop (+ idx 1) elements)))))))
+
+(rf/reg-event-db
+  ::select-smt-to-add
+  [data-path]
+  (fn [db [_ property values]]
+    (let [k          (if (= :security-mechanisms property)
+                       :security-mechanism-to-add
+                       :threat-to-add)
+          old-values (get db k)
+          new-values (concat old-values values)]
+      (assoc db k (vec new-values)))))
+
+(rf/reg-event-db
+  ::select-smt-to-remove
+  [data-path]
+  (fn [db [_ property values]]
+    (let [k          (if (= :security-mechanisms property)
+                       :security-mechanism-to-add
+                       :threat-to-add)
+          old-values (set (get db k))
+          new-values (clj.set/difference old-values values)]
+      (assoc db k (vec new-values)))))
+
+(rf/reg-event-db
+  ::add-smt
+  [data-path]
+  (fn [db [_ selected-property values]]
+    (let [values (-> (get db selected-property)
+                     (concat values)
+                     vec)]
+      (assoc db selected-property values))))
+
+(rf/reg-event-db
+  ::remove-smt
+  [data-path]
+  (fn [db [_ selected-property values]]
+    (let [old-values (set (get db selected-property))
+          new-values (clj.set/difference old-values values)]
+      (assoc db selected-property new-values))))
 
 (rf/reg-sub
   ::form-data

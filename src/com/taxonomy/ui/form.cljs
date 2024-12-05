@@ -12,7 +12,11 @@
    :envelope      'fa-envelope
    :user          'fa-user
    :check         'fa-check-circle
-   :search        'fa-search})
+   :search        'fa-search
+   :plus          'fa-plus
+   :minus         'fa-minus
+   :right         'fa-arrow-right
+   :left          'fa-arrow-left})
 
 (defn icons
   [{:keys [icon icon-css] :as options}]

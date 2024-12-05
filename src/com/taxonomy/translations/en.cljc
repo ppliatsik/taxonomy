@@ -61,8 +61,10 @@
    :support                    "Support"
    :days                       "Days"
    :cost-model-types           "Cost model types"
+   :cost-model-type            "Cost model type"
    :charge-packets             "Charge packets"
    :time-charge-types          "Time charge types"
+   :time-charge-type           "Time charge type"
    :property                   "Property"
    :operator                   "Operator"
    :value                      "Value"
@@ -77,12 +79,14 @@
    :direction-of-values-msg    "Check for positive"
    :unit                       "Unit"
    :support-types              "Support types"
+   :support-type               "Support type"
    :support-daily-duration     "Support daily duration"
    :support-package-number     "Support package number"
    :wrong-weights              "Wrong weights input"
    :logical-operators          "Logical operators"
    :operators                  "Operators"
-   :not                        "Add 'not' logical operator"})
+   :not                        "Add 'not' logical operator"
+   :add                        "Add"})
 
 (def end-user
   {:user-not-exists                   "User does not exists"
