@@ -99,13 +99,13 @@
      (or (:test-duration-w weights) 0.0)))
 
 (defn create-product
-  [{:keys [graph parameters user-info] :as request}]
+  [{:keys [couchbase parameters user-info] :as request}]
   (cond (and (not (end-user/is-admin? user-info))
              (not (end-user/is-user? user-info)))
         (http-response/invalid {:result :failure
                                 :reason ::end-user/invalid-user})
 
-        (data/get-product-by-name graph (:body parameters))
+        (data/get-product-by-name couchbase (:body parameters))
         (http-response/invalid {:result :failure
                                 :reason ::product/product-already-exists})
 
@@ -114,11 +114,11 @@
                        (assoc :id (str (UUID/randomUUID)))
                        (assoc :created-by (:username user-info)))]
           (http-response/ok {:result  :success
-                             :payload (data/create-product graph data)}))))
+                             :payload (data/create-product couchbase data)}))))
 
 (defn publish-product
-  [{:keys [graph parameters user-info] :as request}]
-  (let [product (data/get-product-by-id graph (:path parameters))]
+  [{:keys [couchbase parameters user-info] :as request}]
+  (let [product (data/get-product-by-id couchbase (:path parameters))]
     (cond (not (end-user/is-current-user? user-info (:created-by product)))
           (http-response/invalid {:result :failure
                                   :reason ::end-user/invalid-user})
@@ -129,11 +129,11 @@
 
           :else
           (http-response/ok {:result  :success
-                             :payload (data/publish-product graph product)}))))
+                             :payload (data/publish-product couchbase product)}))))
 
 (defn unpublish-product
-  [{:keys [products parameters user-info] :as request}]
-  (let [product (data/get-product-by-id products (:path parameters))]
+  [{:keys [couchbase parameters user-info] :as request}]
+  (let [product (data/get-product-by-id couchbase (:path parameters))]
     (cond (not (end-user/is-current-user? user-info (:created-by product)))
           (http-response/invalid {:result :failure
                                   :reason ::end-user/invalid-user})
@@ -144,20 +144,20 @@
 
           :else
           (http-response/ok {:result  :success
-                             :payload (data/unpublish-product products product)}))))
+                             :payload (data/unpublish-product couchbase product)}))))
 
 (defn products-match
-  [{:keys [graph parameters user-info guest-products-limit] :as request}]
+  [{:keys [couchbase parameters user-info guest-products-limit] :as request}]
   (let [logical-operator (if (or (not user-info)
                                  (not (-> parameters :body :logical-operator)))
                            "AND" (-> parameters :body :logical-operator))
-        products         (data/search-products graph (-> parameters :body :criteria) logical-operator)]
+        products         (data/search-products couchbase (-> parameters :body :criteria) logical-operator)]
     (if user-info
       (http-response/ok products)
       (http-response/ok (->> products (take guest-products-limit) vec)))))
 
 (defn products-classification
-  [{:keys [graph parameters user-info guest-products-limit] :as request}]
+  [{:keys [couchbase parameters user-info guest-products-limit] :as request}]
   (let [weights (-> parameters :body :weights)
         total-w (get-total-weight weights)]
     (cond (not= 1M total-w)
@@ -166,15 +166,15 @@
 
           :else
           (let [products (if (seq (-> parameters :body :ids))
-                           (data/get-products-by-id graph (-> parameters :body :ids))
-                           (data/get-all-products graph))
+                           (data/get-products-by-id couchbase (-> parameters :body :ids))
+                           (data/get-all-products couchbase))
                 products (classify-products products weights)]
             (if user-info
               (http-response/ok products)
               (http-response/ok (->> products (take guest-products-limit) vec)))))))
 
 (defn products-discovery
-  [{:keys [graph parameters user-info guest-products-limit] :as request}]
+  [{:keys [couchbase parameters user-info guest-products-limit] :as request}]
   (let [weights (-> parameters :body :weights)
         total-w (get-total-weight weights)]
     (cond (not= 1M total-w)
@@ -185,22 +185,22 @@
           (let [logical-operator (if (or (not user-info)
                                          (not (-> parameters :body :logical-operator)))
                                    "AND" (-> parameters :body :logical-operator))
-                products         (-> (data/search-products graph (-> parameters :body :criteria) logical-operator)
+                products         (-> (data/search-products couchbase (-> parameters :body :criteria) logical-operator)
                                      (classify-products weights))]
             (if user-info
               (http-response/ok products)
               (http-response/ok (->> products (take guest-products-limit) vec)))))))
 
 (defn get-my-products
-  [{:keys [graph user-info] :as request}]
+  [{:keys [couchbase user-info] :as request}]
   (if-not user-info
     (http-response/invalid {:result :failure
                             :reason ::end-user/invalid-user})
-    (http-response/ok (data/get-my-products graph user-info))))
+    (http-response/ok (data/get-my-products couchbase user-info))))
 
 (defn get-product
-  [{:keys [graph parameters user-info] :as request}]
-  (let [product (data/get-product-by-id graph (:path parameters))]
+  [{:keys [couchbase parameters user-info] :as request}]
+  (let [product (data/get-product-by-id couchbase (:path parameters))]
     (if (or (not product)
             (and (not (:published product))
                  (not (end-user/is-current-user? user-info (:created-by product)))))
@@ -209,8 +209,8 @@
       (http-response/ok product))))
 
 (defn delete-product
-  [{:keys [graph parameters user-info] :as request}]
-  (let [product (data/get-product-by-id graph (:path parameters))]
+  [{:keys [couchbase parameters user-info] :as request}]
+  (let [product (data/get-product-by-id couchbase (:path parameters))]
     (cond (and (not (end-user/is-admin? user-info))
                (not (end-user/is-current-user? user-info (:created-by product))))
           (http-response/invalid {:result :failure
@@ -222,5 +222,5 @@
 
           :else
           (do
-            (data/delete-product-by-id graph (:path parameters))
+            (data/delete-product-by-id couchbase (:path parameters))
             (http-response/ok {:result :success})))))

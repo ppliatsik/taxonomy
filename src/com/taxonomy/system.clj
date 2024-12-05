@@ -6,8 +6,6 @@
             [java-time :as jt]
             [chime.core :as chime]
             [clojure.edn :as edn]
-            [datascript.core :as d]
-            [datascript.db :as db]
             [com.taxonomy.end-user.data :as end-user.data]
             [com.taxonomy.product.data :as product.data])
   (:import [java.lang AutoCloseable]
@@ -59,21 +57,23 @@
   (when scheduler
     (.close ^AutoCloseable scheduler)))
 
-(defmethod ig/init-key :graph/products [_ {:keys [products-file] :as cfg}]
-  (let [products     (->> products-file
-                          slurp
-                          (edn/read-string {:readers *data-readers*}))
-        initial-data (->> products
-                          (mapcat (fn [product]
-                                    (product.data/product->entity (-> product
-                                                                      (assoc :id (str (UUID/randomUUID)))
-                                                                      (assoc :created-by "admin")))))
-                          vec)
-        graph        (-> (d/empty-db)
-                         (d/db-with initial-data))]
-    graph))
+(defmethod ig/init-key :taxonomy/products [_ {:keys [couchbase products-file] :as cfg}]
+  (let [products (->> products-file
+                      slurp
+                      (edn/read-string {:readers *data-readers*}))]
+    (doseq [product products]
+      (product.data/create-product couchbase (-> product
+                                                 (assoc :id (str (UUID/randomUUID)))
+                                                 (assoc :created-by "admin"))))))
 
-(defmethod ig/halt-key! :graph/products [_ _]
+(defmethod ig/halt-key! :taxonomy/products [_ _]
+  )
+
+(defmethod ig/init-key :db/couchbase [_ cfg]
+  {:cluster ""
+   :bucket  ""})
+
+(defmethod ig/halt-key! :db/couchbase [_ _]
   )
 
 (defmethod ig/init-key :er/security-mechanisms [_ {:keys [file]}]

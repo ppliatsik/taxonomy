@@ -1,70 +1,58 @@
 (ns com.taxonomy.product.data
-  (:require [clojure.string :as clj.str]
-            [datascript.core :as d]))
+  (:require [clojure.string :as clj.str]))
 
-(defn- ->triple
-  [id attribute value]
-  [:db/add id attribute value])
+(defn json-document->edn
+  [json-document]
+  (when json-document
+    ))
 
-(defn product->entity
-  [product]
-  (let [name-q (some-> (:name product)
-                       clj.str/lower-case
-                       (clj.str/replace #"\s" ""))]
-    (as-> product $
-          (assoc $ :name-q name-q)
-          (assoc $ :published false)
-          (map (fn [[k v]]
-                 (when v
-                   (->triple (:id product) k v)))
-               $)
-          (into [] $))))
+(defn edn->json-object
+  [edn]
+  (when edn
+    ))
 
 (defn create-product
-  [graph product]
-  (let [entity (product->entity product)]
-    (d/transact! graph entity)))
+  [{:keys [bucket]} product]
+  )
 
 (defn publish-product
-  [graph {:keys [id] :as product}]
-  (d/transact! graph [{:db/id     id
-                       :published true}]))
+  [couchbase {:keys [id] :as product}]
+  )
 
 (defn unpublish-product
-  [graph {:keys [id] :as product}]
-  (d/transact! graph [{:db/id     id
-                       :published false}]))
+  [couchbase {:keys [id] :as product}]
+  )
 
 (defn search-products
-  [graph params logical-operator]
-  (let [products []]
-    (filter #(:published %) products)))
+  [{:keys [cluster]} params logical-operator]
+  )
 
 (defn get-product-by-name
-  [graph {:keys [name]}]
-  (let [name (some-> name
-                     clj.str/lower-case
-                     (clj.str/replace #"\s" ""))]
-    (d/q '[:find  (pull ?e [*])
-           :where [?e :name-q name]] graph)))
+  [{:keys [cluster]} {:keys [name]}]
+  (let [name   (some-> name
+                       clj.str/lower-case
+                       (clj.str/replace #"\s" ""))
+        result (.query cluster "select * from products where name-q = ")]
+    ))
 
 (defn get-my-products
-  [graph {:keys [username]}]
-  (d/q '[:find  (pull ?e '[*])
-         :where [?e :created-by username]] graph))
+  [{:keys [cluster]} {:keys [username]}]
+  )
 
 (defn get-product-by-id
-  [graph {:keys [id]}]
-  (d/pull graph '[*] id))
+  [{:keys [bucket]} {:keys [id]}]
+  (let [result (.get bucket id)]
+    (json-document->edn result)))
 
 (defn get-products-by-id
-  [graph ids]
-  (d/pull-many graph '[*] ids))
+  [{:keys [cluster]} ids]
+  )
 
 (defn get-all-products
-  [graph]
-  (d/pull graph '[*]))
+  [{:keys [cluster]}]
+  (let [result (.query cluster "select * from products")]
+    ))
 
 (defn delete-product-by-id
-  [graph {:keys [id]}]
-  (d/transact! graph [[:db.fn/retractEntity id]]))
+  [{:keys [bucket]} {:keys [id]}]
+  (.remove bucket id))
