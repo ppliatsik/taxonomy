@@ -172,7 +172,7 @@
                                     :operator            nil
                                     :value               nil
                                     :metric              nil
-                                    :direction-of-values nil
+                                    :direction-of-values false
                                     :unit                nil})
 
           (= :support property)
