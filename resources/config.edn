@@ -8,8 +8,8 @@
                 :host                        "0.0.0.0"
                 :server-address              "http://localhost:8888"
                 :guest-products-limit        10
-                :security-mechanisms         #ig/ref :er/security-mechanisms
-                :threats                     #ig/ref :er/threats
+                :security-mechanisms         #ig/ref :secaas/security-mechanisms
+                :threats                     #ig/ref :secaas/threats
                 :couchbase                   #ig/ref :db/couchbase}
 
  :db/pg {:server-name       "localhost"
@@ -22,7 +22,9 @@
          :maximum-pool-size 15}
 
  :db/couchbase {:bucket-name "products"
-                :uri         "localhost"}
+                :uri         "localhost"
+                :username    "test"
+                :password    "test"}
 
  :email/host {:host "smtp.gmail.com"
               :port 587
@@ -40,6 +42,6 @@
  :taxonomy/products {:couchbase     #ig/ref :db/couchbase
                      :products-file "resources/products.edn"}
 
- :er/security-mechanisms {:file "resources/mechanisms.edn"}
+ :secaas/security-mechanisms {:file "resources/mechanisms.edn"}
 
- :er/threats {:file "resources/threats.edn"}}
+ :secaas/threats {:file "resources/threats.edn"}}

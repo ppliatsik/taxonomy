@@ -19,17 +19,87 @@
   :product-company           ""
   :marketplaces              ""
   :support                   ""}
- {}
- {}
- {}
- {}
- {}
- {}
- {}
- {}
- {}
- {}
- {}
- {}
- {}
- {}]
+ {:name                      ""
+  :description               ""
+  :delivery-methods          ""
+  :deployment-models         ""
+  :product-categories        ""
+  :cost-model                ""
+  :security-mechanisms       ""
+  :non-functional-guarantees ""
+  :protection-types          ""
+  :security-properties       ""
+  :protected-items           ""
+  :threats                   ""
+  :restrictions              ""
+  :open-source               ""
+  :freely-available          ""
+  :test-version              ""
+  :test-duration             ""
+  :product-interfaces        ""
+  :product-company           ""
+  :marketplaces              ""
+  :support                   ""}
+ {:name                      ""
+  :description               ""
+  :delivery-methods          ""
+  :deployment-models         ""
+  :product-categories        ""
+  :cost-model                ""
+  :security-mechanisms       ""
+  :non-functional-guarantees ""
+  :protection-types          ""
+  :security-properties       ""
+  :protected-items           ""
+  :threats                   ""
+  :restrictions              ""
+  :open-source               ""
+  :freely-available          ""
+  :test-version              ""
+  :test-duration             ""
+  :product-interfaces        ""
+  :product-company           ""
+  :marketplaces              ""
+  :support                   ""}
+ {:name                      ""
+  :description               ""
+  :delivery-methods          ""
+  :deployment-models         ""
+  :product-categories        ""
+  :cost-model                ""
+  :security-mechanisms       ""
+  :non-functional-guarantees ""
+  :protection-types          ""
+  :security-properties       ""
+  :protected-items           ""
+  :threats                   ""
+  :restrictions              ""
+  :open-source               ""
+  :freely-available          ""
+  :test-version              ""
+  :test-duration             ""
+  :product-interfaces        ""
+  :product-company           ""
+  :marketplaces              ""
+  :support                   ""}
+ {:name                      ""
+  :description               ""
+  :delivery-methods          ""
+  :deployment-models         ""
+  :product-categories        ""
+  :cost-model                ""
+  :security-mechanisms       ""
+  :non-functional-guarantees ""
+  :protection-types          ""
+  :security-properties       ""
+  :protected-items           ""
+  :threats                   ""
+  :restrictions              ""
+  :open-source               ""
+  :freely-available          ""
+  :test-version              ""
+  :test-duration             ""
+  :product-interfaces        ""
+  :product-company           ""
+  :marketplaces              ""
+  :support                   ""}]

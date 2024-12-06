@@ -33,6 +33,29 @@ services:
     networks:
       - tnet
 
+  couchbase-server:
+    build: ./couchbase
+    container_name: couchbase-server
+    hostname: couchbase-server
+    ports:
+      - "8091-8096:8091-8096"
+      - "11210:11210"
+    environment:
+      - CLUSTER_NAME=taxonomy
+      - COUCHBASE_ADMINISTRATOR_USERNAME=test
+      - COUCHBASE_ADMINISTRATOR_PASSWORD=test
+      - COUCHBASE_BUCKET=products
+      - COUCHBASE_BUCKET_RAMSIZE=512
+      - COUCHBASE_RAM_SIZE=2048
+      - COUCHBASE_INDEX_RAM_SIZE=512
+    working_dir: /opt/couchbase
+    stdin_open: true
+    tty: true
+    entrypoint: [ "" ]
+    command: sh -c "/opt/couchbase/init/init-cbserver.sh"
+    networks:
+      - tnet
+
 volumes:
   dbdata:
 

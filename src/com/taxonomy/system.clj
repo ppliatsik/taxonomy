@@ -8,7 +8,9 @@
             [clojure.edn :as edn]
             [com.taxonomy.end-user.data :as end-user.data]
             [com.taxonomy.product.data :as product.data])
-  (:import [java.lang AutoCloseable]
+  (:import [com.couchbase.client.java Cluster CouchbaseCluster]
+           (com.couchbase.client.java.auth Authenticator)
+           [java.lang AutoCloseable]
            [java.util UUID]))
 
 (defmethod ac/reader 'ig/ref
@@ -62,35 +64,39 @@
                       slurp
                       (edn/read-string {:readers *data-readers*}))]
     (doseq [product products]
-      ;(product.data/create-product couchbase (-> product
-      ;                                           (assoc :id (str (UUID/randomUUID)))
-      ;                                           (assoc :created-by "admin")))
-      )))
+      (when-not (product.data/get-product-by-name couchbase product)
+        (product.data/create-product couchbase (-> product
+                                                   (assoc :id (str (UUID/randomUUID)))
+                                                   (assoc :created-by "admin")))))))
 
 (defmethod ig/halt-key! :taxonomy/products [_ _]
   )
 
-(defmethod ig/init-key :db/couchbase [_ cfg]
-  {:cluster ""
-   :bucket  ""})
+(defmethod ig/init-key :db/couchbase [_ {:keys [bucket-name uri username password]}]
+  (let [cluster (-> (CouchbaseCluster/create)
+                    (.authenticate username password))
+        bucket  (.openBucket cluster bucket-name)]
+    {:cluster cluster
+     :bucket  bucket}))
 
-(defmethod ig/halt-key! :db/couchbase [_ _]
-  )
+(defmethod ig/halt-key! :db/couchbase [_ {:keys [cluster]}]
+  (when cluster
+    (.disconnect cluster)))
 
-(defmethod ig/init-key :er/security-mechanisms [_ {:keys [file]}]
+(defmethod ig/init-key :secaas/security-mechanisms [_ {:keys [file]}]
   (let [sm (->> file
                 slurp
                 (edn/read-string {:readers *data-readers*}))]
     sm))
 
-(defmethod ig/halt-key! :er/security-mechanisms [_ _]
+(defmethod ig/halt-key! :secaas/security-mechanisms [_ _]
   )
 
-(defmethod ig/init-key :er/threats [_ {:keys [file]}]
+(defmethod ig/init-key :secaas/threats [_ {:keys [file]}]
   (let [threats (->> file
                      slurp
                      (edn/read-string {:readers *data-readers*}))]
     threats))
 
-(defmethod ig/halt-key! :er/threats [_ _]
+(defmethod ig/halt-key! :secaas/threats [_ _]
   )
