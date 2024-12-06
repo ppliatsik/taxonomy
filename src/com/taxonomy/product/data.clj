@@ -23,11 +23,10 @@
 (defn edn->json-object
   [data]
   (when data
-    (let [json-object (JsonObject/create)]
-      (->> properties
-           (map (fn [property]
-                  (.put json-object (name property) (get data property)))))
-      json-object)))
+    (reduce (fn [acc property]
+              (.put acc (name property) (get data property)))
+            (JsonObject/create)
+            properties))
 
 (defn get-from-n1ql-result
   [result]
