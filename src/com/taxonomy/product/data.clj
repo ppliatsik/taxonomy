@@ -26,7 +26,7 @@
     (reduce (fn [acc property]
               (.put acc (name property) (get data property)))
             (JsonObject/create)
-            properties))
+            properties)))
 
 (defn get-from-n1ql-result
   [result]
