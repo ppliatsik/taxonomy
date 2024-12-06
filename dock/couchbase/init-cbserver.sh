@@ -39,7 +39,7 @@ if ! [ -f "$FILE" ]; then
   # create indexes using the QUERY REST API
   /opt/couchbase/bin/curl -v http://localhost:8093/query/service \
   -u "$COUCHBASE_ADMINISTRATOR_USERNAME":"$COUCHBASE_ADMINISTRATOR_PASSWORD" \
-  -d 'statement=CREATE INDEX idx_products_name on products(name)'
+  -d 'statement=CREATE INDEX idx_products_name on products(name-q)'
 
   sleep 2s
 

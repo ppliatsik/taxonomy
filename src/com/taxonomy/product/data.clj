@@ -37,26 +37,28 @@
 
 (defn create-product
   [{:keys [bucket]} product]
-  (let [json-object   (edn->json-object product)
+  (let [name (some-> name
+                     clj.str/lower-case
+                     (clj.str/replace #"\s" ""))
+
+        json-object   (edn->json-object (assoc product :name-q name))
         json-document (.create JsonDocument (:id product) json-object)]
     (.insert bucket json-document)
     product))
 
 (defn publish-product
   [{:keys [bucket]} product]
-  (let [json-object   (edn->json-object product)
+  (let [json-object   (-> (edn->json-object product)
+                         (.put "published" true))
         json-document (.create JsonDocument (:id product) json-object)
-        json-object   (.content json-document)
-        _             (.put json-object "published" true)
         new-doc       (.upsert bucket json-document)]
     (json-object->edn (.content new-doc))))
 
 (defn unpublish-product
   [{:keys [bucket]} product]
-  (let [json-object   (edn->json-object product)
+  (let [json-object   (-> (edn->json-object product)
+                          (.put "published" false))
         json-document (.create JsonDocument (:id product) json-object)
-        json-object   (.content json-document)
-        _             (.put json-object "published" true)
         new-doc       (.upsert bucket json-document)]
     (json-object->edn (.content new-doc))))
 
@@ -72,8 +74,8 @@
   (let [name   (some-> name
                        clj.str/lower-case
                        (clj.str/replace #"\s" ""))
-        params (JsonObject/create)
-        _      (.put params "username" name)
+        params (-> (JsonObject/create)
+                   (.put "username" name))
         query  (N1qlQuery/parameterized "select * from products where name-q = $name" params)
         result (.query bucket query)]
     (-> (get-from-n1ql-result result)
@@ -81,8 +83,8 @@
 
 (defn get-my-products
   [{:keys [bucket]} {:keys [username]}]
-  (let [params (JsonObject/create)
-        _      (.put params "username" username)
+  (let [params (-> (JsonObject/create)
+                   (.put "username" username))
         query  (N1qlQuery/parameterized "select * from products where created-by = $username" params)
         result (.query bucket query)]
     (get-from-n1ql-result result)))
@@ -94,15 +96,15 @@
 
 (defn get-products-by-id
   [{:keys [bucket]} ids]
-  (let [params (JsonObject/create)
-        _      (.put params "ids" (JsonArray/from ids))
+  (let [params (-> (JsonObject/create)
+                   (.put "ids" (JsonArray/from ids)))
         query  (N1qlQuery/parameterized "select * from products use keys $ids" params)
         result (.query bucket query)]
     (get-from-n1ql-result result)))
 
 (defn get-all-products
   [{:keys [bucket]}]
-  (let [query  (N1qlQuery/simple "select * from products")
+  (let [query  (N1qlQuery/simple "select * from products where published = true")
         result (.query bucket query)]
     (get-from-n1ql-result result)))
 
