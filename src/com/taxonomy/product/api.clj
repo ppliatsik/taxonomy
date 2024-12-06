@@ -148,10 +148,8 @@
 
 (defn products-match
   [{:keys [couchbase parameters user-info guest-products-limit] :as request}]
-  (let [logical-operator (if (or (not user-info)
-                                 (not (-> parameters :body :logical-operator)))
-                           "AND" (-> parameters :body :logical-operator))
-        products         (data/search-products couchbase (-> parameters :body :criteria) logical-operator)]
+  (let [normalize-params (product/normalize-params (-> parameters :body :criteria) user-info)
+        products         (data/search-products couchbase normalize-params)]
     (if user-info
       (http-response/ok products)
       (http-response/ok (->> products (take guest-products-limit) vec)))))
@@ -182,10 +180,8 @@
                                   :reason ::product/wrong-weights})
 
           :else
-          (let [logical-operator (if (or (not user-info)
-                                         (not (-> parameters :body :logical-operator)))
-                                   "AND" (-> parameters :body :logical-operator))
-                products         (-> (data/search-products couchbase (-> parameters :body :criteria) logical-operator)
+          (let [normalize-params (product/normalize-params (-> parameters :body :criteria) user-info)
+                products         (-> (data/search-products couchbase normalize-params)
                                      (classify-products weights))]
             (if user-info
               (http-response/ok products)

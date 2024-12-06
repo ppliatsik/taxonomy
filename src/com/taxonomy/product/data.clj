@@ -62,10 +62,19 @@
         new-doc       (.upsert bucket json-document)]
     (json-object->edn (.content new-doc))))
 
+(defn get-query
+  [params logical-operator]
+  (let [params (reduce (fn [acc {:keys [property-name match-value]}]
+                         (.put acc (name property-name) match-value))
+                       (JsonObject/create)
+                       params)]
+    (N1qlQuery/parameterized "select * from products where published = true" params)))
+
 (defn search-products
-  [{:keys [bucket]} params logical-operator]
-  (let [params (JsonObject/create)
-        query  (N1qlQuery/parameterized "select * from products where published = true" params)
+  [{:keys [bucket]} {:keys [params logical-operator]}]
+  (let [query  (if (seq params)
+                 (get-query params logical-operator)
+                 (N1qlQuery/simple "select * from products where published = true"))
         result (.query bucket query)]
     (get-from-n1ql-result result)))
 

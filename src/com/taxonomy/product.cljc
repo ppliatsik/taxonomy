@@ -143,3 +143,17 @@
 (s/def ::discover-products-request
   (s/keys :req-un [::weights ::criteria]
           :opt-un [::logical-operator]))
+
+(defn normalize-params
+  [params user-info]
+  (let [logical-operator (if (not user-info)
+                           "AND"
+                           (as-> params $
+                                 (filter #(= :logical-operator (:property-name %)) $)
+                                 (first $)
+                                 (:match-value $)
+                                 (or $ "AND")))
+        params           (->> params
+                              (filter #(not= :logical-operator (:property-name %))))]
+    {:logical-operator logical-operator
+     :params           params}))
