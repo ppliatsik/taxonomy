@@ -14,10 +14,10 @@
 (defn json-object->edn
   [data]
   (when data
-    (let [result (->> properties
-                      (reduce (fn [acc property]
-                                (assoc acc property (.get data (name property))))
-                              {}))]
+    (let [result (reduce (fn [acc property]
+                           (assoc acc property (.get data (name property))))
+                         {}
+                         properties)]
       (assoc result :id (.get data "id")))))
 
 (defn edn->json-object
@@ -30,9 +30,10 @@
 
 (defn get-from-n1ql-result
   [result]
-  (->> (.allRows result)
-       (map (fn [row]
-              (json-object->edn (.value row))))))
+  (reduce (fn [acc row]
+            (conj acc (json-object->edn (.value row))))
+          []
+          (.allRows result)))
 
 (defn create-product
   [{:keys [bucket]} product]
