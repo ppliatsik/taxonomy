@@ -144,6 +144,18 @@
   (s/keys :req-un [::weights ::criteria]
           :opt-un [::logical-operator]))
 
+(def ->operator
+  {"LESS_THAN"          "<"
+   "LESS_EQUAL_THAN"    "<="
+   "GREATER_THAN"       ">"
+   "GREATER_EQUAL_THAN" ">="
+   "EQUAL"              "="
+   "DIFFERENT"          "<>"
+   "SUBSET"             "subset"
+   "SUPERSET"           "superset"
+   "INCLUDES"           "includes"
+   "NON_INCLUDES"       "non-includes"})
+
 (defn normalize-params
   [params user-info]
   (let [logical-operator (if (not user-info)
@@ -154,6 +166,8 @@
                                  (:match-value $)
                                  (or $ "AND")))
         params           (->> params
-                              (filter #(not= :logical-operator (:property-name %))))]
+                              (filter #(not= :logical-operator (:property-name %)))
+                              (map (fn [{:keys [operator] :as property}]
+                                     (assoc property :operator (get ->operator operator "=")))))]
     {:logical-operator logical-operator
      :params           params}))
