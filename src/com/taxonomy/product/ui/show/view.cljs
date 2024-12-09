@@ -53,8 +53,8 @@
       [:td.nowrap (trans/translate lang ::product/description)]
       [:td.nowrap (:description product)]]
      [:tr
-      [:td.nowrap (trans/translate lang ::product/created-by)]
-      [:td.nowrap (:created-by product)]]
+      [:td.nowrap (trans/translate lang ::product/creator)]
+      [:td.nowrap (:creator product)]]
      [:tr
       [:td.nowrap (trans/translate lang ::product/delivery-methods)]
       [:td.nowrap (clj.str/join (:delivery-methods product) ",")]]
@@ -154,7 +154,7 @@
   [login-user {:keys [product]} lang]
   (when product
     [:div.columns
-     (when (end-user/is-current-user? login-user (:created-by product))
+     (when (end-user/is-current-user? login-user (:creator product))
        [:div.columns
         [:div.column.is-4
          {:style {:margin-right "12%"
@@ -168,7 +168,7 @@
           {:on-click #(rf/dispatch [::model/unpublish])}
           [:span (trans/translate lang ::product/unpublish)]]]])
      (when (or (end-user/is-admin? login-user)
-               (end-user/is-current-user? login-user (:created-by product)))
+               (end-user/is-current-user? login-user (:creator product)))
        [:div.column.is-2
         {:style {:margin-left "1.5%"
                  :margin-top  "0.9%"}}

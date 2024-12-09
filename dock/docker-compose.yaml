@@ -33,9 +33,9 @@ services:
     networks:
       - tnet
 
-  couchbase-server:
+  tax-couchbase:
     build: ./couchbase
-    container_name: couchbase-server
+    container_name: tax-couchbase
     hostname: couchbase-server
     ports:
       - "8091-8096:8091-8096"
@@ -43,7 +43,7 @@ services:
     environment:
       - CLUSTER_NAME=taxonomy
       - COUCHBASE_ADMINISTRATOR_USERNAME=test
-      - COUCHBASE_ADMINISTRATOR_PASSWORD=test
+      - COUCHBASE_ADMINISTRATOR_PASSWORD=test12
       - COUCHBASE_BUCKET=products
       - COUCHBASE_BUCKET_RAMSIZE=512
       - COUCHBASE_RAM_SIZE=2048

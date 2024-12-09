@@ -46,6 +46,7 @@
 
         ;;couchbase
         com.couchbase.client/java-client {:mvn/version "2.7.2"}
+        com.couchbase.client/encryption  {:mvn/version "1.0.0"}
 
         ;;postgres
         org.postgresql/postgresql        {:mvn/version "42.6.0"}

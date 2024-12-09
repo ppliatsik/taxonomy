@@ -112,14 +112,14 @@
         :else
         (let [data (-> (:body parameters)
                        (assoc :id (str (UUID/randomUUID)))
-                       (assoc :created-by (:username user-info)))]
+                       (assoc :creator (:username user-info)))]
           (http-response/ok {:result  :success
                              :payload (data/create-product couchbase data)}))))
 
 (defn publish-product
   [{:keys [couchbase parameters user-info] :as request}]
   (let [product (data/get-product-by-id couchbase (:path parameters))]
-    (cond (not (end-user/is-current-user? user-info (:created-by product)))
+    (cond (not (end-user/is-current-user? user-info (:creator product)))
           (http-response/invalid {:result :failure
                                   :reason ::end-user/invalid-user})
 
@@ -134,7 +134,7 @@
 (defn unpublish-product
   [{:keys [couchbase parameters user-info] :as request}]
   (let [product (data/get-product-by-id couchbase (:path parameters))]
-    (cond (not (end-user/is-current-user? user-info (:created-by product)))
+    (cond (not (end-user/is-current-user? user-info (:creator product)))
           (http-response/invalid {:result :failure
                                   :reason ::end-user/invalid-user})
 
@@ -199,7 +199,7 @@
   (let [product (data/get-product-by-id couchbase (:path parameters))]
     (if (or (not product)
             (and (not (:published product))
-                 (not (end-user/is-current-user? user-info (:created-by product)))))
+                 (not (end-user/is-current-user? user-info (:creator product)))))
       (http-response/not-found {:result :failure
                                 :reason ::product/product-not-exists})
       (http-response/ok product))))
@@ -208,7 +208,7 @@
   [{:keys [couchbase parameters user-info] :as request}]
   (let [product (data/get-product-by-id couchbase (:path parameters))]
     (cond (and (not (end-user/is-admin? user-info))
-               (not (end-user/is-current-user? user-info (:created-by product))))
+               (not (end-user/is-current-user? user-info (:creator product))))
           (http-response/invalid {:result :failure
                                   :reason ::end-user/invalid-user})
 

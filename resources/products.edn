@@ -1,66 +1,44 @@
-[{:name                      ""
-  :description               ""
-  :delivery-methods          ""
-  :deployment-models         ""
-  :product-categories        ""
-  :cost-model                ""
-  :security-mechanisms       ""
-  :non-functional-guarantees ""
-  :protection-types          ""
-  :security-properties       ""
-  :protected-items           ""
-  :threats                   ""
-  :restrictions              ""
-  :open-source               ""
-  :freely-available          ""
-  :test-version              ""
-  :test-duration             ""
-  :product-interfaces        ""
-  :product-company           ""
-  :marketplaces              ""
-  :support                   ""}
- {:name                      ""
-  :description               ""
-  :delivery-methods          ""
-  :deployment-models         ""
-  :product-categories        ""
-  :cost-model                ""
-  :security-mechanisms       ""
-  :non-functional-guarantees ""
-  :protection-types          ""
-  :security-properties       ""
-  :protected-items           ""
-  :threats                   ""
-  :restrictions              ""
-  :open-source               ""
-  :freely-available          ""
-  :test-version              ""
-  :test-duration             ""
-  :product-interfaces        ""
-  :product-company           ""
-  :marketplaces              ""
-  :support                   ""}
- {:name                      ""
-  :description               ""
-  :delivery-methods          ""
-  :deployment-models         ""
-  :product-categories        ""
-  :cost-model                ""
-  :security-mechanisms       ""
-  :non-functional-guarantees ""
-  :protection-types          ""
-  :security-properties       ""
-  :protected-items           ""
-  :threats                   ""
-  :restrictions              ""
-  :open-source               ""
-  :freely-available          ""
-  :test-version              ""
-  :test-duration             ""
-  :product-interfaces        ""
-  :product-company           ""
-  :marketplaces              ""
-  :support                   ""}
+[{:name                      "QRADAR"
+  :description               "The QRADAR product"
+  :delivery-methods          ["SAAS" "IAAS"]
+  :deployment-models         ["PUBLIC"]
+  :product-categories        ["SIEM"]
+  :cost-model                [{:cost-model-types ["PER_PACKET"]
+                               :charge-packets   nil
+                               :time-charge-type "MONTHLY"}]
+  :security-mechanisms       ["threat-detection-based-on-behavior" "threat-detection-based-on-ai" "threat-detection-based-on-logs"
+                              "threat-detection-in-real-time" "threat-detection-in-real-time-in-logs" "threat-detection-in-real-time-based-on-machine-learning"
+                              "threat-detection-in-real-time-based-on-rules" "threat-detection-in-real-time-based-on-rules-correlation"
+                              "threat-detection-in-real-time-based-on-rules-threshold-detection"
+                              "threat-detection-in-real-time-based-on-rules-anomaly-detection"]
+  :non-functional-guarantees [{:property            "availability"
+                               :operator            "LESS_THAN"
+                               :value               99.9
+                               :metric              nil
+                               :direction-of-values false
+                               :unit                "second"}]
+  :protection-types          ["DETECTIVE"]
+  :security-properties       ["INTEGRITY"]
+  :protected-items           ["DATA"]
+  :threats                   ["theft" "fraud" "data-loss"]
+  :restrictions              [{:property            "collect"
+                               :operator            "LESS_EQUAL_THAN"
+                               :value               2000
+                               :metric              "facts"
+                               :direction-of-values false
+                               :unit                "second"}]
+  :open-source               false
+  :freely-available          false
+  :test-version              true
+  :test-duration             14
+  :product-interfaces        ["Rest_API" "CLI" "Web_UI" "GUI"]
+  :product-company           "IBM"
+  :marketplaces              ["AWS" "GCP" "AZURE"]
+  :support                   [{:support-types          ["PHONE" "EMAIL" "FAQ_DOCUMENTATION" "PORTAL"
+                                                        "VIDEO" "TWITTER" "TROUBLESHOOTING_CENTER"
+                                                        "SOFTWARE_VERSIONS" "CHAT" "FORUM"]
+                               :support-daily-duration nil
+                               :support-package-number nil}]}
  {:name                      ""
   :description               ""
   :delivery-methods          ""

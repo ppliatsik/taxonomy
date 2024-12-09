@@ -5,7 +5,7 @@
 (s/def ::name string?)
 (s/def ::published boolean?)
 (s/def ::description (s/nilable string?))
-(s/def ::created-by string?)
+(s/def ::creator string?)
 
 (def delivery-methods-set #{"SAAS" "IAAS" "DAAS" "CAAS"})
 (s/def ::delivery-method (s/and string? delivery-methods-set))

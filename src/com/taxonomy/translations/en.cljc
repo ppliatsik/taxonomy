@@ -39,7 +39,7 @@
    :name                       "Name"
    :published                  "Published"
    :description                "Description"
-   :created-by                 "Creator"
+   :creator                 "Creator"
    :delivery-methods           "Delivery methods"
    :deployment-models          "Deployment models"
    :product-categories         "Product categories"

@@ -39,7 +39,7 @@
    :name                       "Όνομα"
    :published                  "Δημοσιευμένο"
    :description                "Περιγραφή"
-   :created-by                 "Δημιουργός"
+   :creator                 "Δημιουργός"
    :delivery-methods           "Τρόποι παράδοσης"
    :deployment-models          "Μοντέλο διάταξης"
    :product-categories         "Κατηγορία προϊόντος"

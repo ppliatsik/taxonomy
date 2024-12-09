@@ -1,11 +1,13 @@
 (ns com.taxonomy.product.data
-  (:require [clojure.string :as clj.str])
+  (:require [clojure.string :as clj.str]
+            [cheshire.core :as che]
+            [clojure.data.json :as json])
   (:import [com.couchbase.client.java.document JsonDocument]
            [com.couchbase.client.java.document.json JsonArray JsonObject]
            [com.couchbase.client.java.query N1qlQuery]))
 
 (def properties
-  [:name :created-by :published :description :delivery-methods
+  [:name :creator :published :description :delivery-methods
    :deployment-models :product-categories :cost-model :security-mechanisms
    :non-functional-guarantees :protection-types :security-properties
    :protected-items :threats :restrictions :open-source :freely-available
@@ -15,7 +17,10 @@
   [data]
   (when data
     (let [result (reduce (fn [acc property]
-                           (assoc acc property (.get data (name property))))
+                           (let [v (.get data (name property))]
+                             (if (instance? JsonArray v)
+                               (assoc acc property (vec (che/parse-string (str v) keyword)))
+                               (assoc acc property (.get data (name property))))))
                          {}
                          properties)]
       (assoc result :id (.get data "id")))))
@@ -23,10 +28,8 @@
 (defn edn->json-object
   [data]
   (when data
-    (reduce (fn [acc property]
-              (.put acc (name property) (get data property)))
-            (JsonObject/create)
-            properties)))
+    (let [j (json/read-json (che/encode data))]
+      (JsonObject/fromJson (json/json-str j)))))
 
 (defn get-from-n1ql-result
   [result]
@@ -37,12 +40,12 @@
 
 (defn create-product
   [{:keys [bucket]} product]
-  (let [name (some-> name
+  (let [name (some-> (:name product)
                      clj.str/lower-case
                      (clj.str/replace #"\s" ""))
 
         json-object   (edn->json-object (assoc product :name-q name))
-        json-document (.create JsonDocument (:id product) json-object)]
+        json-document (JsonDocument/create (:id product) json-object)]
     (.insert bucket json-document)
     product))
 
@@ -68,14 +71,14 @@
                          (.put acc (name property-name) match-value))
                        (JsonObject/create)
                        params)
-        query  "select * from products where published = true"]
+        query  "select p.* from products p where published = true"]
     (N1qlQuery/parameterized query params)))
 
 (defn search-products
   [{:keys [bucket]} {:keys [params logical-operator]}]
   (let [query  (if (seq params)
                  (get-query params logical-operator)
-                 (N1qlQuery/simple "select * from products where published = true"))
+                 (N1qlQuery/simple "select p.* from products p where published = true"))
         result (.query bucket query)]
     (get-from-n1ql-result result)))
 
@@ -85,8 +88,8 @@
                        clj.str/lower-case
                        (clj.str/replace #"\s" ""))
         params (-> (JsonObject/create)
-                   (.put "username" name))
-        query  (N1qlQuery/parameterized "select * from products where name-q = $name" params)
+                   (.put "name" name))
+        query  (N1qlQuery/parameterized "select p.* from products p where `name-q` = $name" params)
         result (.query bucket query)]
     (-> (get-from-n1ql-result result)
         first)))
@@ -95,7 +98,7 @@
   [{:keys [bucket]} {:keys [username]}]
   (let [params (-> (JsonObject/create)
                    (.put "username" username))
-        query  (N1qlQuery/parameterized "select * from products where created-by = $username" params)
+        query  (N1qlQuery/parameterized "select p.* from products p where creator = $username" params)
         result (.query bucket query)]
     (get-from-n1ql-result result)))
 
@@ -108,13 +111,13 @@
   [{:keys [bucket]} ids]
   (let [params (-> (JsonObject/create)
                    (.put "ids" (JsonArray/from ids)))
-        query  (N1qlQuery/parameterized "select * from products use keys $ids" params)
+        query  (N1qlQuery/parameterized "select p.* from products p use keys $ids" params)
         result (.query bucket query)]
     (get-from-n1ql-result result)))
 
 (defn get-all-products
   [{:keys [bucket]}]
-  (let [query  (N1qlQuery/simple "select * from products where published = true")
+  (let [query  (N1qlQuery/simple "select p.* from products p where published = true")
         result (.query bucket query)]
     (get-from-n1ql-result result)))
 

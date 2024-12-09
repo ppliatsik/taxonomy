@@ -67,7 +67,8 @@
       (when-not (product.data/get-product-by-name couchbase product)
         (product.data/create-product couchbase (-> product
                                                    (assoc :id (str (UUID/randomUUID)))
-                                                   (assoc :created-by "admin")))))))
+                                                   (assoc :creator "admin")
+                                                   (assoc :published false)))))))
 
 (defmethod ig/halt-key! :taxonomy/products [_ _]
   )

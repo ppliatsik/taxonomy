@@ -24,7 +24,7 @@
  :db/couchbase {:bucket-name "products"
                 :uri         "localhost"
                 :username    "test"
-                :password    "test"}
+                :password    "test12"}
 
  :email/host {:host "smtp.gmail.com"
               :port 587
