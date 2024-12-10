@@ -52,8 +52,8 @@
 (defn publish-product
   [{:keys [bucket]} product]
   (let [json-object   (-> (edn->json-object product)
-                         (.put "published" true))
-        json-document (.create JsonDocument (:id product) json-object)
+                          (.put "published" true))
+        json-document (JsonDocument/create (:id product) json-object)
         new-doc       (.upsert bucket json-document)]
     (json-object->edn (.content new-doc))))
 
@@ -61,7 +61,7 @@
   [{:keys [bucket]} product]
   (let [json-object   (-> (edn->json-object product)
                           (.put "published" false))
-        json-document (.create JsonDocument (:id product) json-object)
+        json-document (JsonDocument/create (:id product) json-object)
         new-doc       (.upsert bucket json-document)]
     (json-object->edn (.content new-doc))))
 
@@ -110,7 +110,7 @@
 (defn get-products-by-id
   [{:keys [bucket]} ids]
   (let [params (-> (JsonObject/create)
-                   (.put "ids" (JsonArray/from ids)))
+                   (.put "ids" (JsonArray/from (into-array String ids))))
         query  (N1qlQuery/parameterized "select p.* from products p use keys $ids" params)
         result (.query bucket query)]
     (get-from-n1ql-result result)))

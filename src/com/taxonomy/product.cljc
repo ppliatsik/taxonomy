@@ -9,7 +9,7 @@
 
 (def delivery-methods-set #{"SAAS" "IAAS" "DAAS" "CAAS"})
 (s/def ::delivery-method (s/and string? delivery-methods-set))
-(s/def ::delivery-methods (s/nilable (s/coll-of ::delivery-methods :kind vector? :min-count 0)))
+(s/def ::delivery-methods (s/nilable (s/coll-of ::delivery-method :kind vector? :min-count 0)))
 
 (def deployment-models-set #{"PUBLIC" "PRIVATE" "HYBRID"})
 (s/def ::deployment-model (s/and string? deployment-models-set))
@@ -171,3 +171,11 @@
                                      (assoc property :operator (get ->operator operator "=")))))]
     {:logical-operator logical-operator
      :params           params}))
+
+(defn complete-security-mechanisms-threats
+  [selected all]
+  (->> selected
+       (map (fn [sel]
+              ))
+       set
+       vec))

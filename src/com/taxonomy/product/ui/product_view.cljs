@@ -6,17 +6,17 @@
 
 (defn- table-row
   [{:keys [id name creator delivery-methods deployment-models
-           product-categories product-company marketplaces]}]
+           product-categories product-company marketplaces] :as p}]
   [:tr {:key id}
    [:td.nowrap
     [:a {:href (routes/product {:id id})}
      name]]
    [:td.nowrap creator]
-   [:td.nowrap (clj.str/join delivery-methods ",")]
-   [:td.nowrap (clj.str/join deployment-models ",")]
-   [:td.nowrap (clj.str/join product-categories ",")]
-   [:td.nowrap (clj.str/join product-company ",")]
-   [:td.nowrap (clj.str/join marketplaces ",")]])
+   [:td.nowrap (clj.str/join "," delivery-methods)]
+   [:td.nowrap (clj.str/join "," deployment-models)]
+   [:td.nowrap (clj.str/join "," product-categories)]
+   [:td.nowrap product-company]
+   [:td.nowrap (clj.str/join "," marketplaces)]])
 
 (defn list-products
   [{:keys [products]} lang]

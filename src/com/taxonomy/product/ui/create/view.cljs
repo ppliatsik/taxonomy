@@ -153,7 +153,8 @@
    [:div.column.is-2 [:b (trans/translate lang ::product/property)]]
    [:div.column.is-2 [:b (trans/translate lang ::product/operator)]]
    [:div.column.is-1
-    {:style {:margin-right "5%"}}
+    {:style {:margin-right "5%"
+             :margin-left  "5%"}}
     [:b (trans/translate lang ::product/value)]]
    [:div.column.is-2 [:b (trans/translate lang ::product/metric)]]
    [:div.column.is-2
@@ -165,10 +166,10 @@
     [:b (trans/translate lang ::product/unit)]]])
 
 (defn- guarantees-restrictions-line
-  [property line idx]
+  [property line idx {:keys [products-choices]}]
   [:div.columns {:key (str (name property) idx)}
    [input-line-without-label property (:property line) :property idx]
-   [input-line-without-label property (:operator line) :operator idx]
+   [dropdown-line property (:operators products-choices) (:operator line) :operator idx]
    [input-line-without-label property (:value line) :value idx]
    [input-line-without-label property (:metric line) :metric idx]
    [checkbox-without-label property (:direction-of-values line) :direction-of-values idx]
@@ -281,7 +282,7 @@
                     :icon-css "fa-2x"}]]]]
     [guarantees-restrictions-head lang]
     (map-indexed (fn [idx line]
-                   ^{:key (str "non-functional-guarantees" idx)} [guarantees-restrictions-line :non-functional-guarantees line idx])
+                   ^{:key (str "non-functional-guarantees" idx)} [guarantees-restrictions-line :non-functional-guarantees line idx model])
                  (:non-functional-guarantees model))]
    [multi-dropdown-menu-view model :protection-types lang]
    [multi-dropdown-menu-view model :security-properties lang]
@@ -301,7 +302,7 @@
                     :icon-css "fa-2x"}]]]]
     [guarantees-restrictions-head lang]
     (map-indexed (fn [idx line]
-                   ^{:key (str "restrictions" idx)} [guarantees-restrictions-line :restrictions line idx])
+                   ^{:key (str "restrictions" idx)} [guarantees-restrictions-line :restrictions line idx model])
                  (:restrictions model))]
    [:div
     [checkbox model :open-source lang]]
@@ -338,12 +339,12 @@
                  (:support model))]])
 
 (defn- create-button
-  [{:keys [correct-inputs]} lang]
+  [lang]
   [:div.columns
    [:div.column.is-6
     [:button.button.is-info
      {:on-click #(rf/dispatch [::model/create])
-      :disabled (not correct-inputs)}
+      :disabled false}
      [:span (trans/translate lang ::product/create-product)]]]])
 
 (defn view []
@@ -352,4 +353,4 @@
     [:article.box
      [ui.navbar/view]
      [create-view model lang]
-     [create-button model lang]]))
+     [create-button lang]]))

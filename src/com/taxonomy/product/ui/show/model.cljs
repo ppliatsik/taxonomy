@@ -27,7 +27,7 @@
   ::init-success
   [data-path]
   (fn [db [_ response]]
-    {:db (assoc db :product response)}))
+    (assoc db :product response)))
 
 (rf/reg-event-fx
   ::init-failure

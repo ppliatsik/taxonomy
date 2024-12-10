@@ -99,7 +99,7 @@
      (or (:test-duration-w weights) 0.0)))
 
 (defn create-product
-  [{:keys [couchbase parameters user-info] :as request}]
+  [{:keys [couchbase parameters user-info security-mechanisms threats] :as request}]
   (cond (and (not (end-user/is-admin? user-info))
              (not (end-user/is-user? user-info)))
         (http-response/invalid {:result :failure
@@ -112,7 +112,11 @@
         :else
         (let [data (-> (:body parameters)
                        (assoc :id (str (UUID/randomUUID)))
-                       (assoc :creator (:username user-info)))]
+                       (assoc :creator (:username user-info))
+                       (assoc :published false)
+                       (update :security-mechanisms #(product/complete-security-mechanisms-threats % security-mechanisms))
+                       (update :threats #(product/complete-security-mechanisms-threats % threats)))]
+          (prn "data" data)
           (http-response/ok {:result  :success
                              :payload (data/create-product couchbase data)}))))
 

@@ -36,12 +36,6 @@
    :marketplaces              (:marketplaces db)
    :support                   (:support db)})
 
-(defn check-fields
-  [data]
-  (let [product (get-product-data data)]
-    (assoc data :correct-inputs (s/valid? ::product/create-product-request
-                                          (st/coerce ::product/create-product-request product st/string-transformer)))))
-
 (rf/reg-event-fx
   ::init
   [data-path]
@@ -104,6 +98,7 @@
   [data-path]
   (fn [{:keys [db]} _]
     (let [params (get-product-data db)]
+      (prn params)
       {:fx [[:dispatch [:ajax/post {:uri     "/api/products"
                                     :params  params
                                     :success ::create-success
@@ -212,5 +207,4 @@
   (fn [[data language] _]
     (-> metadata
         (assoc :language language)
-        (merge data)
-        (check-fields))))
+        (merge data))))

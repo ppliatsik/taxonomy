@@ -57,13 +57,13 @@
       [:td.nowrap (:creator product)]]
      [:tr
       [:td.nowrap (trans/translate lang ::product/delivery-methods)]
-      [:td.nowrap (clj.str/join (:delivery-methods product) ",")]]
+      [:td.nowrap (clj.str/join "," (:delivery-methods product))]]
      [:tr
       [:td.nowrap (trans/translate lang ::product/deployment-models)]
-      [:td.nowrap (clj.str/join (:deployment-models product) ",")]]
+      [:td.nowrap (clj.str/join "," (:deployment-models product))]]
      [:tr
       [:td.nowrap (trans/translate lang ::product/product-categories)]
-      [:td.nowrap (clj.str/join (:product-categories product) ",")]]
+      [:td.nowrap (clj.str/join "," (:product-categories product))]]
      [:tr
       [:td.nowrap (trans/translate lang ::product/cost-model)]
       [:td.nowrap (->> (:cost-model product)
@@ -72,36 +72,36 @@
                                [:table.table.is-fullwidth.is-stripped.is-hoverable.vertical-align-middle.fixed
                                 [:tr
                                  [:td.nowrap (trans/translate lang ::product/cost-model-types)]
-                                 [:td.nowrap (clj.str/join (:cost-model-types cm) ",")]]
+                                 [:td.nowrap (clj.str/join "," (:cost-model-types cm))]]
                                 [:tr
                                  [:td.nowrap (trans/translate lang ::product/charge-packets)]
                                  [:td.nowrap (:charge-packets cm)]]
                                 [:tr
                                  [:td.nowrap (trans/translate lang ::product/time-charge-types)]
-                                 [:td.nowrap (clj.str/join (:time-charge-types cm) ",")]]]]))
+                                 [:td.nowrap (clj.str/join "," (:time-charge-types cm))]]]]))
                        (into [:div.columns]))]]
      [:tr
       [:td.nowrap (trans/translate lang ::product/security-mechanisms)]
-      [:td.nowrap (as-> (util/get-all-keys (:security-mechanisms product)) $
-                        (map #(trans/translate lang (keyword "com.taxonomy.security-mechanisms" %)))
-                        (clj.str/join "\n" $))]]
+      [:td.nowrap (as-> (:security-mechanisms product) $
+                        (map #(trans/translate lang (keyword "com.taxonomy.security-mechanisms" %)) $)
+                        (clj.str/join ",\n" $))]]
      [:tr
       [:td.nowrap (trans/translate lang ::product/non-functional-guarantees)]
       [:td.nowrap [show-guarantees-restrictions (:non-functional-guarantees product) lang]]]
      [:tr
       [:td.nowrap (trans/translate lang ::product/protection-types)]
-      [:td.nowrap (clj.str/join (:protection-types product) ",")]]
+      [:td.nowrap (clj.str/join "," (:protection-types product))]]
      [:tr
       [:td.nowrap (trans/translate lang ::product/security-properties)]
-      [:td.nowrap (clj.str/join (:security-properties product) ",")]]
+      [:td.nowrap (clj.str/join "," (:security-properties product))]]
      [:tr
       [:td.nowrap (trans/translate lang ::product/protected-items)]
-      [:td.nowrap (clj.str/join (:protected-items product) ",")]]
+      [:td.nowrap (clj.str/join "," (:protected-items product))]]
      [:tr
       [:td.nowrap (trans/translate lang ::product/threats)]
-      [:td.nowrap (as-> (util/get-all-keys (:threats product)) $
-                        (map #(trans/translate lang (keyword "com.taxonomy.threats" %)))
-                        (clj.str/join "\n" $))]]
+      [:td.nowrap (as-> (:threats product) $
+                        (map #(trans/translate lang (keyword "com.taxonomy.threats" %)) $)
+                        (clj.str/join ",\n" $))]]
      [:tr
       [:td.nowrap (trans/translate lang ::product/restrictions)]
       [:td.nowrap [show-guarantees-restrictions (:restrictions product) lang]]]
@@ -126,13 +126,13 @@
                     (str (:test-duration product) " " (trans/translate lang ::product/days)))]]
      [:tr
       [:td.nowrap (trans/translate lang ::product/product-interfaces)]
-      [:td.nowrap (clj.str/join (:product-interfaces product) ",")]]
+      [:td.nowrap (clj.str/join "," (:product-interfaces product))]]
      [:tr
       [:td.nowrap (trans/translate lang ::product/product-company)]
       [:td.nowrap (:product-company product)]]
      [:tr
       [:td.nowrap (trans/translate lang ::product/marketplaces)]
-      [:td.nowrap (clj.str/join (:marketplaces product) ",")]]
+      [:td.nowrap (clj.str/join "," (:marketplaces product))]]
      [:tr
       [:td.nowrap (trans/translate lang ::product/support)]
       [:td.nowrap (->> (:support product)
@@ -141,7 +141,7 @@
                                [:table.table.is-fullwidth.is-stripped.is-hoverable.vertical-align-middle.fixed
                                 [:tr
                                  [:td.nowrap (trans/translate lang ::product/support-types)]
-                                 [:td.nowrap (clj.str/join (:support-types sup) ",")]]
+                                 [:td.nowrap (clj.str/join "," (:support-types sup))]]
                                 [:tr
                                  [:td.nowrap (trans/translate lang ::product/support-daily-duration)]
                                  [:td.nowrap (:support-daily-duration sup)]]
