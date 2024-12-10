@@ -1,6 +1,6 @@
 (ns com.taxonomy.product
   (:require [clojure.spec.alpha :as s]
-            #?(:clj [clojure.zip :as z])
+            [clojure.zip :as z]
             #?(:clj [com.taxonomy.util :as util])))
 
 (s/def ::id string?)
