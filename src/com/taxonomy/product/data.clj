@@ -67,12 +67,9 @@
 
 (defn get-query
   [params logical-operator]
-  (let [params (reduce (fn [acc {:keys [property-name match-value]}]
-                         (.put acc (name property-name) match-value))
-                       (JsonObject/create)
-                       params)
-        query  "select p.* from products p where published = true"]
-    (N1qlQuery/parameterized query params)))
+  (let [j-params (edn->json-object (->> params (map (juxt :property-name :match-value)) into {}))
+        query    (str "select p.* from products p where published = true")]
+    (N1qlQuery/parameterized query j-params)))
 
 (defn search-products
   [{:keys [bucket]} {:keys [params logical-operator]}]

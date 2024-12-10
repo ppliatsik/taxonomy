@@ -67,7 +67,7 @@
         (product.data/create-product couchbase (-> product
                                                    (assoc :id (str (UUID/randomUUID)))
                                                    (assoc :creator "admin")
-                                                   (assoc :published false)))))))
+                                                   (assoc :published true)))))))
 
 (defmethod ig/halt-key! :taxonomy/products [_ _]
   )
