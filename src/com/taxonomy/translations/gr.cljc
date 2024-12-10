@@ -19,6 +19,8 @@
 (def product
   {:product-not-exists         "Το προϊόν δεν υπάρχει"
    :product-already-exists     "Το προϊόν υπάρχει ήδη"
+   :invalid-sm-values          "Λανθασμένες τιμές στους μηχανισμούς ασφαλείας"
+   :invalid-threat-values      "Λανθασμένες τιμές στις απειλές"
    :secaas-products-management "Διαχείριση προϊόντων SecaaS"
    :create-product             "Δημιουργία προϊόντος SecaaS"
    :products                   "Προϊόντα SecaaS"
@@ -39,7 +41,7 @@
    :name                       "Όνομα"
    :published                  "Δημοσιευμένο"
    :description                "Περιγραφή"
-   :creator                 "Δημιουργός"
+   :creator                    "Δημιουργός"
    :delivery-methods           "Τρόποι παράδοσης"
    :deployment-models          "Μοντέλο διάταξης"
    :product-categories         "Κατηγορία προϊόντος"

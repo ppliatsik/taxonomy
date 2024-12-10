@@ -19,6 +19,8 @@
 (def product
   {:product-not-exists         "Product does not exists"
    :product-already-exists     "Product already exists"
+   :invalid-sm-values          "Invalid security mechanisms values"
+   :invalid-threat-values      "Invalid threats values"
    :secaas-products-management "SecaaS products management"
    :create-product             "Create SecaaS product"
    :products                   "SecaaS products"
@@ -39,7 +41,7 @@
    :name                       "Name"
    :published                  "Published"
    :description                "Description"
-   :creator                 "Creator"
+   :creator                    "Creator"
    :delivery-methods           "Delivery methods"
    :deployment-models          "Deployment models"
    :product-categories         "Product categories"

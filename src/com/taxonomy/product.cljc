@@ -210,5 +210,7 @@
 
                        (map? d)
                        (util/get-all-keys d))))
+       (remove nil?)
+       (map name)
        set
        vec))

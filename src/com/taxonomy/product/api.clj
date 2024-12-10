@@ -1,9 +1,11 @@
 (ns com.taxonomy.product.api
   (:require [clojure.string :as clj.str]
+            [clojure.set :as clj.set]
             [com.taxonomy.http.http-response :as http-response]
             [com.taxonomy.product :as product]
             [com.taxonomy.product.data :as data]
-            [com.taxonomy.end-user :as end-user])
+            [com.taxonomy.end-user :as end-user]
+            [com.taxonomy.util :as util])
   (:import [java.util UUID]))
 
 (defn- get-min-max-values
@@ -108,6 +110,16 @@
         (data/get-product-by-name couchbase (:body parameters))
         (http-response/invalid {:result :failure
                                 :reason ::product/product-already-exists})
+
+        (not (clj.set/subset? (-> parameters :body :security-mechanisms)
+                              (set (util/get-all-keys security-mechanisms))))
+        (http-response/invalid {:result :failure
+                                :reason ::product/invalid-sm-values})
+
+        (not (clj.set/subset? (-> parameters :body :threats)
+                              (set (util/get-all-keys threats))))
+        (http-response/invalid {:result :failure
+                                :reason ::product/invalid-threat-values})
 
         :else
         (let [data (-> (:body parameters)
