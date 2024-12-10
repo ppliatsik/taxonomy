@@ -47,3 +47,12 @@
          clj.str/join)))
   ([]
    (create-password 16)))
+
+(defn get-all-keys
+  [m]
+  (reduce (fn [acc [k v]]
+            (if (map? v)
+              (apply conj acc k (get-all-keys v))
+              (conj acc k)))
+          []
+          m))

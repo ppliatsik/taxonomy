@@ -1,5 +1,5 @@
-[{:name                      "QRADAR"
-  :description               "The QRADAR product"
+[{:name                      "QRADAR TEST"
+  :description               "The QRADAR product for test"
   :delivery-methods          ["SAAS" "IAAS"]
   :deployment-models         ["PUBLIC"]
   :product-categories        ["SIEM"]
@@ -39,45 +39,103 @@
                                                         "SOFTWARE_VERSIONS" "CHAT" "FORUM"]
                                :support-daily-duration nil
                                :support-package-number nil}]}
- {:name                      ""
-  :description               ""
-  :delivery-methods          ""
-  :deployment-models         ""
-  :product-categories        ""
-  :cost-model                ""
-  :security-mechanisms       ""
-  :non-functional-guarantees ""
-  :protection-types          ""
-  :security-properties       ""
-  :protected-items           ""
-  :threats                   ""
-  :restrictions              ""
-  :open-source               ""
-  :freely-available          ""
-  :test-version              ""
-  :test-duration             ""
-  :product-interfaces        ""
-  :product-company           ""
-  :marketplaces              ""
-  :support                   ""}
- {:name                      ""
-  :description               ""
-  :delivery-methods          ""
-  :deployment-models         ""
-  :product-categories        ""
-  :cost-model                ""
-  :security-mechanisms       ""
-  :non-functional-guarantees ""
-  :protection-types          ""
-  :security-properties       ""
-  :protected-items           ""
-  :threats                   ""
-  :restrictions              ""
-  :open-source               ""
-  :freely-available          ""
-  :test-version              ""
-  :test-duration             ""
-  :product-interfaces        ""
-  :product-company           ""
-  :marketplaces              ""
-  :support                   ""}]
+ {:name                      "Elastic Security solution SIEM TEST"
+  :description               "The Elastic Security solution SIEM product for test"
+  :delivery-methods          ["SAAS"]
+  :deployment-models         ["PUBLIC"]
+  :product-categories        ["SIEM"]
+  :cost-model                [{:cost-model-types ["PER_HARDWARE_RESOURCE"]
+                               :charge-packets   4
+                               :time-charge-type nil}]
+  :security-mechanisms       ["response" "ssae" "monitoring" "isolation-of-usb-devices" "regulation-of-firewall-rules"
+                              "risk-management" "update-data" "recovery-tools" "isolation" "generate-alerts"
+                              "data-integrity-checks" "integrations-with-other-components-or-systems" "complex-response"
+                              "generate-rich-alerts" "user-logout" "individual-response" "integrations"
+                              "non-automated-response" "apply-security-fixes" "isolation-of-ip" "data-management"
+                              "threat-detection" "continuous-threat-intelligence-updates" "recovery-from-backups"
+                              "automated-response" "isolation-of-infected-machines" "activation-of-multi-factor-authentication"
+                              "packet-expulsion" "reports-compliance" "data-and-events-management" "revoke-user-permissions"
+                              "encrypt-logs" "apply-incident-response-plan" "kill-malicious-processes" "iso-27002"
+                              "execution-of-workflows" "monitoring-device-and-software-configuration-changes"
+                              "backup-encryption" "network-segmentation" "combined-security-and-network-monitoring"
+                              "malware-quarantine" "threat-detection-based-on-behavior" "investigation-of-an-incident"
+                              "apply-requests-flow-restriction-techniques" "support-compliance-to-standards"
+                              "logs-management" "isolation-of-network" "disable-user-account" "support-compliance-guidance"]
+  :non-functional-guarantees [{:property            "availability"
+                               :operator            "LESS_THAN"
+                               :value               99.9
+                               :metric              nil
+                               :direction-of-values false
+                               :unit                "second"}
+                              {:property            "availability"
+                               :operator            "LESS_THAN"
+                               :value               99.9
+                               :metric              nil
+                               :direction-of-values false
+                               :unit                "second"}]
+  :protection-types          ["DETECTIVE"]
+  :security-properties       ["INTEGRITY"]
+  :protected-items           ["EVERYTHING" ]
+  :threats                   ["theft" "fraud" "data-loss"]
+  :restrictions              [{:property            "collect"
+                               :operator            "LESS_EQUAL_THAN"
+                               :value               2000
+                               :metric              "facts"
+                               :direction-of-values false
+                               :unit                "second"}]
+  :open-source               false
+  :freely-available          false
+  :test-version              true
+  :test-duration             14
+  :product-interfaces        ["Rest_API" "Web_UI"]
+  :product-company           "Elastic"
+  :marketplaces              ["AWS" "GCP" "AZURE"]
+  :support                   [{:support-types          ["PHONE" "EMAIL"]
+                               :support-daily-duration nil
+                               :support-package-number 2}]}
+ {:name                      "McAfee Enterprise Security Manager SIEM TEST"
+  :description               "The McAfee Enterprise Security Manager SIEM product for test"
+  :delivery-methods          ["IAAS"]
+  :deployment-models         ["PUBLIC"]
+  :product-categories        ["SIEM"]
+  :cost-model                [{:cost-model-types ["PER_WORKLOAD"]
+                               :charge-packets   nil
+                               :time-charge-type nil}]
+  :security-mechanisms       ["threat-detection-based-on-behavior" "threat-detection-based-on-ai" "threat-detection-based-on-logs"
+                              "threat-detection-in-real-time" "threat-detection-in-real-time-in-logs" "threat-detection-in-real-time-based-on-machine-learning"
+                              "threat-detection-in-real-time-based-on-rules" "threat-detection-in-real-time-based-on-rules-correlation"
+                              "threat-detection-in-real-time-based-on-rules-threshold-detection"
+                              "threat-detection-in-real-time-based-on-rules-anomaly-detection"]
+  :non-functional-guarantees [{:property            "availability"
+                               :operator            "LESS_THAN"
+                               :value               99.9
+                               :metric              nil
+                               :direction-of-values false
+                               :unit                "second"}]
+  :protection-types          ["DETECTIVE"]
+  :security-properties       ["INTEGRITY"]
+  :protected-items           ["DATA"]
+  :threats                   ["theft" "fraud" "data-loss"]
+  :restrictions              [{:property            "collect"
+                               :operator            "LESS_EQUAL_THAN"
+                               :value               2000
+                               :metric              "facts"
+                               :direction-of-values false
+                               :unit                "second"}
+                              {:property            "activate"
+                               :operator            "EQUAL"
+                               :value               5000
+                               :metric              "rules"
+                               :direction-of-values false
+                               :unit                "day"}]
+  :open-source               false
+  :freely-available          false
+  :test-version              true
+  :test-duration             14
+  :product-interfaces        ["CLI" "Web_UI"]
+  :product-company           "McAfee"
+  :marketplaces              nil
+  :support                   [{:support-types          ["PHONE" "EMAIL" "FAQ_DOCUMENTATION"
+                                                        "NOTIFICATIONS" "COMMUNITY"]
+                               :support-daily-duration nil
+                               :support-package-number nil}]}]

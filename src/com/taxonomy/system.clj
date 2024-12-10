@@ -8,8 +8,7 @@
             [clojure.edn :as edn]
             [com.taxonomy.end-user.data :as end-user.data]
             [com.taxonomy.product.data :as product.data])
-  (:import [com.couchbase.client.java Cluster CouchbaseCluster]
-           (com.couchbase.client.java.auth Authenticator)
+  (:import [com.couchbase.client.java CouchbaseCluster]
            [java.lang AutoCloseable]
            [java.util UUID]))
 

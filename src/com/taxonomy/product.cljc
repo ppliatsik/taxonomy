@@ -1,5 +1,7 @@
 (ns com.taxonomy.product
-  (:require [clojure.spec.alpha :as s]))
+  (:require [clojure.spec.alpha :as s]
+            #?(:clj [clojure.zip :as z])
+            #?(:clj [com.taxonomy.util :as util])))
 
 (s/def ::id string?)
 (s/def ::name string?)
@@ -172,10 +174,39 @@
     {:logical-operator logical-operator
      :params           params}))
 
+(defn get-root-path
+  [k all]
+  (loop [curr (z/zipper coll? seq nil all)]
+    (cond (z/end? curr)
+          nil
+
+          (-> curr z/node (= k))
+          (->> curr
+               z/path
+               (filter map-entry?)
+               (mapv first))
+
+          :else
+          (recur (z/next curr)))))
+
 (defn complete-security-mechanisms-threats
   [selected all]
   (->> selected
        (map (fn [sel]
-              ))
+              (get-root-path sel all)))
+       (mapcat (fn [ks]
+                 (let [v (get-in all ks)]
+                   (if v
+                     [ks v]
+                     ks))))
+       (mapcat (fn [d]
+                 (cond (vector? d)
+                       d
+
+                       (keyword? d)
+                       [d]
+
+                       (map? d)
+                       (util/get-all-keys d))))
        set
        vec))
