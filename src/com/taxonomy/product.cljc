@@ -169,8 +169,10 @@
                                  (or $ "AND")))
         params           (->> params
                               (filter #(not= :logical-operator (:property-name %)))
-                              (map (fn [{:keys [operator] :as property}]
-                                     (assoc property :operator (get ->operator operator "=")))))]
+                              (map (fn [{:keys [operator property-name] :as criterion}]
+                                     (-> criterion
+                                         (assoc :column property-name)
+                                         (assoc :operator (get ->operator operator "="))))))]
     {:logical-operator logical-operator
      :params           params}))
 

@@ -2,7 +2,8 @@
   (:require [clojure.string :as clj.str]
             [cheshire.core :as che]
             [clojure.data.json :as json])
-  (:import [com.couchbase.client.java.document JsonDocument]
+  (:import [com.couchbase.client.java PersistTo]
+           [com.couchbase.client.java.document JsonDocument]
            [com.couchbase.client.java.document.json JsonArray JsonObject]
            [com.couchbase.client.java.query N1qlQuery]))
 
@@ -68,7 +69,11 @@
 (defn get-query
   [params logical-operator]
   (let [j-params (edn->json-object (->> params (map (juxt :property-name :match-value)) into {}))
-        query    (str "select p.* from products p where published = true")]
+        query    (reduce (fn [q {:keys [property-name not operator column]}]
+                           (let [no (if not "not" "")]
+                             (str q " " logical-operator " `" column "` " no " " operator " $" property-name)))
+                         "select p.* from products p where published = true"
+                         params)]
     (N1qlQuery/parameterized query j-params)))
 
 (defn search-products
@@ -120,4 +125,4 @@
 
 (defn delete-product-by-id
   [{:keys [bucket]} {:keys [id]}]
-  (.remove bucket id))
+  (.remove bucket id PersistTo/MASTER))
