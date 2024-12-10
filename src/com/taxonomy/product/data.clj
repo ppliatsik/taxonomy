@@ -69,9 +69,9 @@
 (defn get-query
   [params logical-operator]
   (let [j-params (edn->json-object (->> params (map (juxt :property-name :match-value)) into {}))
-        query    (reduce (fn [q {:keys [property-name not operator column]}]
+        query    (reduce (fn [q {:keys [property-name not operator doc-property]}]
                            (let [no (if not "not" "")]
-                             (str q " " logical-operator " `" column "` " no " " operator " $" property-name)))
+                             (str q " " logical-operator " `" doc-property "` " no " " operator " $" property-name)))
                          "select p.* from products p where published = true"
                          params)]
     (N1qlQuery/parameterized query j-params)))

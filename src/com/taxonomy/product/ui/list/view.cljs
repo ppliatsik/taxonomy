@@ -247,12 +247,14 @@
 (defn- multi-weights
   [{:keys [products] :as model} lang product-key]
   (->> products
-       (map #(get % product-key))
+       (mapcat #(get % product-key))
+       (map :property)
+       set
        (map (fn [data]
-              (let [property (clj.str/replace (:property data) #"\s" "")]
+              (let [property (clj.str/replace data #"\s" "")]
                 [:div.column.is-3
                  [:label.label.mb-0 {:htmlFor (str "non-functional-guarantees-w-" property)}
-                  (str (trans/translate lang (keyword "com.taxonomy.product" product-key)) "-" (:property data))]
+                  (str (trans/translate lang (keyword "com.taxonomy.product" product-key)) "-" property)]
                  [:input.input {:key       (str "non-functional-guarantees-w-" property)
                                 :value     (get-in model [:weights product-key property])
                                 :on-change (fn [e]

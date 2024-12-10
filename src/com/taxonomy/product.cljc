@@ -1,6 +1,7 @@
 (ns com.taxonomy.product
   (:require [clojure.spec.alpha :as s]
-            [clojure.zip :as z]
+            [camel-snake-kebab.core :as csk]
+            #?(:clj [clojure.zip :as z])
             #?(:clj [com.taxonomy.util :as util])))
 
 (s/def ::id string?)
@@ -128,9 +129,10 @@
 (s/def ::logical-operator (s/and string? logical-operators))
 (s/def ::not (s/nilable boolean?))
 (s/def ::match-value
-  (s/or :string string?
-        :number number?
-        :vector vector?))
+  (s/or :string   string?
+        :number   number?
+        :vector   vector?
+        :boolean? boolean?))
 (s/def ::property-name keyword?)
 (s/def ::criterion
   (s/keys :req-un [::property-name ::match-value]
@@ -158,6 +160,38 @@
    "INCLUDES"           "includes"
    "NON_INCLUDES"       "non-includes"})
 
+(def ->doc-property
+  {:name                   "name"
+   :description            "description"
+   :creator                "creator"
+   :delivery-methods       "delivery-methods"
+   :deployment-models      "deployment-models"
+   :product-categories     "product-categories"
+   :cost-model-types       "cost-model.types"
+   :charge-packets         "cost-model.charge-packets"
+   :time-charge-types      "cost-model.time-charge-type"
+   :nfg-property           "non-functional-guarantees.property"
+   :nfg-value              "non-functional-guarantees.value"
+   :nfg-metric             "non-functional-guarantees.metric"
+   :security-mechanisms    "security-mechanisms"
+   :protection-types       "protection-types"
+   :security-properties    "security-properties"
+   :protected-items        "protected-items"
+   :threats                "threats"
+   :res-property           "restrictions.property"
+   :res-value              "restrictions.value"
+   :res-metric             "restrictions.metric"
+   :open-source            "open-source"
+   :freely-available       "freely-available"
+   :test-version           "test-version"
+   :test-duration          "test-duration"
+   :product-interfaces     "product-interfaces"
+   :product-company        "product-company"
+   :marketplaces           "marketplaces"
+   :support-types          "support.support-types"
+   :support-daily-duration "support.support-daily-duration"
+   :support-package-number "support.support-package-number"})
+
 (defn normalize-params
   [params user-info]
   (let [logical-operator (if (not user-info)
@@ -169,48 +203,56 @@
                                  (or $ "AND")))
         params           (->> params
                               (filter #(not= :logical-operator (:property-name %)))
-                              (map (fn [{:keys [operator property-name] :as criterion}]
-                                     (-> criterion
-                                         (assoc :column property-name)
-                                         (assoc :operator (get ->operator operator "="))))))]
+                              (map (fn [{:keys [operator property-name match-value] :as criterion}]
+                                     (let [match-value (if (or (= :security-mechanisms property-name)
+                                                               (= :threats property-name))
+                                                         (->> match-value (map name) vec)
+                                                         match-value)]
+                                       (-> criterion
+                                           (assoc :match-value match-value)
+                                           (assoc :doc-property (->doc-property property-name))
+                                           (assoc :operator (get ->operator operator "="))
+                                           (assoc :property-name (csk/->camelCase (name property-name))))))))]
     {:logical-operator logical-operator
      :params           params}))
 
-(defn get-root-path
-  [k all]
-  (loop [curr (z/zipper coll? seq nil all)]
-    (cond (z/end? curr)
-          nil
+#?(:clj
+   (defn get-root-path
+     [k all]
+     (loop [curr (z/zipper coll? seq nil all)]
+       (cond (z/end? curr)
+             nil
 
-          (-> curr z/node (= k))
-          (->> curr
-               z/path
-               (filter map-entry?)
-               (mapv first))
+             (-> curr z/node (= k))
+             (->> curr
+                  z/path
+                  (filter map-entry?)
+                  (mapv first))
 
-          :else
-          (recur (z/next curr)))))
+             :else
+             (recur (z/next curr))))))
 
-(defn complete-security-mechanisms-threats
-  [selected all]
-  (->> selected
-       (map (fn [sel]
-              (get-root-path sel all)))
-       (mapcat (fn [ks]
-                 (let [v (get-in all ks)]
-                   (if v
-                     [ks v]
-                     ks))))
-       (mapcat (fn [d]
-                 (cond (vector? d)
-                       d
+#?(:clj
+   (defn complete-security-mechanisms-threats
+     [selected all]
+     (->> selected
+          (map (fn [sel]
+                 (get-root-path sel all)))
+          (mapcat (fn [ks]
+                    (let [v (get-in all ks)]
+                      (if v
+                        [ks v]
+                        ks))))
+          (mapcat (fn [d]
+                    (cond (vector? d)
+                          d
 
-                       (keyword? d)
-                       [d]
+                          (keyword? d)
+                          [d]
 
-                       (map? d)
-                       (util/get-all-keys d))))
-       (remove nil?)
-       (map name)
-       set
-       vec))
+                          (map? d)
+                          (util/get-all-keys d))))
+          (remove nil?)
+          (map name)
+          set
+          vec)))
