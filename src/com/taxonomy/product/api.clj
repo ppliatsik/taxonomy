@@ -116,7 +116,6 @@
                        (assoc :published false)
                        (update :security-mechanisms #(product/complete-security-mechanisms-threats % security-mechanisms))
                        (update :threats #(product/complete-security-mechanisms-threats % threats)))]
-          (prn "data" data)
           (http-response/ok {:result  :success
                              :payload (data/create-product couchbase data)}))))
 
