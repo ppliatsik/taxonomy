@@ -95,7 +95,7 @@
                                :support-package-number 2}]}
  {:name                      "McAfee Enterprise Security Manager SIEM TEST"
   :description               "The McAfee Enterprise Security Manager SIEM product for test"
-  :delivery-methods          ["IAAS"]
+  :delivery-methods          ["CAAS"]
   :deployment-models         ["PUBLIC"]
   :product-categories        ["SIEM"]
   :cost-model                [{:cost-model-types ["PER_WORKLOAD"]

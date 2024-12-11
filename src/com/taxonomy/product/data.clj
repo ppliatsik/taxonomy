@@ -14,6 +14,8 @@
    :protected-items :threats :restrictions :open-source :freely-available
    :test-version :test-duration :product-interfaces :product-company :marketplaces :support])
 
+(def query-all-str "select p.* from products p where published = true")
+
 (defn json-object->edn
   [data]
   (when data
@@ -68,19 +70,25 @@
 
 (defn get-query
   [params logical-operator]
-  (let [j-params (edn->json-object (->> params (map (juxt :property-name :match-value)) into {}))
-        query    (reduce (fn [q {:keys [property-name not operator doc-property]}]
-                           (let [no (if not "not" "")]
-                             (str q " " logical-operator " `" doc-property "` " no " " operator " $" property-name)))
-                         "select p.* from products p where published = true"
-                         params)]
+  (let [logical-operator (str " " logical-operator " ")
+        j-params         (edn->json-object (->> params (map (juxt :property-name :match-value)) into {}))
+        query            (reduce (fn [q {:keys [property-name not operator doc-property]}]
+                                   (let [no    (if not " NOT " " ")
+                                         input (str "$" property-name)]
+                                     (cond (fn? operator)
+                                           (str q logical-operator no (operator input doc-property))
+
+                                           :else
+                                           (str q logical-operator no "`" doc-property "`" operator input))))
+                                 query-all-str
+                                 params)]
     (N1qlQuery/parameterized query j-params)))
 
 (defn search-products
   [{:keys [bucket]} {:keys [params logical-operator]}]
   (let [query  (if (seq params)
                  (get-query params logical-operator)
-                 (N1qlQuery/simple "select p.* from products p where published = true"))
+                 (N1qlQuery/simple query-all-str))
         result (.query bucket query)]
     (get-from-n1ql-result result)))
 
@@ -119,7 +127,7 @@
 
 (defn get-all-products
   [{:keys [bucket]}]
-  (let [query  (N1qlQuery/simple "select p.* from products p where published = true")
+  (let [query  (N1qlQuery/simple query-all-str)
         result (.query bucket query)]
     (get-from-n1ql-result result)))
 

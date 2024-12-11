@@ -155,11 +155,16 @@
    "GREATER_EQUAL_THAN" ">="
    "EQUAL"              "="
    "DIFFERENT"          "<>"
-   "EQUAL_ARRAYS"       "EVERY p IN %s SATISFIES p IN %s END" ; b (first) is equal to a (second)
-   "SUBSET"             "EVERY w IN %s SATISFIES ARRAY_CONTAINS(%s,w) END" ; b (first) is sub-set of a (second) (or a is super-set of b)
-   "SUPERSET"           "EVERY x IN %s SATISFIES ARRAY_CONTAINS(%s,x) END" ; b (second) is super-set of a (first) (or a is sub-set of b)
-   "INCLUDES"           "ANY y IN %s SATISFIES ARRAY_CONTAINS(%s,y) END" ; at least one element of b (first) is present in a (second)
-   "NON_INCLUDES"       "EVERY z IN %s SATISFIES NOT ARRAY_CONTAINS(%s,z) END" ; no element in b (first) is present in a (second)
+   "EQUAL_ARRAYS"       (fn [input column]
+                          (format " EVERY p IN %s SATISFIES p IN `%s` END " input column)) ; input (first) is equal to column (second)
+   "SUBSET"             (fn [input column]
+                          (format " EVERY w IN %s SATISFIES ARRAY_CONTAINS(`%s`,w) END " input column)) ; input (first) is sub-set of column (second) (or column is super-set of input)
+   "SUPERSET"           (fn [input column]
+                          (format " EVERY x IN `%s` SATISFIES ARRAY_CONTAINS(%s,x) END " column input)) ; input (second) is super-set of column (first) (or column is sub-set of input)
+   "INCLUDES"           (fn [input column]
+                          (format " ANY y IN %s SATISFIES ARRAY_CONTAINS(`%s`,y) END " input column)) ; at least one element of input (first) is present in column (second)
+   "NON_INCLUDES"       (fn [input column]
+                          (format " EVERY z IN %s SATISFIES NOT ARRAY_CONTAINS(`%s`,z) END " input column)) ; no element in input (first) is present in column (second)
    })
 
 (def ->doc-property
