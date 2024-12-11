@@ -2,7 +2,6 @@
   (:require [re-frame.core :as rf]
             [clojure.spec.alpha :as s]
             [spec-tools.core :as st]
-            [clojure.set :as clj.set]
             [com.taxonomy.ui.util :as util]
             [com.taxonomy.product :as product]))
 
@@ -10,6 +9,25 @@
 (def data-path (rf/path [:ui/forms ::product/list :data]))
 (def metadata
   {:data-path paths})
+
+(defn get-operators-by-type
+  [type-k operators]
+  (cond (= :string type-k)
+        (filter #(or (= "EQUAL" %)
+                     (= "DIFFERENT" %))
+                operators)
+
+        (= :number type-k)
+        (filter #(or (= "LESS_THAN" %)
+                     (= "LESS_EQUAL_THAN" %)
+                     (= "GREATER_THAN" %)
+                     (= "GREATER_EQUAL_THAN" %)
+                     (= "EQUAL" %)
+                     (= "DIFFERENT" %))
+                operators)
+
+        (= :list type-k)
+        operators))
 
 (defn check-fields
   [data]

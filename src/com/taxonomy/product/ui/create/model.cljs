@@ -1,8 +1,5 @@
 (ns com.taxonomy.product.ui.create.model
   (:require [re-frame.core :as rf]
-            [clojure.spec.alpha :as s]
-            [spec-tools.core :as st]
-            [clojure.set :as clj.set]
             [com.taxonomy.ui.routes :as routes]
             [com.taxonomy.ui.util :as util]
             [com.taxonomy.product :as product]))

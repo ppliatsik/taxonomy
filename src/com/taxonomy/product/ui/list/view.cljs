@@ -3,7 +3,6 @@
             [clojure.string :as clj.str]
             [clojure.set :as clj.set]
             [com.taxonomy.ui.navbar :as ui.navbar]
-            [com.taxonomy.ui.form :as form]
             [com.taxonomy.translations :as trans]
             [com.taxonomy.product :as product]
             [com.taxonomy.product.ui.product-view :as product-view]
@@ -80,8 +79,9 @@
                     :disabled true}]]))
 
 (defn- dropdown-operators
-  [{:keys [products-choices] :as model} k lang]
-  (let [id (str "op-" (name k))]
+  [{:keys [products-choices] :as model} k lang type-k]
+  (let [id        (str "op-" (name k))
+        operators (model/get-operators-by-type type-k (:operators products-choices))]
     [:div.column
      {:className (if (or (= :security-mechanisms k)
                          (= :threats k))
@@ -97,7 +97,7 @@
               [:option ""]]
              (map (fn [v]
                     [:option {:key v :value v} v])
-                  (:operators products-choices)))]]]))
+                  operators))]]]))
 
 (defn- items-list
   [model k items add? lang]
@@ -142,7 +142,7 @@
      [:div.columns
       {:style {:margin-left "2%"}}
       (when login-user
-        [dropdown-operators model k lang])]]))
+        [dropdown-operators model k lang :list])]]))
 
 (defn- input
   [model k lang]
@@ -163,57 +163,97 @@
      [:div.columns
       [dropdown-simple model (-> model :products-choices :logical-operators) :logical-operators nil lang]])
    [:div.columns
-    [input model :name lang]]
+    [input model :name lang]
+    (when login-user
+      [dropdown-operators model :name lang :string])
+    (when login-user
+      [checkbox-not model :name lang])]
    [:div.columns
     [dropdown model (-> model :products-choices :delivery-methods) :delivery-methods lang]
     [dropdown-values model :delivery-methods lang]
     (when login-user
-      [dropdown-operators model :delivery-methods lang])
+      [dropdown-operators model :delivery-methods lang :list])
     (when login-user
       [checkbox-not model :delivery-methods lang])]
    [:div.columns
     [dropdown model (-> model :products-choices :deployment-models) :deployment-models lang]
     [dropdown-values model :deployment-models lang]
     (when login-user
-      [dropdown-operators model :deployment-models lang])
+      [dropdown-operators model :deployment-models lang :list])
     (when login-user
       [checkbox-not model :deployment-models lang])]
    [:div.columns
     [dropdown model (-> model :products-choices :product-categories) :product-categories lang]
     [dropdown-values model :product-categories lang]
     (when login-user
-      [dropdown-operators model :product-categories lang])
+      [dropdown-operators model :product-categories lang :list])
     (when login-user
       [checkbox-not model :product-categories lang])]
    [:div.columns
     [dropdown model (-> model :products-choices :cost-model-types) :cost-model-types lang]
-    [dropdown-values model :cost-model-types lang]]
+    [dropdown-values model :cost-model-types lang]
+    (when login-user
+      [dropdown-operators model :cost-model-types lang :list])
+    (when login-user
+      [checkbox-not model :cost-model-types lang])]
    [:div.columns
-    [input model :charge-packets lang]]
+    [input model :charge-packets lang]
+    (when login-user
+      [dropdown-operators model :charge-packets lang :number])
+    (when login-user
+      [checkbox-not model :charge-packets lang])]
    [:div.columns
     [dropdown model (-> model :products-choices :time-charge-types) :time-charge-types lang]
-    [dropdown-values model :time-charge-types lang]]
+    [dropdown-values model :time-charge-types lang]
+    (when login-user
+      [dropdown-operators model :time-charge-types lang :list])
+    (when login-user
+      [checkbox-not model :time-charge-types lang])]
    [security-threats-view model login-user :security-mechanisms lang]
    [:div.columns
-    [input model :nfg-property lang]]
+    [input model :nfg-property lang]
+    (when login-user
+      [dropdown-operators model :nfg-property lang :string])
+    (when login-user
+      [checkbox-not model :nfg-property lang])]
    [:div.columns
-    [input model :nfg-value lang]]
+    [input model :nfg-value lang]
+    (when login-user
+      [dropdown-operators model :nfg-value lang :number])
+    (when login-user
+      [checkbox-not model :nfg-value lang])]
    [:div.columns
-    [input model :nfg-metric lang]]
+    [input model :nfg-metric lang]
+    (when login-user
+      [dropdown-operators model :nfg-metric lang :string])
+    (when login-user
+      [checkbox-not model :nfg-metric lang])]
    [:div.columns
     [dropdown model (-> model :products-choices :protection-types) :protection-types lang]
     [dropdown-values model :protection-types lang]
     (when login-user
-      [dropdown-operators model :protection-types lang])
+      [dropdown-operators model :protection-types lang :list])
     (when login-user
       [checkbox-not model :protection-types lang])]
    [security-threats-view model login-user :threats lang]
    [:div.columns
-    [input model :res-property lang]]
+    [input model :res-property lang]
+    (when login-user
+      [dropdown-operators model :res-property lang :string])
+    (when login-user
+      [checkbox-not model :res-property lang])]
    [:div.columns
-    [input model :res-value lang]]
+    [input model :res-value lang]
+    (when login-user
+      [dropdown-operators model :res-value lang :number])
+    (when login-user
+      [checkbox-not model :res-value lang])]
    [:div.columns
-    [input model :res-metric lang]]
+    [input model :res-metric lang]
+    (when login-user
+      [dropdown-operators model :res-metric lang :string])
+    (when login-user
+      [checkbox-not model :res-metric lang])]
    [:div.columns
     [checkbox model :open-source lang]]
    [:div.columns
@@ -221,28 +261,42 @@
    [:div.columns
     [checkbox model :test-version lang]]
    [:div.columns
-    [input model :test-duration lang]]
+    [input model :test-duration lang]
+    (when login-user
+      [dropdown-operators model :test-duration lang :number])]
    [:div.columns
     [dropdown model (-> model :products-choices :product-interfaces) :product-interfaces lang]
     [dropdown-values model :product-interfaces lang]
     (when login-user
-      [dropdown-operators model :product-interfaces lang])
+      [dropdown-operators model :product-interfaces lang :list])
     (when login-user
       [checkbox-not model :product-interfaces lang])]
    [:div.columns
     [dropdown model (-> model :products-choices :marketplaces) :marketplaces lang]
     [dropdown-values model :marketplaces lang]
     (when login-user
-      [dropdown-operators model :marketplaces lang])
+      [dropdown-operators model :marketplaces lang :list])
     (when login-user
       [checkbox-not model :marketplaces lang])]
    [:div.columns
     [dropdown model (-> model :products-choices :support-types) :support-types lang]
-    [dropdown-values model :support-types lang]]
+    [dropdown-values model :support-types lang]
+    (when login-user
+      [dropdown-operators model :support-types lang :list])
+    (when login-user
+      [checkbox-not model :support-types lang])]
    [:div.columns
-    [input model :support-daily-duration lang]]
+    [input model :support-daily-duration lang]
+    (when login-user
+      [dropdown-operators model :support-daily-duration lang :number])
+    (when login-user
+      [checkbox-not model :support-daily-duration lang])]
    [:div.columns
-    [input model :support-package-number lang]]])
+    [input model :support-package-number lang]
+    (when login-user
+      [dropdown-operators model :support-package-number lang :number])
+    (when login-user
+      [checkbox-not model :support-package-number lang])]])
 
 (defn- multi-weights
   [{:keys [products] :as model} lang product-key]
