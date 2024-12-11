@@ -27,7 +27,12 @@
                 operators)
 
         (= :list type-k)
-        operators))
+        (filter #(or (= "EQUAL_ARRAYS" %)
+                     (= "SUBSET" %)
+                     (= "SUPERSET" %)
+                     (= "INCLUDES" %)
+                     (= "NON_INCLUDES" %))
+                operators)))
 
 (defn check-fields
   [data]

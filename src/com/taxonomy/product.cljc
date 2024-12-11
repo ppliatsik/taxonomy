@@ -39,7 +39,7 @@
 
 (s/def ::property	string?)
 (def operator-types #{"LESS_THAN" "LESS_EQUAL_THAN" "GREATER_THAN" "GREATER_EQUAL_THAN"
-                      "EQUAL" "DIFFERENT" "SUBSET" "SUPERSET" "INCLUDES" "NON_INCLUDES"})
+                      "EQUAL" "DIFFERENT" "EQUAL_ARRAYS" "SUBSET" "SUPERSET" "INCLUDES" "NON_INCLUDES"})
 (s/def ::operator	(s/and string? operator-types))
 (s/def ::value
   #?(:clj decimal?)
@@ -155,10 +155,12 @@
    "GREATER_EQUAL_THAN" ">="
    "EQUAL"              "="
    "DIFFERENT"          "<>"
-   "SUBSET"             "subset"
-   "SUPERSET"           "superset"
-   "INCLUDES"           "includes"
-   "NON_INCLUDES"       "non-includes"})
+   "EQUAL_ARRAYS"       "EVERY p IN %s SATISFIES p IN %s END" ; b (first) is equal to a (second)
+   "SUBSET"             "EVERY w IN %s SATISFIES ARRAY_CONTAINS(%s,w) END" ; b (first) is sub-set of a (second) (or a is super-set of b)
+   "SUPERSET"           "EVERY x IN %s SATISFIES ARRAY_CONTAINS(%s,x) END" ; b (second) is super-set of a (first) (or a is sub-set of b)
+   "INCLUDES"           "ANY y IN %s SATISFIES ARRAY_CONTAINS(%s,y) END" ; at least one element of b (first) is present in a (second)
+   "NON_INCLUDES"       "EVERY z IN %s SATISFIES NOT ARRAY_CONTAINS(%s,z) END" ; no element in b (first) is present in a (second)
+   })
 
 (def ->doc-property
   {:name                   "name"
