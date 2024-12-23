@@ -89,7 +89,11 @@
    :operators                  "Operators"
    :not                        "Add 'not' logical operator"
    :add                        "Add"
-   :clear                      "Clear"})
+   :clear                      "Clear"
+   :hide-criteria              "Hide criteria"
+   :show-criteria              "Show criteria"
+   :hide-weights               "Hide weights"
+   :show-weights               "Show weights"})
 
 (def end-user
   {:user-not-exists                   "User does not exists"

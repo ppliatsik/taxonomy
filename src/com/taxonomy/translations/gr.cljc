@@ -89,7 +89,11 @@
    :operators                  "Τελεστές"
    :not                        "Προσθέστε τον λογικό τελεστή 'όχι'"
    :add                        "Προσθήκη"
-   :clear                      "Καθαρισμός"})
+   :clear                      "Καθαρισμός"
+   :hide-criteria              "Απόκρυψη κριτηρίων"
+   :show-criteria              "Εμφάνιση κριτηρίων"
+   :hide-weights               "Απόκρυψη βαρών"
+   :show-weights               "Εμφάνιση βαρών"})
 
 (def end-user
   {:user-not-exists                   "Ο χρήστης δεν υπάρχει"

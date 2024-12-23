@@ -2,6 +2,7 @@
   (:require [re-frame.core :as rf]
             [clojure.spec.alpha :as s]
             [spec-tools.core :as st]
+            [clojure.string :as clj.str]
             [com.taxonomy.ui.util :as util]
             [com.taxonomy.product :as product]))
 
@@ -43,17 +44,21 @@
                              (st/coerce ::product/restrictions-w (:restrictions data) st/string-transformer))
                    (s/valid? ::product/test-duration-w
                              (st/coerce ::product/weight (:test-duration data) st/string-transformer))
-                   (= 1.0 (+ (as-> (:non-functional-guarantees data) $
-                                   (map :weight $)
+                   (= 1.0 (+ (as-> (-> data :weights :non-functional-guarantees) $
+                                   (vals $)
+                                   (remove clj.str/blank? $)
                                    (map #(st/coerce ::product/weight % st/string-transformer) $)
                                    (reduce + $)
-                                   (or $ 0M))
-                             (as-> (:restrictions data) $
-                                   (map :weight $)
+                                   (or $ 0.0))
+                             (as-> (-> data :weights :restrictions) $
+                                   (vals $)
+                                   (remove clj.str/blank? $)
                                    (map #(st/coerce ::product/weight % st/string-transformer) $)
                                    (reduce + $)
-                                   (or $ 0M))
-                             (or (st/coerce ::product/weight (:test-duration data) st/string-transformer) 0.0))))))
+                                   (or $ 0.0))
+                             (if-not (clj.str/blank? (-> data :weights :test-duration))
+                               (st/coerce ::product/weight (-> data :weights :test-duration) st/string-transformer)
+                               0.0))))))
 
 (defn get-criteria
   [db]
@@ -70,16 +75,32 @@
 
 (defn get-weights
   [{:keys [weights]}]
-  {:non-functional-guarantees-w (:non-functional-guarantees weights)
-   :restrictions-w              (:restrictions weights)
-   :test-duration-w             (:test-duration weights)})
+  (let [nfg (->> (:non-functional-guarantees weights)
+                 (map (fn [[k v]]
+                        (if (clojure.string/blank? v)
+                          {k nil}
+                          {k v})))
+                 (into {}))
+        res (->> (:restrictions weights)
+                 (map (fn [[k v]]
+                        (if (clojure.string/blank? v)
+                          {k nil}
+                          {k v})))
+                 (into {}))
+        td  (when-not (clj.str/blank? (:test-duration weights))
+              (:test-duration weights))]
+    {:non-functional-guarantees-w nfg
+     :restrictions-w              res
+     :test-duration-w             td}))
 
 (rf/reg-event-fx
   ::init
   [data-path]
   (fn [_ _]
-    {:db {:criteria {}
-          :weights  {}}
+    {:db {:criteria      {}
+          :weights       {}
+          :show-criteria true
+          :show-weights  true}
      :fx [[:dispatch [:ajax/get {:uri     "/api/config/security-mechanisms"
                                  :success ::get-security-mechanisms-success
                                  :failure ::get-security-mechanisms-failure}]]
@@ -246,13 +267,25 @@
   ::set-input
   [data-path]
   (fn [db [_ k v]]
-    (assoc-in db [:weight k] v)))
+    (assoc-in db [:weights k] v)))
 
 (rf/reg-event-db
   ::set-multi-weight-input
   [data-path]
   (fn [db [_ product-key property weight]]
     (assoc-in db [:weights product-key property] weight)))
+
+(rf/reg-event-db
+  ::toggle-criteria-view
+  [data-path]
+  (fn [db _]
+    (update db :show-criteria not)))
+
+(rf/reg-event-db
+  ::toggle-weights-view
+  [data-path]
+  (fn [db _]
+    (update db :show-weights not)))
 
 (rf/reg-sub
   ::form-data

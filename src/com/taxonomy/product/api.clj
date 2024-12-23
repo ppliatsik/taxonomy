@@ -6,18 +6,20 @@
             [com.taxonomy.product.data :as data]
             [com.taxonomy.end-user :as end-user]
             [com.taxonomy.util :as util])
-  (:import [java.util UUID]))
+  (:import [java.math RoundingMode]
+           [java.util UUID]))
 
 (defn- get-min-max-values
   [products]
   (let [property-fn (fn [prop]
                       (->> products
-                           (map #(get % prop))
+                           (mapcat #(get % prop))
                            (map #(select-keys % [:property :value]))
                            (group-by :property)
                            (reduce-kv (fn [m k v]
                                         (let [new-v (->> v
                                                          (map :value)
+                                                         (map bigdec)
                                                          sort)]
                                           (assoc m (clj.str/replace k #"\s" "") new-v)))
                                       {})))]
@@ -25,34 +27,35 @@
      :restrictions-values              (property-fn :restrictions)
      :test-durations                   (->> products
                                             (map #(:test-duration %))
+                                            (remove nil?)
+                                            (map bigdec)
                                             sort)}))
 
 (defn- get-positive-direction-local-score
   "Formula for positive local score is: (x_{ij} - min_k(x_{ik})) / (max_k(x_{ik}) - min_k(x_{ik}))"
   [value min-value max-value]
   (if value
-    (let [divisor (if (= 0M (- max-value min-value))
+    (let [divisor (if (= 0M (.subtract max-value min-value))
                     1M
-                    (- max-value min-value))]
-      (- value (/ min-value divisor)))
+                    (.subtract max-value min-value))]
+      (.subtract value (.divide min-value divisor 2 RoundingMode/HALF_UP)))
     0M))
 
 (defn- get-negative-direction-local-score
   "Formula for negative local score is: (max_k(x_{ik}) - x_{ij}) / (max_k(x_{ik}) - min_k(x_{ik}))"
   [value min-value max-value]
   (if value
-    (let [divisor (if (= 0M (- max-value min-value))
+    (let [divisor (if (= 0M (.subtract max-value min-value))
                     1M
-                    (- max-value min-value))]
-      (- (/ (- max-value value) divisor)))
+                    (.subtract max-value min-value))]
+      (.negate (.divide (.subtract max-value value) divisor 2 RoundingMode/HALF_UP)))
     0M))
 
 (defn- compute-score
   "Formula for score is: score_j = Sum_i (w_i * score_{ij}),
   where score_{ij} is the score of each property and w_i its weight."
   [product
-   {:keys [non-functional-guarantees-w restrictions-w test-duration-w]
-    :or {test-duration-w 0M}}
+   {:keys [non-functional-guarantees-w restrictions-w test-duration-w]}
    {:keys [non-functional-guarantees-values restrictions-values test-durations]}]
   (let [score-fn (fn [data weights values]
                    (->> data
@@ -60,9 +63,10 @@
                                (when-let [w (get weights (clj.str/replace (:property res) #"\s" ""))]
                                  (let [min-value (or (first (get values (clj.str/replace (:property res) #"\s" ""))) 0M)
                                        max-value (or (last (get values (clj.str/replace (:property res) #"\s" ""))) 0M)
+                                       value     (if (:value res) (bigdec (:value res)) 0M)
                                        v         (if (:direction-of-values res)
-                                                   (get-positive-direction-local-score (:value res) min-value max-value)
-                                                   (get-negative-direction-local-score (:value res) min-value max-value))]
+                                                   (get-positive-direction-local-score value min-value max-value)
+                                                   (get-negative-direction-local-score value min-value max-value))]
                                    (* w v)))))
                         (remove nil?)
                         (reduce +)))
@@ -71,9 +75,10 @@
                                                   non-functional-guarantees-w
                                                   non-functional-guarantees-values)
         restrictions-score              (score-fn (:restrictions product) restrictions-w restrictions-values)
-        test-duration-score             (* test-duration-w
+        test-duration-value             (if (:test-duration product) (bigdec (:test-duration product)) 0M)
+        test-duration-score             (* (or test-duration-w 0M)
                                            (get-positive-direction-local-score
-                                             (:test-duration product)
+                                             test-duration-value
                                              (or (first test-durations) 0M)
                                              (or (last test-durations) 0M)))]
     (+ non-functional-guarantees-score restrictions-score test-duration-score)))
@@ -91,14 +96,16 @@
 (defn get-total-weight
   [weights]
   (+ (as-> (:non-functional-guarantees-w weights) $
-           (map :value $)
+           (vals $)
+           (remove nil? $)
            (reduce + $)
            (or $ 0M))
      (as-> (:restrictions-w weights) $
-           (map :value $)
+           (vals $)
+           (remove nil? $)
            (reduce + $)
            (or $ 0M))
-     (or (:test-duration-w weights) 0.0)))
+     (or (:test-duration-w weights) 0M)))
 
 (defn create-product
   [{:keys [couchbase parameters user-info security-mechanisms threats] :as request}]

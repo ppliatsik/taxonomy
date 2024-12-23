@@ -352,13 +352,37 @@
       :disabled (not correct-inputs)}
      [:span (trans/translate lang ::product/discovery)]]]])
 
+(defn- criteria-show-hide
+  [{:keys [show-criteria]} lang]
+  [:div.columns
+   [:div.column.is-4
+    [:button.button.is-info
+     {:on-click #(rf/dispatch [::model/toggle-criteria-view])}
+     [:span (if show-criteria
+              (trans/translate lang ::product/hide-criteria)
+              (trans/translate lang ::product/show-criteria))]]]])
+
+(defn- weights-show-hide
+  [{:keys [show-weights]} lang]
+  [:div.columns
+   [:div.column.is-4
+    [:button.button.is-info
+     {:on-click #(rf/dispatch [::model/toggle-weights-view])}
+     [:span (if show-weights
+              (trans/translate lang ::product/hide-weights)
+              (trans/translate lang ::product/show-weights))]]]])
+
 (defn view []
   (let [login-user @(rf/subscribe [:ui/user])
         model      @(rf/subscribe [::model/ui-model])
         lang       (:language model)]
     [:article.box
      [ui.navbar/view]
-     [criteria-view model lang login-user]
-     [weights-view model lang]
+     [criteria-show-hide model lang]
+     (when (:show-criteria model)
+       [criteria-view model lang login-user])
+     [weights-show-hide model lang]
+     (when (:show-weights model)
+       [weights-view model lang])
      [submit-buttons model lang]
      [product-view/list-products model lang]]))
