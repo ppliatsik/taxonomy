@@ -12,29 +12,32 @@
   [data lang]
   (->> data
        (map (fn [cur]
-              [:div.column
-               [:table.table.is-fullwidth.is-stripped.is-hoverable.vertical-align-middle.fixed
-                [:tr
-                 [:td.nowrap [:b (trans/translate lang ::product/property)]]
-                 [:td.nowrap (:property cur)]]
-                [:tr
-                 [:td.nowrap [:b (trans/translate lang ::product/operator)]]
-                 [:td.nowrap (:operator cur)]]
-                [:tr
-                 [:td.nowrap [:b (trans/translate lang ::product/value)]]
-                 [:td.nowrap (:value cur)]]
-                [:tr
-                 [:td.nowrap [:b (trans/translate lang ::product/metric)]]
-                 [:td.nowrap (:metric cur)]]
-                [:tr
-                 [:td.nowrap [:b (trans/translate lang ::product/direction-of-values)]]
-                 [:td.nowrap (if (:direction-of-values cur)
-                               (trans/translate lang :com.taxonomy.ui/positive)
-                               (trans/translate lang :com.taxonomy.ui/negative))]]
-                [:tr
-                 [:td.nowrap [:b (trans/translate lang ::product/unit)]]
-                 [:td.nowrap (:unit cur)]]]]))
-       (into [:div.columns])))
+              [:div.columns
+               [:div.column
+                [:table.table.is-fullwidth.is-stripped.is-hoverable.vertical-align-middle.fixed
+                 [:tr
+                  [:td.nowrap [:b (trans/translate lang ::product/property)]]
+                  [:td.nowrap (:property cur)]]
+                 [:tr
+                  [:td.nowrap [:b (trans/translate lang ::product/operator)]]
+                  [:td.nowrap (:operator cur)]]
+                 [:tr
+                  [:td.nowrap [:b (trans/translate lang ::product/value)]]
+                  [:td.nowrap (:value cur)]]
+                 [:tr
+                  [:td.nowrap [:b (trans/translate lang ::product/metric)]]
+                  [:td.nowrap (:metric cur)]]
+                 [:tr
+                  [:td.nowrap [:b (trans/translate lang ::product/direction-of-values)]]
+                  [:td.nowrap (if (:direction-of-values cur)
+                                (trans/translate lang :com.taxonomy.ui/positive)
+                                (trans/translate lang :com.taxonomy.ui/negative))]]
+                 [:tr
+                  [:td.nowrap [:b (trans/translate lang ::product/unit)]]
+                  [:td.nowrap (:unit cur)]]]
+                [:div {:style {:border     "none"
+                               :border-top "2px dotted black"}}]]]))
+       (into [:div])))
 
 (defn- product-view
   [{:keys [product]} lang]
@@ -67,18 +70,21 @@
       [:td.nowrap [:b (trans/translate lang ::product/cost-model)]]
       [:td.nowrap (->> (:cost-model product)
                        (map (fn [cm]
-                              [:div.column
-                               [:table.table.is-fullwidth.is-stripped.is-hoverable.vertical-align-middle.fixed
-                                [:tr
-                                 [:td.nowrap [:b (trans/translate lang ::product/cost-model-types)]]
-                                 [:td.nowrap (clj.str/join "," (:cost-model-types cm))]]
-                                [:tr
-                                 [:td.nowrap [:b (trans/translate lang ::product/charge-packets)]]
-                                 [:td.nowrap (:charge-packets cm)]]
-                                [:tr
-                                 [:td.nowrap [:b (trans/translate lang ::product/time-charge-types)]]
-                                 [:td.nowrap (clj.str/join "," (:time-charge-types cm))]]]]))
-                       (into [:div.columns]))]]
+                              [:div.columns
+                               [:div.column
+                                [:table.table.is-fullwidth.is-stripped.is-hoverable.vertical-align-middle.fixed
+                                 [:tr
+                                  [:td.nowrap [:b (trans/translate lang ::product/cost-model-types)]]
+                                  [:td.nowrap (clj.str/join "," (:cost-model-types cm))]]
+                                 [:tr
+                                  [:td.nowrap [:b (trans/translate lang ::product/charge-packets)]]
+                                  [:td.nowrap (:charge-packets cm)]]
+                                 [:tr
+                                  [:td.nowrap [:b (trans/translate lang ::product/time-charge-types)]]
+                                  [:td.nowrap (clj.str/join "," (:time-charge-types cm))]]]
+                                [:div {:style {:border     "none"
+                                               :border-top "2px dotted black"}}]]]))
+                       (into [:div]))]]
      [:tr
       [:td.nowrap [:b (trans/translate lang ::product/security-mechanisms)]]
       [:td.nowrap (as-> (:security-mechanisms product) $
