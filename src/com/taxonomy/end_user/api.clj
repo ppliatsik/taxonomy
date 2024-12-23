@@ -19,11 +19,11 @@
                                                    :token    token
                                                    :valid-to (-> (jt/local-date-time)
                                                                  (jt/plus (jt/minutes activation-token-valid-time)))})]
-    (email/send email-host
-                {:to      email
-                 :subject "User account activation"
-                 :body    (str "<a href=" server-address "/#/email-activate-account?token="
-                               token ">Click to activate account</a>")})))
+    (email/send-email email-host
+                      {:to      email
+                       :subject "User account activation"
+                       :body    (str "<a href=" server-address "/#/email-activate-account?token="
+                                     token ">Click to activate account</a>")})))
 
 (defn login
   [{:keys [db parameters auth-keys token-valid-time email-host] :as request}]
@@ -45,10 +45,10 @@
           (and user-by-name (nil? user) (<= 3 (:login-fails user-by-name)))
           (do
             (data/deactivate-user db {:username username})
-            (email/send email-host
-                        {:to      (:email user-by-name)
-                         :subject "User account deactivation"
-                         :body    "Your account has been deactivated due to too many failed logins"})
+            (email/send-email email-host
+                              {:to      (:email user-by-name)
+                               :subject "User account deactivation"
+                               :body    "Your account has been deactivated due to too many failed logins"})
             (http-response/invalid {:result :failure
                                     :reason ::end-user/user-deactivated}))
 
@@ -209,10 +209,10 @@
                           :password (util/string->md5 password)}
                 _        (data/change-user-password db params)]
             (data/reset-login-fails* db user)
-            (email/send email-host
-                        {:to      email
-                         :subject "New account password"
-                         :body    (str "Your new password is: " password "\nChange it after login.")})
+            (email/send-email email-host
+                              {:to      email
+                               :subject "New account password"
+                               :body    (str "Your new password is: " password "\nChange it after login.")})
             (http-response/ok {:result :success})))))
 
 (defn update-user-info

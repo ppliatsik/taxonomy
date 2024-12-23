@@ -4,7 +4,7 @@
            [javax.mail Message$RecipientType Session]
            [javax.mail.internet InternetAddress MimeMessage]))
 
-(defn send
+(defn send-email
   [email-host {:keys [to subject body]}]
   (try
     (let [props (Properties.)

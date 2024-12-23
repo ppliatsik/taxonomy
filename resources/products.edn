@@ -42,7 +42,7 @@
  {:name                      "Elastic Security solution SIEM TEST"
   :description               "The Elastic Security solution SIEM product for test"
   :delivery-methods          ["SAAS"]
-  :deployment-models         ["PUBLIC"]
+  :deployment-models         ["PRIVATE"]
   :product-categories        ["SIEM"]
   :cost-model                [{:cost-model-types ["PER_HARDWARE_RESOURCE"]
                                :charge-packets   4
@@ -96,7 +96,7 @@
  {:name                      "McAfee Enterprise Security Manager SIEM TEST"
   :description               "The McAfee Enterprise Security Manager SIEM product for test"
   :delivery-methods          ["CAAS"]
-  :deployment-models         ["PUBLIC"]
+  :deployment-models         ["HYBRID"]
   :product-categories        ["SIEM"]
   :cost-model                [{:cost-model-types ["PER_WORKLOAD"]
                                :charge-packets   20

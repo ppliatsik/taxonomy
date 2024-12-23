@@ -148,24 +148,25 @@
   (s/keys :req-un [::weights ::criteria]
           :opt-un [::logical-operator]))
 
-(def ->operator
-  {"LESS_THAN"          "<"
-   "LESS_EQUAL_THAN"    "<="
-   "GREATER_THAN"       ">"
-   "GREATER_EQUAL_THAN" ">="
-   "EQUAL"              "="
-   "DIFFERENT"          "<>"
-   "EQUAL_ARRAYS"       (fn [input column]
-                          (format " EVERY p IN %s SATISFIES p IN `%s` END " input column)) ; input (first) is equal to column (second)
-   "SUBSET"             (fn [input column]
-                          (format " EVERY w IN %s SATISFIES ARRAY_CONTAINS(`%s`,w) END " input column)) ; input (first) is sub-set of column (second) (or column is super-set of input)
-   "SUPERSET"           (fn [input column]
-                          (format " EVERY x IN `%s` SATISFIES ARRAY_CONTAINS(%s,x) END " column input)) ; input (second) is super-set of column (first) (or column is sub-set of input)
-   "INCLUDES"           (fn [input column]
-                          (format " ANY y IN %s SATISFIES ARRAY_CONTAINS(`%s`,y) END " input column)) ; at least one element of input (first) is present in column (second)
-   "NON_INCLUDES"       (fn [input column]
-                          (format " EVERY z IN %s SATISFIES NOT ARRAY_CONTAINS(`%s`,z) END " input column)) ; no element in input (first) is present in column (second)
-   })
+#?(:clj
+   (def ->operator
+     {"LESS_THAN"          "<"
+      "LESS_EQUAL_THAN"    "<="
+      "GREATER_THAN"       ">"
+      "GREATER_EQUAL_THAN" ">="
+      "EQUAL"              "="
+      "DIFFERENT"          "<>"
+      "EQUAL_ARRAYS"       (fn [input column]
+                             (format " EVERY j IN %s SATISFIES j IN `%s` END " input column)) ; input (first) is equal to column (second)
+      "SUBSET"             (fn [input column]
+                             (format " EVERY w IN %s SATISFIES ARRAY_CONTAINS(`%s`,w) END " input column)) ; input (first) is sub-set of column (second) (or column is super-set of input)
+      "SUPERSET"           (fn [input column]
+                             (format " EVERY x IN `%s` SATISFIES ARRAY_CONTAINS(%s,x) END " column input)) ; input (second) is super-set of column (first) (or column is sub-set of input)
+      "INCLUDES"           (fn [input column]
+                             (format " ANY y IN %s SATISFIES ARRAY_CONTAINS(`%s`,y) END " input column)) ; at least one element of input (first) is present in column (second)
+      "NON_INCLUDES"       (fn [input column]
+                             (format " EVERY z IN %s SATISFIES NOT ARRAY_CONTAINS(`%s`,z) END " input column)) ; no element in input (first) is present in column (second)
+      }))
 
 (def ->doc-property
   {:name                   "name"
@@ -199,29 +200,38 @@
    :support-daily-duration "support.support-daily-duration"
    :support-package-number "support.support-package-number"})
 
-(defn normalize-params
-  [params user-info]
-  (let [logical-operator (if (not user-info)
-                           "AND"
-                           (as-> params $
-                                 (filter #(= :logical-operator (:property-name %)) $)
-                                 (first $)
-                                 (:match-value $)
-                                 (or $ "AND")))
-        params           (->> params
-                              (filter #(not= :logical-operator (:property-name %)))
-                              (map (fn [{:keys [operator property-name match-value] :as criterion}]
-                                     (let [match-value (if (or (= :security-mechanisms property-name)
-                                                               (= :threats property-name))
-                                                         (->> match-value (map name) vec)
-                                                         match-value)]
-                                       (-> criterion
-                                           (assoc :match-value match-value)
-                                           (assoc :doc-property (->doc-property property-name))
-                                           (assoc :operator (get ->operator operator "="))
-                                           (assoc :property-name (csk/->camelCase (name property-name))))))))]
-    {:logical-operator logical-operator
-     :params           params}))
+(def non-collection-properties
+  #{:name :description :creator :charge-packets :nfg-property :nfg-value :nfg-metric
+    :res-property :res-value :res-metric :open-source :freely-available :test-version
+    :test-duration :product-company :support-daily-duration :support-package-number})
+
+#?(:clj
+   (defn normalize-params
+     [params user-info]
+     (let [logical-operator (if (not user-info)
+                              "AND"
+                              (as-> params $
+                                    (filter #(= :logical-operator (:property-name %)) $)
+                                    (first $)
+                                    (:match-value $)
+                                    (or $ "AND")))
+           params           (->> params
+                                 (filter #(not= :logical-operator (:property-name %)))
+                                 (map (fn [{:keys [operator property-name match-value] :as criterion}]
+                                        (let [match-value      (if (or (= :security-mechanisms property-name)
+                                                                       (= :threats property-name))
+                                                                 (->> match-value (map name) vec)
+                                                                 match-value)
+                                              default-operator (if (contains? non-collection-properties property-name)
+                                                                 (get ->operator "EQUAL")
+                                                                 (get ->operator "EQUAL_ARRAYS"))]
+                                          (-> criterion
+                                              (assoc :match-value match-value)
+                                              (assoc :doc-property (get ->doc-property property-name))
+                                              (assoc :operator (get ->operator operator default-operator))
+                                              (assoc :property-name (csk/->camelCase (name property-name))))))))]
+       {:logical-operator logical-operator
+        :params           params})))
 
 #?(:clj
    (defn get-root-path

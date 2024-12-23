@@ -71,7 +71,7 @@
 (defn get-query
   [params logical-operator]
   (let [logical-operator (str " " logical-operator " ")
-        j-params         (edn->json-object (->> params (map (juxt :property-name :match-value)) into {}))
+        j-params         (edn->json-object (->> params (map (juxt :property-name :match-value)) (into {})))
         query            (reduce (fn [q {:keys [property-name not operator doc-property]}]
                                    (let [no    (if not " NOT " " ")
                                          input (str "$" property-name)]
