@@ -8,11 +8,6 @@
 (def metadata
   {:data-path paths})
 
-(rf/reg-sub
-  ::form-data
-  (fn [db _]
-    (get-in db paths)))
-
 (rf/reg-event-fx
   ::init
   [data-path]
