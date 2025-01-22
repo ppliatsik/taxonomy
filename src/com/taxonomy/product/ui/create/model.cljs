@@ -114,7 +114,8 @@
   ::create-failure
   [data-path]
   (fn [_ [_ {:keys [response]}]]
-    {:fx [[:dispatch [:ui/push-notification {:title :com.taxonomy.ui/failure
+    {:db {}
+     :fx [[:dispatch [:ui/push-notification {:title :com.taxonomy.ui/failure
                                              :body  (:reason response)
                                              :type  :error}]]]}))
 
