@@ -165,12 +165,14 @@
          {:style {:margin-right "12%"
                   :margin-top   "7%"}}
          [:button.button.is-info
-          {:on-click #(rf/dispatch [::model/publish])}
+          {:on-click #(rf/dispatch [::model/publish])
+           :disabled (:published product)}
           [:span (trans/translate lang ::product/publish)]]]
         [:div.column.is-4
          {:style {:margin-top "7%"}}
          [:button.button.is-info
-          {:on-click #(rf/dispatch [::model/unpublish])}
+          {:on-click #(rf/dispatch [::model/unpublish])
+           :disabled (not (:published product))}
           [:span (trans/translate lang ::product/unpublish)]]]])
      (when (or (end-user/is-admin? login-user)
                (end-user/is-current-user? login-user (:creator product)))
