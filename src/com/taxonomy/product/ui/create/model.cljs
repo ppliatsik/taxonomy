@@ -95,7 +95,6 @@
   [data-path]
   (fn [{:keys [db]} _]
     (let [params (get-product-data db)]
-      (prn params)
       {:fx [[:dispatch [:ajax/post {:uri     "/api/products"
                                     :params  params
                                     :success ::create-success
@@ -105,7 +104,8 @@
   ::create-success
   [data-path]
   (fn [_ _]
-    {:fx [[:url (routes/my-products)]
+    {:db {}
+     :fx [[:url (routes/my-products)]
           [:dispatch [:ui/push-notification {:title :com.taxonomy.ui/success
                                              :body  ::product/product-created
                                              :type  :success}]]]}))
