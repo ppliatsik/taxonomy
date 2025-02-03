@@ -119,7 +119,7 @@
         :else
         (let [data (-> (:body parameters)
                        (update :password util/string->md5)
-                       (assoc :roles (into-array String ["user"])))
+                       (assoc :roles (into-array String ["USER"])))
               user (data/create-user db data)]
           (create-token-and-send-email-account-activation request user)
           (http-response/ok {:result  :success

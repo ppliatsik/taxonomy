@@ -92,8 +92,8 @@
                         "SOFTWARE_VERSIONS" "CHAT" "FORUM" "TICKETS" "COMMUNITY" "NOTIFICATIONS" "BLOG"})
 (s/def ::support-type (s/and string? support-type-set))
 (s/def ::support-types (s/coll-of ::support-type :kind vector? :min-count 0))
-(s/def ::support-daily-duration integer?)
-(s/def ::support-package-number integer?)
+(s/def ::support-daily-duration (s/nilable integer?))
+(s/def ::support-package-number (s/nilable integer?))
 (s/def ::support-map
   (s/keys :opt-un [::support-types ::support-daily-duration ::support-package-number]))
 (s/def ::support (s/nilable (s/coll-of ::support-map :kind vector? :min-count 0)))

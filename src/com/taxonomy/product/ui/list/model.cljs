@@ -167,7 +167,9 @@
   ::match-success
   [data-path]
   (fn [db [_ response]]
-    (assoc db :products response)))
+    (-> db
+        (assoc :products response)
+        (dissoc :weights))))
 
 (rf/reg-event-fx
   ::match-failure
