@@ -4,8 +4,8 @@
             [clojure.set :as clj.set]
             [com.taxonomy.ui.navbar :as ui.navbar]
             [com.taxonomy.translations :as trans]
+            [com.taxonomy.ui.routes :as routes]
             [com.taxonomy.product :as product]
-            [com.taxonomy.product.ui.product-view :as product-view]
             [com.taxonomy.product.ui.list.model :as model]))
 
 (defn- checkbox
@@ -162,12 +162,33 @@
    (when login-user
      [:div.columns
       [dropdown-simple model (-> model :products-choices :logical-operators) :logical-operators nil lang]])
+
    [:div.columns
     [input model :name lang]
     (when login-user
       [dropdown-operators model :name lang :string])
     (when login-user
       [checkbox-not model :name lang])]
+   [:div.columns
+    [dropdown model (-> model :products-choices :product-categories) :product-categories lang]
+    [dropdown-values model :product-categories lang]
+    (when login-user
+      [dropdown-operators model :product-categories lang :list])
+    (when login-user
+      [checkbox-not model :product-categories lang])]
+   [:div.columns
+    [input model :product-company lang]
+    (when login-user
+      [dropdown-operators model :product-company lang :string])
+    (when login-user
+      [checkbox-not model :product-company lang])]
+   [:div.columns
+    [dropdown model (-> model :products-choices :marketplaces) :marketplaces lang]
+    [dropdown-values model :marketplaces lang]
+    (when login-user
+      [dropdown-operators model :marketplaces lang :list])
+    (when login-user
+      [checkbox-not model :marketplaces lang])]
    [:div.columns
     [dropdown model (-> model :products-choices :delivery-methods) :delivery-methods lang]
     [dropdown-values model :delivery-methods lang]
@@ -182,13 +203,12 @@
       [dropdown-operators model :deployment-models lang :list])
     (when login-user
       [checkbox-not model :deployment-models lang])]
-   [:div.columns
-    [dropdown model (-> model :products-choices :product-categories) :product-categories lang]
-    [dropdown-values model :product-categories lang]
-    (when login-user
-      [dropdown-operators model :product-categories lang :list])
-    (when login-user
-      [checkbox-not model :product-categories lang])]
+
+   [:div {:style {:border        "none"
+                  :border-top    "2px dotted black"
+                  :margin-top    "40px"
+                  :margin-bottom "40px"}}]
+
    [:div.columns
     [dropdown model (-> model :products-choices :cost-model-types) :cost-model-types lang]
     [dropdown-values model :cost-model-types lang]
@@ -196,20 +216,12 @@
       [dropdown-operators model :cost-model-types lang :list])
     (when login-user
       [checkbox-not model :cost-model-types lang])]
-   [:div.columns
-    [input model :charge-packets lang]
-    (when login-user
-      [dropdown-operators model :charge-packets lang :number])
-    (when login-user
-      [checkbox-not model :charge-packets lang])]
-   [:div.columns
-    [dropdown model (-> model :products-choices :time-charge-types) :time-charge-types lang]
-    [dropdown-values model :time-charge-types lang]
-    (when login-user
-      [dropdown-operators model :time-charge-types lang :list])
-    (when login-user
-      [checkbox-not model :time-charge-types lang])]
-   [security-threats-view model login-user :security-mechanisms lang]
+
+   [:div {:style {:border        "none"
+                  :border-top    "2px dotted black"
+                  :margin-top    "40px"
+                  :margin-bottom "40px"}}]
+
    [:div.columns
     [input model :nfg-property lang]
     (when login-user
@@ -229,14 +241,6 @@
     (when login-user
       [checkbox-not model :nfg-metric lang])]
    [:div.columns
-    [dropdown model (-> model :products-choices :protection-types) :protection-types lang]
-    [dropdown-values model :protection-types lang]
-    (when login-user
-      [dropdown-operators model :protection-types lang :list])
-    (when login-user
-      [checkbox-not model :protection-types lang])]
-   [security-threats-view model login-user :threats lang]
-   [:div.columns
     [input model :res-property lang]
     (when login-user
       [dropdown-operators model :res-property lang :string])
@@ -254,6 +258,54 @@
       [dropdown-operators model :res-metric lang :string])
     (when login-user
       [checkbox-not model :res-metric lang])]
+
+   [:div {:style {:border        "none"
+                  :border-top    "2px dotted black"
+                  :margin-top    "40px"
+                  :margin-bottom "40px"}}]
+
+   [security-threats-view model login-user :security-mechanisms lang]
+   [:div.columns
+    [dropdown model (-> model :products-choices :protection-types) :protection-types lang]
+    [dropdown-values model :protection-types lang]
+    (when login-user
+      [dropdown-operators model :protection-types lang :list])
+    (when login-user
+      [checkbox-not model :protection-types lang])]
+   [:div.columns
+    [dropdown model (-> model :products-choices :security-properties) :security-properties lang]
+    [dropdown-values model :security-properties lang]
+    (when login-user
+      [dropdown-operators model :security-properties lang :list])
+    (when login-user
+      [checkbox-not model :security-properties lang])]
+   [:div.columns
+    [dropdown model (-> model :products-choices :protected-items) :protected-items lang]
+    [dropdown-values model :protected-items lang]
+    (when login-user
+      [dropdown-operators model :protected-items lang :list])
+    (when login-user
+      [checkbox-not model :protected-items lang])]
+   [security-threats-view model login-user :threats lang]
+
+   [:div {:style {:border        "none"
+                  :border-top    "2px dotted black"
+                  :margin-top    "40px"
+                  :margin-bottom "40px"}}]
+
+   [:div.columns
+    [input model :charge-packets lang]
+    (when login-user
+      [dropdown-operators model :charge-packets lang :number])
+    (when login-user
+      [checkbox-not model :charge-packets lang])]
+   [:div.columns
+    [dropdown model (-> model :products-choices :time-charge-types) :time-charge-types lang]
+    [dropdown-values model :time-charge-types lang]
+    (when login-user
+      [dropdown-operators model :time-charge-types lang :list])
+    (when login-user
+      [checkbox-not model :time-charge-types lang])]
    [:div.columns
     [checkbox model :open-source lang]]
    [:div.columns
@@ -271,13 +323,6 @@
       [dropdown-operators model :product-interfaces lang :list])
     (when login-user
       [checkbox-not model :product-interfaces lang])]
-   [:div.columns
-    [dropdown model (-> model :products-choices :marketplaces) :marketplaces lang]
-    [dropdown-values model :marketplaces lang]
-    (when login-user
-      [dropdown-operators model :marketplaces lang :list])
-    (when login-user
-      [checkbox-not model :marketplaces lang])]
    [:div.columns
     [dropdown model (-> model :products-choices :support-types) :support-types lang]
     [dropdown-values model :support-types lang]
@@ -372,6 +417,41 @@
               (trans/translate lang ::product/hide-weights)
               (trans/translate lang ::product/show-weights))]]]])
 
+(defn- table-row
+  [{:keys [id name creator delivery-methods deployment-models
+           product-categories product-company marketplaces score] :as p}
+   classify]
+  [:tr {:key id}
+   [:td.nowrap
+    [:a {:href (routes/product {:id id})}
+     name]]
+   [:td.nowrap creator]
+   [:td.nowrap (clj.str/join "," delivery-methods)]
+   [:td.nowrap (clj.str/join "," deployment-models)]
+   [:td.nowrap (clj.str/join "," product-categories)]
+   [:td.nowrap product-company]
+   [:td.nowrap (clj.str/join "," marketplaces)]
+   (when classify [:td.nowrap score])])
+
+(defn list-products
+  [{:keys [products classify]} lang]
+  [:table.table.is-fullwidth.is-stripped.is-hoverable.vertical-align-middle.fixed
+   [:thead.has-background-light
+    [:tr
+     [:td (trans/translate lang ::product/name)]
+     [:td (trans/translate lang ::product/creator)]
+     [:td (trans/translate lang ::product/delivery-methods)]
+     [:td (trans/translate lang ::product/deployment-models)]
+     [:td (trans/translate lang ::product/product-categories)]
+     [:td (trans/translate lang ::product/product-company)]
+     [:td (trans/translate lang ::product/marketplaces)]
+     (when classify [:td (trans/translate lang ::product/score)])]]
+   [:tbody
+    (map (fn [product]
+           ^{:key (:id product)}
+           [table-row product classify])
+         products)]])
+
 (defn view []
   (let [login-user @(rf/subscribe [:ui/user])
         model      @(rf/subscribe [::model/ui-model])
@@ -385,4 +465,4 @@
      (when (:show-weights model)
        [weights-view model lang])
      [submit-buttons model lang]
-     [product-view/list-products model lang]]))
+     [list-products model lang]]))

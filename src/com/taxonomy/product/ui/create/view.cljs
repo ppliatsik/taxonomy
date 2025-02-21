@@ -6,6 +6,7 @@
             [com.taxonomy.ui.form :as form]
             [com.taxonomy.translations :as trans]
             [com.taxonomy.product :as product]
+            [com.taxonomy.end-user :as end-user]
             [com.taxonomy.product.ui.create.model :as model]))
 
 (defn- checkbox
@@ -23,11 +24,14 @@
   (let [id (name k)]
     [:div.column.is-6
      [:label.label.mb-0 {:htmlFor id}
-      (trans/translate lang (keyword "com.taxonomy.product" (name k)))]
+      (str (trans/translate lang (keyword "com.taxonomy.product" (name k)))
+           (when (= :name k) "*"))]
      [:input.input {:key       id
                     :value     (get model k)
                     :on-change (fn [e]
-                                 (rf/dispatch [::model/set-input k (-> e .-target .-value)]))}]]))
+                                 (rf/dispatch [::model/set-input k (-> e .-target .-value)]))}]
+     (when (and (= :name k) (clj.str/blank? (get model k)))
+       [:p.help.is-danger (trans/translate lang ::end-user/wrong-input)])]))
 
 (defn- multi-dropdown-menu-view
   [{:keys [products-choices] :as model} k lang]
@@ -242,9 +246,18 @@
     [input model :name lang]]
    [:div.columns
     [input model :description lang]]
+   [multi-dropdown-menu-view model :product-categories lang]
+   [:div.columns
+    [input model :product-company lang]]
+   [multi-dropdown-menu-view model :marketplaces lang]
    [multi-dropdown-menu-view model :delivery-methods lang]
    [multi-dropdown-menu-view model :deployment-models lang]
-   [multi-dropdown-menu-view model :product-categories lang]
+
+   [:div {:style {:border        "none"
+                  :border-top    "2px dotted black"
+                  :margin-top    "40px"
+                  :margin-bottom "40px"}}]
+
    [:div
     {:style {:margin-bottom "3%"}}
     [:div.columns
@@ -267,7 +280,12 @@
     (map-indexed (fn [idx line]
                    ^{:key (str "cost-model" idx)} [cost-model-line model line idx])
                  (:cost-model model))]
-   [security-threats-view model :security-mechanisms :selected-security-mechanisms lang]
+
+   [:div {:style {:border        "none"
+                  :border-top    "2px dotted black"
+                  :margin-top    "40px"
+                  :margin-bottom "40px"}}]
+
    [:div
     {:style {:margin-top    "2%"
              :margin-bottom "2%"}}
@@ -284,10 +302,6 @@
     (map-indexed (fn [idx line]
                    ^{:key (str "non-functional-guarantees" idx)} [guarantees-restrictions-line :non-functional-guarantees line idx model])
                  (:non-functional-guarantees model))]
-   [multi-dropdown-menu-view model :protection-types lang]
-   [multi-dropdown-menu-view model :security-properties lang]
-   [multi-dropdown-menu-view model :protected-items lang]
-   [security-threats-view model :threats :selected-threats lang]
    [:div
     {:style {:margin-top    "2%"
              :margin-bottom "2%"}}
@@ -304,18 +318,32 @@
     (map-indexed (fn [idx line]
                    ^{:key (str "restrictions" idx)} [guarantees-restrictions-line :restrictions line idx model])
                  (:restrictions model))]
-   [:div
+
+   [:div {:style {:border        "none"
+                  :border-top    "2px dotted black"
+                  :margin-top    "40px"
+                  :margin-bottom "40px"}}]
+
+   [security-threats-view model :security-mechanisms :selected-security-mechanisms lang]
+   [multi-dropdown-menu-view model :protection-types lang]
+   [multi-dropdown-menu-view model :security-properties lang]
+   [multi-dropdown-menu-view model :protected-items lang]
+   [security-threats-view model :threats :selected-threats lang]
+
+   [:div {:style {:border        "none"
+                  :border-top    "2px dotted black"
+                  :margin-top    "40px"
+                  :margin-bottom "40px"}}]
+
+   [:div.columns
     [checkbox model :open-source lang]]
-   [:div
+   [:div.columns
     [checkbox model :freely-available lang]]
-   [:div
+   [:div.columns
     [checkbox model :test-version lang]]
-   [:div
+   [:div.columns
     [input model :test-duration lang]]
    [multi-dropdown-menu-view model :product-interfaces lang]
-   [:div
-    [input model :product-company lang]]
-   [multi-dropdown-menu-view model :marketplaces lang]
    [:div
     [:div.columns
      [:div.column.is-1
@@ -336,7 +364,12 @@
       [:b (trans/translate lang ::product/support-package-number)]]]
     (map-indexed (fn [idx line]
                    ^{:key (str "support" idx)} [support-line model line idx])
-                 (:support model))]])
+                 (:support model))]
+
+   [:div {:style {:border        "none"
+                  :border-top    "2px dotted black"
+                  :margin-top    "40px"
+                  :margin-bottom "40px"}}]])
 
 (defn- create-button
   [lang]

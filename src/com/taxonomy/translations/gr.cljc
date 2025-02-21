@@ -85,15 +85,16 @@
    :support-daily-duration     "Υποστήριξη ημερήσιας διάρκειας"
    :support-package-number     "Αριθμός πακέτων υποστήριξης"
    :wrong-weights              "Λανθασμένα βάρη εισόδου"
-   :logical-operators          "Λογικοί τελεστές"
-   :operators                  "Τελεστές"
+   :logical-operators          "Λογικός τελεστής μεταξύ των κριτηρίων"
+   :operators                  "Τελεστής για το κριτήριο"
    :not                        "Προσθέστε τον λογικό τελεστή 'όχι'"
    :add                        "Προσθήκη"
    :clear                      "Καθαρισμός"
    :hide-criteria              "Απόκρυψη κριτηρίων"
    :show-criteria              "Εμφάνιση κριτηρίων"
    :hide-weights               "Απόκρυψη βαρών"
-   :show-weights               "Εμφάνιση βαρών"})
+   :show-weights               "Εμφάνιση βαρών"
+   :score                      "Σκορ"})
 
 (def end-user
   {:user-not-exists                   "Ο χρήστης δεν υπάρχει"

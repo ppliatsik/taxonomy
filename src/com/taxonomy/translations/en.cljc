@@ -85,7 +85,7 @@
    :support-daily-duration     "Support daily duration"
    :support-package-number     "Support package number"
    :wrong-weights              "Wrong weights input"
-   :logical-operators          "Logical operators"
+   :logical-operators          "Logical operator for all criteria"
    :operators                  "Operators"
    :not                        "Add 'not' logical operator"
    :add                        "Add"
@@ -93,7 +93,8 @@
    :hide-criteria              "Hide criteria"
    :show-criteria              "Show criteria"
    :hide-weights               "Hide weights"
-   :show-weights               "Show weights"})
+   :show-weights               "Show weights"
+   :score                      "Score"})
 
 (def end-user
   {:user-not-exists                   "User does not exists"

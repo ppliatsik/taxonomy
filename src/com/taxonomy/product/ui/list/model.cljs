@@ -168,7 +168,8 @@
   [data-path]
   (fn [db [_ response]]
     (-> db
-        (assoc :products response)
+        (assoc :products response
+               :classify false)
         (dissoc :weights))))
 
 (rf/reg-event-fx
@@ -194,7 +195,8 @@
   ::classification-success
   [data-path]
   (fn [db [_ response]]
-    (assoc db :products response)))
+    (assoc db :products response
+              :classify true)))
 
 (rf/reg-event-fx
   ::classification-failure
@@ -219,7 +221,8 @@
   ::discovery-success
   [data-path]
   (fn [db [_ response]]
-    (assoc db :products response)))
+    (assoc db :products response
+              :classify true)))
 
 (rf/reg-event-fx
   ::discovery-failure

@@ -91,6 +91,7 @@
                 (let [score (compute-score product weights min-max-values)]
                   (assoc product :score score))))
          (sort-by :score)
+         reverse
          vec)))
 
 (defn get-total-weight
