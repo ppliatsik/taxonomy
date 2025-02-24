@@ -11,22 +11,22 @@
                               "threat-detection-in-real-time-based-on-rules" "threat-detection-in-real-time-based-on-rules-correlation"
                               "threat-detection-in-real-time-based-on-rules-threshold-detection"
                               "threat-detection-in-real-time-based-on-rules-anomaly-detection"]
-  :non-functional-guarantees [{:property            "availability"
+  :non-functional-guarantees [{:property            "Διαθεσιμότητα"
                                :operator            "LESS_THAN"
                                :value               9.9
-                               :metric              nil
+                               :metric              "Unit"
                                :direction-of-values false
-                               :unit                "second"}]
+                               :unit                "Δευτερόλεπτα"}]
   :protection-types          ["DETECTIVE"]
   :security-properties       ["INTEGRITY"]
   :protected-items           ["DATA"]
   :threats                   ["theft" "fraud" "data-loss"]
-  :restrictions              [{:property            "collect"
+  :restrictions              [{:property            "Συλλογή"
                                :operator            "LESS_EQUAL_THAN"
                                :value               3000
-                               :metric              "facts"
+                               :metric              "Γεγονότα"
                                :direction-of-values false
-                               :unit                "second"}]
+                               :unit                "Δευτερόλεπτα"}]
   :open-source               false
   :freely-available          false
   :test-version              true
@@ -61,28 +61,28 @@
                               "malware-quarantine" "threat-detection-based-on-behavior" "investigation-of-an-incident"
                               "apply-requests-flow-restriction-techniques" "support-compliance-to-standards"
                               "logs-management" "isolation-of-network" "disable-user-account" "support-compliance-guidance"]
-  :non-functional-guarantees [{:property            "availability"
+  :non-functional-guarantees [{:property            "Διαθεσιμότητα"
                                :operator            "LESS_THAN"
                                :value               19.9
-                               :metric              nil
+                               :metric              "Unit"
                                :direction-of-values false
-                               :unit                "second"}
-                              {:property            "availability"
+                               :unit                "Δευτερόλεπτα"}
+                              {:property            "Συλλογή"
                                :operator            "LESS_THAN"
                                :value               89.9
-                               :metric              nil
-                               :direction-of-values false
-                               :unit                "second"}]
+                               :metric              "Γεγονότα"
+                               :direction-of-values nil
+                               :unit                "Δευτερόλεπτα"}]
   :protection-types          ["DETECTIVE"]
   :security-properties       ["INTEGRITY"]
   :protected-items           ["EVERYTHING" ]
   :threats                   ["theft" "fraud" "data-loss"]
-  :restrictions              [{:property            "collect"
+  :restrictions              [{:property            "Συλλογή"
                                :operator            "LESS_EQUAL_THAN"
                                :value               1000
-                               :metric              "facts"
+                               :metric              "Γεγονότα"
                                :direction-of-values false
-                               :unit                "second"}]
+                               :unit                "Δευτερόλεπτα"}]
   :open-source               false
   :freely-available          false
   :test-version              true
@@ -106,28 +106,28 @@
                               "threat-detection-in-real-time-based-on-rules" "threat-detection-in-real-time-based-on-rules-correlation"
                               "threat-detection-in-real-time-based-on-rules-threshold-detection"
                               "threat-detection-in-real-time-based-on-rules-anomaly-detection"]
-  :non-functional-guarantees [{:property            "availability"
+  :non-functional-guarantees [{:property            "Διαθεσιμότητα"
                                :operator            "LESS_THAN"
                                :value               99.9
-                               :metric              nil
+                               :metric              "Unit"
                                :direction-of-values false
-                               :unit                "second"}]
+                               :unit                "Δευτερόλεπτα"}]
   :protection-types          ["DETECTIVE"]
   :security-properties       ["INTEGRITY"]
   :protected-items           ["DATA"]
   :threats                   ["theft" "fraud" "data-loss"]
-  :restrictions              [{:property            "collect"
+  :restrictions              [{:property            "Συλλογή"
                                :operator            "LESS_EQUAL_THAN"
                                :value               500
-                               :metric              "facts"
+                               :metric              "Γεγονότα"
                                :direction-of-values false
-                               :unit                "second"}
-                              {:property            "activate"
+                               :unit                "Δευτερόλεπτα"}
+                              {:property            "Ενεργοποίηση"
                                :operator            "EQUAL"
                                :value               5000
-                               :metric              "rules"
+                               :metric              "Κανόνες"
                                :direction-of-values false
-                               :unit                "day"}]
+                               :unit                "Ημέρες"}]
   :open-source               false
   :freely-available          false
   :test-version              true
