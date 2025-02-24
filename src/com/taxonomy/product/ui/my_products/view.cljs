@@ -3,6 +3,7 @@
             [clojure.string :as clj.str]
             [com.taxonomy.ui.navbar :as ui.navbar]
             [com.taxonomy.ui.routes :as routes]
+            [com.taxonomy.ui.form :as form]
             [com.taxonomy.translations :as trans]
             [com.taxonomy.product :as product]
             [com.taxonomy.product.ui.my-products.model :as model]))
@@ -20,7 +21,11 @@
    [:td.nowrap (clj.str/join "," deployment-models)]
    [:td.nowrap (clj.str/join "," product-categories)]
    [:td.nowrap product-company]
-   [:td.nowrap (clj.str/join "," marketplaces)]])
+   [:td.nowrap (clj.str/join "," marketplaces)]
+   [:td.nowrap
+    [:button.button.is-danger
+     {:on-click #(rf/dispatch [::model/show-delete-confirmation-box id])}
+     [:span (trans/translate lang ::product/delete)]]]])
 
 (defn list-products
   [{:keys [products]} lang]
@@ -33,7 +38,8 @@
      [:td (trans/translate lang ::product/deployment-models)]
      [:td (trans/translate lang ::product/product-categories)]
      [:td (trans/translate lang ::product/product-company)]
-     [:td (trans/translate lang ::product/marketplaces)]]]
+     [:td (trans/translate lang ::product/marketplaces)]
+     [:td (trans/translate lang ::product/delete)]]]
    [:tbody
     (map (fn [product]
            ^{:key (:id product)}
@@ -45,4 +51,6 @@
         lang  (:language model)]
     [:article.box
      [ui.navbar/view]
-     [list-products model lang]]))
+     [list-products model lang]
+     (when-not (:hide-delete-confirmation-box model)
+       (form/delete-confirmation-dialog ::model/delete ::model/hide-delete-confirmation-box lang))]))

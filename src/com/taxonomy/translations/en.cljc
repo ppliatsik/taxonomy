@@ -94,7 +94,11 @@
    :show-criteria              "Show criteria"
    :hide-weights               "Hide weights"
    :show-weights               "Show weights"
-   :score                      "Score"})
+   :score                      "Score"
+   :general-characteristics    "General characteristics"
+   :cost                       "Cost"
+   :security                   "Security"
+   :availability-support       "Availability & support"})
 
 (def end-user
   {:user-not-exists                   "User does not exists"

@@ -94,7 +94,11 @@
    :show-criteria              "Εμφάνιση κριτηρίων"
    :hide-weights               "Απόκρυψη βαρών"
    :show-weights               "Εμφάνιση βαρών"
-   :score                      "Σκορ"})
+   :score                      "Σκορ"
+   :general-characteristics    "Γενικά χαρακτηριστικά"
+   :cost                       "Κόστος"
+   :security                   "Ασφάλεια"
+   :availability-support       "Διάθεση & υποστήριξη"})
 
 (def end-user
   {:user-not-exists                   "Ο χρήστης δεν υπάρχει"

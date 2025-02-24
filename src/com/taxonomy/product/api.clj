@@ -37,8 +37,9 @@
   (if value
     (let [divisor (if (= 0M (.subtract max-value min-value))
                     1M
-                    (.subtract max-value min-value))]
-      (.subtract value (.divide min-value divisor 2 RoundingMode/HALF_UP)))
+                    (.subtract max-value min-value))
+          dividor (.subtract value min-value)]
+      (.divide dividor divisor 2 RoundingMode/HALF_UP))
     0M))
 
 (defn- get-negative-direction-local-score
@@ -47,8 +48,9 @@
   (if value
     (let [divisor (if (= 0M (.subtract max-value min-value))
                     1M
-                    (.subtract max-value min-value))]
-      (.negate (.divide (.subtract max-value value) divisor 2 RoundingMode/HALF_UP)))
+                    (.subtract max-value min-value))
+          dividor (.subtract max-value value)]
+      (.divide dividor divisor 2 RoundingMode/HALF_UP))
     0M))
 
 (defn- compute-score

@@ -138,7 +138,11 @@
       [:div.column.is-5
        [items-list model k available-items true lang]]
       [:div.column.is-5
-       [items-list model k selected-items false lang]]]
+       [items-list model k selected-items false lang]]
+      [:button.button.is-info
+       {:on-click (fn [_]
+                    (rf/dispatch [::model/clear-criterion-value k]))}
+       [:span (trans/translate lang ::product/clear)]]]
      [:div.columns
       {:style {:margin-left "2%"}}
       (when login-user
@@ -163,185 +167,193 @@
      [:div.columns
       [dropdown-simple model (-> model :products-choices :logical-operators) :logical-operators nil lang]])
 
-   [:div.columns
-    [input model :name lang]
-    (when login-user
-      [dropdown-operators model :name lang :string])
-    (when login-user
-      [checkbox-not model :name lang])]
-   [:div.columns
-    [dropdown model (-> model :products-choices :product-categories) :product-categories lang]
-    [dropdown-values model :product-categories lang]
-    (when login-user
-      [dropdown-operators model :product-categories lang :list])
-    (when login-user
-      [checkbox-not model :product-categories lang])]
-   [:div.columns
-    [input model :product-company lang]
-    (when login-user
-      [dropdown-operators model :product-company lang :string])
-    (when login-user
-      [checkbox-not model :product-company lang])]
-   [:div.columns
-    [dropdown model (-> model :products-choices :marketplaces) :marketplaces lang]
-    [dropdown-values model :marketplaces lang]
-    (when login-user
-      [dropdown-operators model :marketplaces lang :list])
-    (when login-user
-      [checkbox-not model :marketplaces lang])]
-   [:div.columns
-    [dropdown model (-> model :products-choices :delivery-methods) :delivery-methods lang]
-    [dropdown-values model :delivery-methods lang]
-    (when login-user
-      [dropdown-operators model :delivery-methods lang :list])
-    (when login-user
-      [checkbox-not model :delivery-methods lang])]
-   [:div.columns
-    [dropdown model (-> model :products-choices :deployment-models) :deployment-models lang]
-    [dropdown-values model :deployment-models lang]
-    (when login-user
-      [dropdown-operators model :deployment-models lang :list])
-    (when login-user
-      [checkbox-not model :deployment-models lang])]
-
-   [:div {:style {:border        "none"
-                  :border-top    "2px dotted black"
+   [:div {:style {:border        "2px dotted black"
                   :margin-top    "40px"
-                  :margin-bottom "40px"}}]
+                  :margin-bottom "40px"
+                  :padding       "10px"}}
+    [:h1.title.has-text-centered (trans/translate lang ::product/general-characteristics)]
+    [:div.columns
+     [input model :name lang]
+     (when login-user
+       [dropdown-operators model :name lang :string])
+     (when login-user
+       [checkbox-not model :name lang])]
+    [:div.columns
+     [dropdown model (-> model :products-choices :product-categories) :product-categories lang]
+     [dropdown-values model :product-categories lang]
+     (when login-user
+       [dropdown-operators model :product-categories lang :list])
+     (when login-user
+       [checkbox-not model :product-categories lang])]
+    [:div.columns
+     [input model :product-company lang]
+     (when login-user
+       [dropdown-operators model :product-company lang :string])
+     (when login-user
+       [checkbox-not model :product-company lang])]
+    [:div.columns
+     [dropdown model (-> model :products-choices :marketplaces) :marketplaces lang]
+     [dropdown-values model :marketplaces lang]
+     (when login-user
+       [dropdown-operators model :marketplaces lang :list])
+     (when login-user
+       [checkbox-not model :marketplaces lang])]
+    [:div.columns
+     [dropdown model (-> model :products-choices :delivery-methods) :delivery-methods lang]
+     [dropdown-values model :delivery-methods lang]
+     (when login-user
+       [dropdown-operators model :delivery-methods lang :list])
+     (when login-user
+       [checkbox-not model :delivery-methods lang])]
+    [:div.columns
+     [dropdown model (-> model :products-choices :deployment-models) :deployment-models lang]
+     [dropdown-values model :deployment-models lang]
+     (when login-user
+       [dropdown-operators model :deployment-models lang :list])
+     (when login-user
+       [checkbox-not model :deployment-models lang])]]
 
-   [:div.columns
-    [dropdown model (-> model :products-choices :cost-model-types) :cost-model-types lang]
-    [dropdown-values model :cost-model-types lang]
-    (when login-user
-      [dropdown-operators model :cost-model-types lang :list])
-    (when login-user
-      [checkbox-not model :cost-model-types lang])]
-
-   [:div {:style {:border        "none"
-                  :border-top    "2px dotted black"
+   [:div {:style {:border        "2px dotted black"
                   :margin-top    "40px"
-                  :margin-bottom "40px"}}]
+                  :margin-bottom "40px"
+                  :padding       "10px"}}
+    [:h1.title.has-text-centered (trans/translate lang ::product/cost)]
+    [:div.columns
+     [dropdown model (-> model :products-choices :cost-model-types) :cost-model-types lang]
+     [dropdown-values model :cost-model-types lang]
+     (when login-user
+       [dropdown-operators model :cost-model-types lang :list])
+     (when login-user
+       [checkbox-not model :cost-model-types lang])]]
 
-   [:div.columns
-    [input model :nfg-property lang]
-    (when login-user
-      [dropdown-operators model :nfg-property lang :string])
-    (when login-user
-      [checkbox-not model :nfg-property lang])]
-   [:div.columns
-    [input model :nfg-value lang]
-    (when login-user
-      [dropdown-operators model :nfg-value lang :number])
-    (when login-user
-      [checkbox-not model :nfg-value lang])]
-   [:div.columns
-    [input model :nfg-metric lang]
-    (when login-user
-      [dropdown-operators model :nfg-metric lang :string])
-    (when login-user
-      [checkbox-not model :nfg-metric lang])]
-   [:div.columns
-    [input model :res-property lang]
-    (when login-user
-      [dropdown-operators model :res-property lang :string])
-    (when login-user
-      [checkbox-not model :res-property lang])]
-   [:div.columns
-    [input model :res-value lang]
-    (when login-user
-      [dropdown-operators model :res-value lang :number])
-    (when login-user
-      [checkbox-not model :res-value lang])]
-   [:div.columns
-    [input model :res-metric lang]
-    (when login-user
-      [dropdown-operators model :res-metric lang :string])
-    (when login-user
-      [checkbox-not model :res-metric lang])]
-
-   [:div {:style {:border        "none"
-                  :border-top    "2px dotted black"
+   [:div {:style {:border        "2px dotted black"
                   :margin-top    "40px"
-                  :margin-bottom "40px"}}]
+                  :margin-bottom "40px"
+                  :padding       "10px"}}
+    [:h1.title.has-text-centered (trans/translate lang ::product/non-functional-guarantees)]
+    [:div.columns
+     [input model :nfg-property lang]
+     (when login-user
+       [dropdown-operators model :nfg-property lang :string])
+     (when login-user
+       [checkbox-not model :nfg-property lang])]
+    [:div.columns
+     [input model :nfg-value lang]
+     (when login-user
+       [dropdown-operators model :nfg-value lang :number])
+     (when login-user
+       [checkbox-not model :nfg-value lang])]
+    [:div.columns
+     [input model :nfg-metric lang]
+     (when login-user
+       [dropdown-operators model :nfg-metric lang :string])
+     (when login-user
+       [checkbox-not model :nfg-metric lang])]
+    [:div {:style {:border     "none"
+                   :border-top "2px dotted black"
+                   :margin     "30px"}}]
+    [:div.columns
+     [input model :res-property lang]
+     (when login-user
+       [dropdown-operators model :res-property lang :string])
+     (when login-user
+       [checkbox-not model :res-property lang])]
+    [:div.columns
+     [input model :res-value lang]
+     (when login-user
+       [dropdown-operators model :res-value lang :number])
+     (when login-user
+       [checkbox-not model :res-value lang])]
+    [:div.columns
+     [input model :res-metric lang]
+     (when login-user
+       [dropdown-operators model :res-metric lang :string])
+     (when login-user
+       [checkbox-not model :res-metric lang])]]
 
-   [security-threats-view model login-user :security-mechanisms lang]
-   [:div.columns
-    [dropdown model (-> model :products-choices :protection-types) :protection-types lang]
-    [dropdown-values model :protection-types lang]
-    (when login-user
-      [dropdown-operators model :protection-types lang :list])
-    (when login-user
-      [checkbox-not model :protection-types lang])]
-   [:div.columns
-    [dropdown model (-> model :products-choices :security-properties) :security-properties lang]
-    [dropdown-values model :security-properties lang]
-    (when login-user
-      [dropdown-operators model :security-properties lang :list])
-    (when login-user
-      [checkbox-not model :security-properties lang])]
-   [:div.columns
-    [dropdown model (-> model :products-choices :protected-items) :protected-items lang]
-    [dropdown-values model :protected-items lang]
-    (when login-user
-      [dropdown-operators model :protected-items lang :list])
-    (when login-user
-      [checkbox-not model :protected-items lang])]
-   [security-threats-view model login-user :threats lang]
-
-   [:div {:style {:border        "none"
-                  :border-top    "2px dotted black"
+   [:div {:style {:border        "2px dotted black"
                   :margin-top    "40px"
-                  :margin-bottom "40px"}}]
+                  :margin-bottom "40px"
+                  :padding       "10px"}}
+    [:h1.title.has-text-centered (trans/translate lang ::product/security)]
+    [security-threats-view model login-user :security-mechanisms lang]
+    [:div.columns
+     [dropdown model (-> model :products-choices :protection-types) :protection-types lang]
+     [dropdown-values model :protection-types lang]
+     (when login-user
+       [dropdown-operators model :protection-types lang :list])
+     (when login-user
+       [checkbox-not model :protection-types lang])]
+    [:div.columns
+     [dropdown model (-> model :products-choices :security-properties) :security-properties lang]
+     [dropdown-values model :security-properties lang]
+     (when login-user
+       [dropdown-operators model :security-properties lang :list])
+     (when login-user
+       [checkbox-not model :security-properties lang])]
+    [:div.columns
+     [dropdown model (-> model :products-choices :protected-items) :protected-items lang]
+     [dropdown-values model :protected-items lang]
+     (when login-user
+       [dropdown-operators model :protected-items lang :list])
+     (when login-user
+       [checkbox-not model :protected-items lang])]
+    [security-threats-view model login-user :threats lang]]
 
-   [:div.columns
-    [input model :charge-packets lang]
-    (when login-user
-      [dropdown-operators model :charge-packets lang :number])
-    (when login-user
-      [checkbox-not model :charge-packets lang])]
-   [:div.columns
-    [dropdown model (-> model :products-choices :time-charge-types) :time-charge-types lang]
-    [dropdown-values model :time-charge-types lang]
-    (when login-user
-      [dropdown-operators model :time-charge-types lang :list])
-    (when login-user
-      [checkbox-not model :time-charge-types lang])]
-   [:div.columns
-    [checkbox model :open-source lang]]
-   [:div.columns
-    [checkbox model :freely-available lang]]
-   [:div.columns
-    [checkbox model :test-version lang]]
-   [:div.columns
-    [input model :test-duration lang]
-    (when login-user
-      [dropdown-operators model :test-duration lang :number])]
-   [:div.columns
-    [dropdown model (-> model :products-choices :product-interfaces) :product-interfaces lang]
-    [dropdown-values model :product-interfaces lang]
-    (when login-user
-      [dropdown-operators model :product-interfaces lang :list])
-    (when login-user
-      [checkbox-not model :product-interfaces lang])]
-   [:div.columns
-    [dropdown model (-> model :products-choices :support-types) :support-types lang]
-    [dropdown-values model :support-types lang]
-    (when login-user
-      [dropdown-operators model :support-types lang :list])
-    (when login-user
-      [checkbox-not model :support-types lang])]
-   [:div.columns
-    [input model :support-daily-duration lang]
-    (when login-user
-      [dropdown-operators model :support-daily-duration lang :number])
-    (when login-user
-      [checkbox-not model :support-daily-duration lang])]
-   [:div.columns
-    [input model :support-package-number lang]
-    (when login-user
-      [dropdown-operators model :support-package-number lang :number])
-    (when login-user
-      [checkbox-not model :support-package-number lang])]])
+   [:div {:style {:border        "2px dotted black"
+                  :margin-top    "40px"
+                  :margin-bottom "40px"
+                  :padding       "10px"}}
+    [:h1.title.has-text-centered (trans/translate lang ::product/availability-support)]
+    [:div.columns
+     [input model :charge-packets lang]
+     (when login-user
+       [dropdown-operators model :charge-packets lang :number])
+     (when login-user
+       [checkbox-not model :charge-packets lang])]
+    [:div.columns
+     [dropdown model (-> model :products-choices :time-charge-types) :time-charge-types lang]
+     [dropdown-values model :time-charge-types lang]
+     (when login-user
+       [dropdown-operators model :time-charge-types lang :list])
+     (when login-user
+       [checkbox-not model :time-charge-types lang])]
+    [:div.columns
+     [checkbox model :open-source lang]]
+    [:div.columns
+     [checkbox model :freely-available lang]]
+    [:div.columns
+     [checkbox model :test-version lang]]
+    [:div.columns
+     [input model :test-duration lang]
+     (when login-user
+       [dropdown-operators model :test-duration lang :number])]
+    [:div.columns
+     [dropdown model (-> model :products-choices :product-interfaces) :product-interfaces lang]
+     [dropdown-values model :product-interfaces lang]
+     (when login-user
+       [dropdown-operators model :product-interfaces lang :list])
+     (when login-user
+       [checkbox-not model :product-interfaces lang])]
+    [:div.columns
+     [dropdown model (-> model :products-choices :support-types) :support-types lang]
+     [dropdown-values model :support-types lang]
+     (when login-user
+       [dropdown-operators model :support-types lang :list])
+     (when login-user
+       [checkbox-not model :support-types lang])]
+    [:div.columns
+     [input model :support-daily-duration lang]
+     (when login-user
+       [dropdown-operators model :support-daily-duration lang :number])
+     (when login-user
+       [checkbox-not model :support-daily-duration lang])]
+    [:div.columns
+     [input model :support-package-number lang]
+     (when login-user
+       [dropdown-operators model :support-package-number lang :number])
+     (when login-user
+       [checkbox-not model :support-package-number lang])]]])
 
 (defn- multi-weights
   [{:keys [products] :as model} lang product-key]

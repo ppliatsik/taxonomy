@@ -33,7 +33,7 @@
   :test-duration             1
   :product-interfaces        ["Rest_API" "CLI" "Web_UI" "GUI"]
   :product-company           "IBM"
-  :marketplaces              ["AWS" "GCP" "AZURE"]
+  :marketplaces              ["AWS" "AZURE"]
   :support                   [{:support-types          ["PHONE" "EMAIL" "FAQ_DOCUMENTATION" "PORTAL"
                                                         "VIDEO" "TWITTER" "TROUBLESHOOTING_CENTER"
                                                         "SOFTWARE_VERSIONS" "CHAT" "FORUM"]
@@ -89,7 +89,7 @@
   :test-duration             4
   :product-interfaces        ["Rest_API" "Web_UI"]
   :product-company           "Elastic"
-  :marketplaces              ["AWS" "GCP" "AZURE"]
+  :marketplaces              ["GCP" "AZURE"]
   :support                   [{:support-types          ["PHONE" "EMAIL"]
                                :support-daily-duration nil
                                :support-package-number 2}]}
@@ -134,7 +134,7 @@
   :test-duration             14
   :product-interfaces        ["CLI" "Web_UI"]
   :product-company           "McAfee"
-  :marketplaces              nil
+  :marketplaces              ["AWS" "GCP"]
   :support                   [{:support-types          ["PHONE" "EMAIL" "FAQ_DOCUMENTATION"
                                                         "NOTIFICATIONS" "COMMUNITY"]
                                :support-daily-duration nil

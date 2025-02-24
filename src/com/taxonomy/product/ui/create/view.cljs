@@ -231,145 +231,150 @@
                                             (set selected-items))]
     [:div.columns
      [:div.columns
-      [:div.column.is-6
+      [:div.column.is-3
        [:b (trans/translate lang (keyword "com.taxonomy.product" (name property)))]]]
      [:div.columns
-      [:div.column.is-6
+      [:div.column.is-5
        [items-list model selected-property available-items ::model/add-smt true lang]]
-      [:div.column.is-6
-       [items-list model selected-property selected-items ::model/remove-smt false lang]]]]))
+      [:div.column.is-5
+       [items-list model selected-property selected-items ::model/remove-smt false lang]]
+      [:div.column.is-4
+       [:button.button.is-info
+        {:on-click (fn [_]
+                     (rf/dispatch [::model/clear-input selected-property]))}
+        [:span (trans/translate lang ::product/clear)]]]]]))
 
 (defn- create-view
   [model lang]
   [:div
-   [:div.columns
-    [input model :name lang]]
-   [:div.columns
-    [input model :description lang]]
-   [multi-dropdown-menu-view model :product-categories lang]
-   [:div.columns
-    [input model :product-company lang]]
-   [multi-dropdown-menu-view model :marketplaces lang]
-   [multi-dropdown-menu-view model :delivery-methods lang]
-   [multi-dropdown-menu-view model :deployment-models lang]
-
-   [:div {:style {:border        "none"
-                  :border-top    "2px dotted black"
+   [:div {:style {:border        "2px dotted black"
                   :margin-top    "40px"
-                  :margin-bottom "40px"}}]
-
-   [:div
-    {:style {:margin-bottom "3%"}}
+                  :margin-bottom "40px"
+                  :padding       "10px"}}
+    [:h1.title.has-text-centered (trans/translate lang ::product/general-characteristics)]
     [:div.columns
-     [:div.column.is-2
-      [:b (trans/translate lang ::product/cost-model)]]
-     [:div.column
-      [:button.button.is-small.is-success
-       {:on-click (fn [_]
-                    (rf/dispatch [::model/add-line :cost-model]))}
-       [form/icons {:icon     :plus
-                    :icon-css "fa-2x"}]]]]
+     [input model :name lang]]
     [:div.columns
-     [:div.column.is-4 [:b (trans/translate lang ::product/cost-model-types)]]
-     [:div.column.is-3
-      {:style {:margin-left "7%"}}
-      [:b (trans/translate lang ::product/charge-packets)]]
-     [:div.column.is-3
-      {:style {:margin-left "-4%"}}
-      [:b (trans/translate lang ::product/time-charge-types)]]]
-    (map-indexed (fn [idx line]
-                   ^{:key (str "cost-model" idx)} [cost-model-line model line idx])
-                 (:cost-model model))]
+     [input model :description lang]]
+    [multi-dropdown-menu-view model :product-categories lang]
+    [:div.columns
+     [input model :product-company lang]]
+    [multi-dropdown-menu-view model :marketplaces lang]
+    [multi-dropdown-menu-view model :delivery-methods lang]
+    [multi-dropdown-menu-view model :deployment-models lang]]
 
-   [:div {:style {:border        "none"
-                  :border-top    "2px dotted black"
+   [:div {:style {:border        "2px dotted black"
                   :margin-top    "40px"
-                  :margin-bottom "40px"}}]
+                  :margin-bottom "40px"
+                  :padding       "10px"}}
+    [:h1.title.has-text-centered (trans/translate lang ::product/cost)]
+    [:div
+     {:style {:margin-bottom "3%"}}
+     [:div.columns
+      [:div.column.is-2
+       [:b (trans/translate lang ::product/cost-model)]]
+      [:div.column
+       [:button.button.is-small.is-success
+        {:on-click (fn [_]
+                     (rf/dispatch [::model/add-line :cost-model]))}
+        [form/icons {:icon     :plus
+                     :icon-css "fa-2x"}]]]]
+     [:div.columns
+      [:div.column.is-4 [:b (trans/translate lang ::product/cost-model-types)]]
+      [:div.column.is-3
+       {:style {:margin-left "7%"}}
+       [:b (trans/translate lang ::product/charge-packets)]]
+      [:div.column.is-3
+       {:style {:margin-left "-4%"}}
+       [:b (trans/translate lang ::product/time-charge-types)]]]
+     (map-indexed (fn [idx line]
+                    ^{:key (str "cost-model" idx)} [cost-model-line model line idx])
+                  (:cost-model model))]]
 
-   [:div
-    {:style {:margin-top    "2%"
-             :margin-bottom "2%"}}
-    [:div.columns
-     [:div.column.is-3
-      [:b (trans/translate lang ::product/non-functional-guarantees)]]
-     [:div.column
-      [:button.button.is-small.is-success
-       {:on-click (fn [_]
-                    (rf/dispatch [::model/add-line :non-functional-guarantees]))}
-       [form/icons {:icon     :plus
-                    :icon-css "fa-2x"}]]]]
-    [guarantees-restrictions-head lang]
-    (map-indexed (fn [idx line]
-                   ^{:key (str "non-functional-guarantees" idx)} [guarantees-restrictions-line :non-functional-guarantees line idx model])
-                 (:non-functional-guarantees model))]
-   [:div
-    {:style {:margin-top    "2%"
-             :margin-bottom "2%"}}
-    [:div.columns
-     [:div.column.is-1
-      [:b (trans/translate lang ::product/restrictions)]]
-     [:div.column
-      [:button.button.is-small.is-success
-       {:on-click (fn [_]
-                    (rf/dispatch [::model/add-line :restrictions]))}
-       [form/icons {:icon     :plus
-                    :icon-css "fa-2x"}]]]]
-    [guarantees-restrictions-head lang]
-    (map-indexed (fn [idx line]
-                   ^{:key (str "restrictions" idx)} [guarantees-restrictions-line :restrictions line idx model])
-                 (:restrictions model))]
-
-   [:div {:style {:border        "none"
-                  :border-top    "2px dotted black"
+   [:div {:style {:border        "2px dotted black"
                   :margin-top    "40px"
-                  :margin-bottom "40px"}}]
+                  :margin-bottom "40px"
+                  :padding       "10px"}}
+    [:h1.title.has-text-centered (trans/translate lang ::product/non-functional-guarantees)]
+    [:div
+     {:style {:margin-top    "2%"
+              :margin-bottom "2%"}}
+     [:div.columns
+      [:div.column.is-3
+       [:b (trans/translate lang ::product/non-functional-guarantees)]]
+      [:div.column
+       [:button.button.is-small.is-success
+        {:on-click (fn [_]
+                     (rf/dispatch [::model/add-line :non-functional-guarantees]))}
+        [form/icons {:icon     :plus
+                     :icon-css "fa-2x"}]]]]
+     [guarantees-restrictions-head lang]
+     (map-indexed (fn [idx line]
+                    ^{:key (str "non-functional-guarantees" idx)} [guarantees-restrictions-line :non-functional-guarantees line idx model])
+                  (:non-functional-guarantees model))]
+    [:div
+     {:style {:margin-top    "2%"
+              :margin-bottom "2%"}}
+     [:div.columns
+      [:div.column.is-1
+       [:b (trans/translate lang ::product/restrictions)]]
+      [:div.column
+       [:button.button.is-small.is-success
+        {:on-click (fn [_]
+                     (rf/dispatch [::model/add-line :restrictions]))}
+        [form/icons {:icon     :plus
+                     :icon-css "fa-2x"}]]]]
+     [guarantees-restrictions-head lang]
+     (map-indexed (fn [idx line]
+                    ^{:key (str "restrictions" idx)} [guarantees-restrictions-line :restrictions line idx model])
+                  (:restrictions model))]]
 
-   [security-threats-view model :security-mechanisms :selected-security-mechanisms lang]
-   [multi-dropdown-menu-view model :protection-types lang]
-   [multi-dropdown-menu-view model :security-properties lang]
-   [multi-dropdown-menu-view model :protected-items lang]
-   [security-threats-view model :threats :selected-threats lang]
-
-   [:div {:style {:border        "none"
-                  :border-top    "2px dotted black"
+   [:div {:style {:border        "2px dotted black"
                   :margin-top    "40px"
-                  :margin-bottom "40px"}}]
+                  :margin-bottom "40px"
+                  :padding       "20px"}}
+    [:h1.title.has-text-centered (trans/translate lang ::product/security)]
+    [security-threats-view model :security-mechanisms :selected-security-mechanisms lang]
+    [multi-dropdown-menu-view model :protection-types lang]
+    [multi-dropdown-menu-view model :security-properties lang]
+    [multi-dropdown-menu-view model :protected-items lang]
+    [security-threats-view model :threats :selected-threats lang]]
 
-   [:div.columns
-    [checkbox model :open-source lang]]
-   [:div.columns
-    [checkbox model :freely-available lang]]
-   [:div.columns
-    [checkbox model :test-version lang]]
-   [:div.columns
-    [input model :test-duration lang]]
-   [multi-dropdown-menu-view model :product-interfaces lang]
-   [:div
-    [:div.columns
-     [:div.column.is-1
-      [:b (trans/translate lang ::product/support)]]
-     [:div.column
-      [:button.button.is-small.is-success
-       {:on-click (fn [_]
-                    (rf/dispatch [::model/add-line :support]))}
-       [form/icons {:icon     :plus
-                    :icon-css "fa-2x"}]]]]
-    [:div.columns
-     [:div.column.is-2 [:b (trans/translate lang ::product/support-types)]]
-     [:div.column.is-3
-      {:style {:margin-left "23%"}}
-      [:b (trans/translate lang ::product/support-daily-duration)]]
-     [:div.column.is-3
-      {:style {:margin-left "-3%"}}
-      [:b (trans/translate lang ::product/support-package-number)]]]
-    (map-indexed (fn [idx line]
-                   ^{:key (str "support" idx)} [support-line model line idx])
-                 (:support model))]
-
-   [:div {:style {:border        "none"
-                  :border-top    "2px dotted black"
+   [:div {:style {:border        "2px dotted black"
                   :margin-top    "40px"
-                  :margin-bottom "40px"}}]])
+                  :margin-bottom "40px"
+                  :padding       "10px"}}
+    [:h1.title.has-text-centered (trans/translate lang ::product/availability-support)]
+    [:div.columns
+     [checkbox model :open-source lang]]
+    [:div.columns
+     [checkbox model :freely-available lang]]
+    [:div.columns
+     [checkbox model :test-version lang]]
+    [:div.columns
+     [input model :test-duration lang]]
+    [multi-dropdown-menu-view model :product-interfaces lang]
+    [:div
+     [:div.columns
+      [:div.column.is-1
+       [:b (trans/translate lang ::product/support)]]
+      [:div.column
+       [:button.button.is-small.is-success
+        {:on-click (fn [_]
+                     (rf/dispatch [::model/add-line :support]))}
+        [form/icons {:icon     :plus
+                     :icon-css "fa-2x"}]]]]
+     [:div.columns
+      [:div.column.is-2 [:b (trans/translate lang ::product/support-types)]]
+      [:div.column.is-3
+       {:style {:margin-left "23%"}}
+       [:b (trans/translate lang ::product/support-daily-duration)]]
+      [:div.column.is-3
+       {:style {:margin-left "-3%"}}
+       [:b (trans/translate lang ::product/support-package-number)]]]
+     (map-indexed (fn [idx line]
+                    ^{:key (str "support" idx)} [support-line model line idx])
+                  (:support model))]]])
 
 (defn- create-button
   [lang]
