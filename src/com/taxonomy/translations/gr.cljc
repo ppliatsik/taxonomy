@@ -85,8 +85,8 @@
    :support-daily-duration     "Υποστήριξη ημερήσιας διάρκειας"
    :support-package-number     "Αριθμός πακέτων υποστήριξης"
    :wrong-weights              "Λανθασμένα βάρη εισόδου"
-   :logical-operators          "Λογικός τελεστής μεταξύ των κριτηρίων"
-   :operators                  "Τελεστής για το κριτήριο"
+   :logical-operators          "Λογικός τελεστής σύνθεσης περιορισμών"
+   :operators                  "Τελεστής συγκρισης"
    :not                        "Προσθέστε τον λογικό τελεστή 'όχι'"
    :add                        "Προσθήκη"
    :clear                      "Καθαρισμός"
@@ -98,7 +98,8 @@
    :general-characteristics    "Γενικά χαρακτηριστικά"
    :cost                       "Κόστος"
    :security                   "Ασφάλεια"
-   :availability-support       "Διάθεση & υποστήριξη"})
+   :availability-support       "Διάθεση & υποστήριξη"
+   :nfg-restrictions           "Μη λειτουργικές εγγυήσεις & Περιορισμοί"})
 
 (def end-user
   {:user-not-exists                   "Ο χρήστης δεν υπάρχει"

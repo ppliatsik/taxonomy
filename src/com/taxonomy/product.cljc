@@ -1,8 +1,10 @@
 (ns com.taxonomy.product
   (:require [clojure.spec.alpha :as s]
             [camel-snake-kebab.core :as csk]
+            [clojure.string :as clj.str]
             #?(:clj [clojure.zip :as z])
-            #?(:clj [com.taxonomy.util :as util])))
+            #?(:clj [com.taxonomy.util :as util])
+            [spec-tools.core :as st]))
 
 (s/def ::id string?)
 (s/def ::name string?)
@@ -35,10 +37,10 @@
 (s/def ::cost-model	(s/nilable (s/coll-of ::cost-model-map :kind vector? :min-count 0)))
 
 (s/def ::security-mechanism keyword?)
-(s/def ::security-mechanisms (s/nilable (s/coll-of ::security-mechanism :kind vector? :min-count 0)))
+(s/def ::security-mechanisms (s/nilable (s/coll-of ::security-mechanism :kind vector? :min-count 1)))
 
 (s/def ::property	string?)
-(def operator-types #{"LESS_THAN" "LESS_EQUAL_THAN" "GREATER_THAN" "GREATER_EQUAL_THAN"
+(def operator-types #{"LESS_THAN" "LESS_EQUAL_THAN" "GREATER_THAN" "GREATER_EQUAL_THAN" ""
                       "EQUAL" "DIFFERENT" "EQUAL_ARRAYS" "SUBSET" "SUPERSET" "INCLUDES" "NON_INCLUDES"})
 (s/def ::operator	(s/and string? operator-types))
 (s/def ::value
@@ -67,7 +69,7 @@
 (s/def ::protected-items (s/nilable (s/coll-of ::protected-item :kind vector? :min-count 0)))
 
 (s/def ::threat keyword?)
-(s/def ::threats (s/nilable (s/coll-of ::threat :kind vector? :min-count 0)))
+(s/def ::threats (s/nilable (s/coll-of ::threat :kind vector? :min-count 1)))
 
 (s/def ::restrictions-map
   (s/keys :opt-un [::property ::operator ::value ::metric ::direction-of-values ::unit]))
@@ -129,8 +131,8 @@
 (s/def ::logical-operator (s/and string? logical-operators))
 (s/def ::not (s/nilable boolean?))
 (s/def ::match-value
-  (s/or :string   string?
-        :number   number?
+  (s/or :number   number?
+        :string   string?
         :vector   vector?
         :boolean? boolean?))
 (s/def ::property-name keyword?)
@@ -168,37 +170,50 @@
                              (format " EVERY z IN %s SATISFIES NOT ARRAY_CONTAINS(`%s`,z) END " input column)) ; no element in input (first) is present in column (second)
       }))
 
-(def ->doc-property
-  {:name                   "name"
-   :description            "description"
-   :creator                "creator"
-   :delivery-methods       "delivery-methods"
-   :deployment-models      "deployment-models"
-   :product-categories     "product-categories"
-   :cost-model-types       "cost-model.types"
-   :charge-packets         "cost-model.charge-packets"
-   :time-charge-types      "cost-model.time-charge-type"
-   :nfg-property           "non-functional-guarantees.property"
-   :nfg-value              "non-functional-guarantees.value"
-   :nfg-metric             "non-functional-guarantees.metric"
-   :security-mechanisms    "security-mechanisms"
-   :protection-types       "protection-types"
-   :security-properties    "security-properties"
-   :protected-items        "protected-items"
-   :threats                "threats"
-   :res-property           "restrictions.property"
-   :res-value              "restrictions.value"
-   :res-metric             "restrictions.metric"
-   :open-source            "open-source"
-   :freely-available       "freely-available"
-   :test-version           "test-version"
-   :test-duration          "test-duration"
-   :product-interfaces     "product-interfaces"
-   :product-company        "product-company"
-   :marketplaces           "marketplaces"
-   :support-types          "support.support-types"
-   :support-daily-duration "support.support-daily-duration"
-   :support-package-number "support.support-package-number"})
+#?(:clj
+   (def ->doc-property
+     {:name                   "name"
+      :description            "description"
+      :creator                "creator"
+      :delivery-methods       "delivery-methods"
+      :deployment-models      "deployment-models"
+      :product-categories     "product-categories"
+      :cost-model-types       (fn [operator input]
+                                (format "ANY cmt IN `cost-model` SATISFIES cmt.`types` = %s END" input))
+      :charge-packets         (fn [operator input]
+                                (format "ANY cmt IN `cost-model` SATISFIES cmt.`charge-packets` %s %s END" operator input))
+      :time-charge-types      (fn [operator input]
+                                (format "ANY cmt IN `cost-model` SATISFIES cmt.`time-charge-type` %s %s END" operator input))
+      :nfg-property           (fn [operator input]
+                                (format "ANY nfg IN `non-functional-guarantees` SATISFIES nfg.`property` = %s END" input))
+      :nfg-value              (fn [operator input]
+                                (format "ANY nfg IN `non-functional-guarantees` SATISFIES nfg.`value` %s %s END" operator input))
+      :nfg-metric             (fn [operator input]
+                                (format "ANY nfg IN `non-functional-guarantees` SATISFIES nfg.`metric` = %s END" input))
+      :security-mechanisms    "security-mechanisms"
+      :protection-types       "protection-types"
+      :security-properties    "security-properties"
+      :protected-items        "protected-items"
+      :threats                "threats"
+      :res-property           (fn [operator input]
+                                (format "ANY re IN `restrictions` SATISFIES re.`property` in %s END" input))
+      :res-value              (fn [operator input]
+                                (format "ANY re IN `restrictions` SATISFIES re.`value` %s %s END" operator input))
+      :res-metric             (fn [operator input]
+                                (format "ANY re IN `restrictions` SATISFIES re.`metric` = %s END" input))
+      :open-source            "open-source"
+      :freely-available       "freely-available"
+      :test-version           "test-version"
+      :test-duration          "test-duration"
+      :product-interfaces     "product-interfaces"
+      :product-company        "product-company"
+      :marketplaces           "marketplaces"
+      :support-types          (fn [operator input]
+                                (format "ANY su IN `support` SATISFIES su.`support-types` = %s END" input))
+      :support-daily-duration (fn [operator input]
+                                (format "ANY su IN `support` SATISFIES su.`support-daily-duration` %s %s END" operator input))
+      :support-package-number (fn [operator input]
+                                (format "ANY su IN `support` SATISFIES su.`support-package-number` %s %s END" operator input))}))
 
 (def non-collection-properties
   #{:name :description :creator :charge-packets :nfg-property :nfg-value :nfg-metric
@@ -217,14 +232,17 @@
                                     (or $ "AND")))
            params           (->> params
                                  (filter #(not= :logical-operator (:property-name %)))
+                                 (filter #(or (not (string? (:match-value %)))
+                                              (not (clj.str/blank? (:match-value %)))))
                                  (map (fn [{:keys [operator property-name match-value] :as criterion}]
                                         (let [match-value      (if (or (= :security-mechanisms property-name)
                                                                        (= :threats property-name))
                                                                  (->> match-value (map name) vec)
-                                                                 match-value)
+                                                                 (st/coerce ::match-value match-value st/string-transformer))
                                               default-operator (if (contains? non-collection-properties property-name)
                                                                  (get ->operator "EQUAL")
                                                                  (get ->operator "EQUAL_ARRAYS"))]
+                                          (prn "??" property-name match-value)
                                           (-> criterion
                                               (assoc :match-value match-value)
                                               (assoc :doc-property (get ->doc-property property-name))

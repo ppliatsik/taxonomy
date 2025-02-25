@@ -33,6 +33,9 @@
    :marketplaces              (:marketplaces db)
    :support                   (:support db)})
 
+(def required-fields
+  #{:name :security-mechanisms :threats})
+
 (rf/reg-event-fx
   ::init
   [data-path]

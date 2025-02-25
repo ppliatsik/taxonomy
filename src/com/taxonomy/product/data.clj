@@ -78,6 +78,9 @@
                                      (cond (fn? operator)
                                            (str q logical-operator no (operator input doc-property))
 
+                                           (fn? doc-property)
+                                           (str q logical-operator no (doc-property operator input))
+
                                            :else
                                            (str q logical-operator no "`" doc-property "`" operator input))))
                                  query-all-str
@@ -90,6 +93,7 @@
                  (get-query params logical-operator)
                  (N1qlQuery/simple query-all-str))
         result (.query bucket query)]
+    (prn "query" query)
     (get-from-n1ql-result result)))
 
 (defn get-product-by-name

@@ -68,7 +68,7 @@
    :time-charge-types          "Time charge types"
    :time-charge-type           "Time charge type"
    :property                   "Property"
-   :operator                   "Operator"
+   :operator                   "Compare operator"
    :value                      "Value"
    :metric                     "Metric"
    :nfg-property               "Non functional guarantees property"
@@ -85,7 +85,7 @@
    :support-daily-duration     "Support daily duration"
    :support-package-number     "Support package number"
    :wrong-weights              "Wrong weights input"
-   :logical-operators          "Logical operator for all criteria"
+   :logical-operators          "Logical constraint composition operator"
    :operators                  "Operators"
    :not                        "Add 'not' logical operator"
    :add                        "Add"
@@ -98,7 +98,8 @@
    :general-characteristics    "General characteristics"
    :cost                       "Cost"
    :security                   "Security"
-   :availability-support       "Availability & support"})
+   :availability-support       "Availability & support"
+   :nfg-restrictions           "Non functional guarantees & Restrictions"})
 
 (def end-user
   {:user-not-exists                   "User does not exists"

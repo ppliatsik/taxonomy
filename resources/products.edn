@@ -13,20 +13,20 @@
                               "threat-detection-in-real-time-based-on-rules-anomaly-detection"]
   :non-functional-guarantees [{:property            "Διαθεσιμότητα"
                                :operator            "LESS_THAN"
-                               :value               9.9
-                               :metric              "Unit"
-                               :direction-of-values false
-                               :unit                "Δευτερόλεπτα"}]
+                               :value               99.99
+                               :metric              "Μέση διαθεσιμότητα"
+                               :direction-of-values true
+                               :unit                nil}]
   :protection-types          ["DETECTIVE"]
   :security-properties       ["INTEGRITY"]
   :protected-items           ["DATA"]
   :threats                   ["theft" "fraud" "data-loss"]
-  :restrictions              [{:property            "Συλλογή"
+  :restrictions              [{:property            "Ταχύτητα συλλογής"
                                :operator            "LESS_EQUAL_THAN"
                                :value               3000
-                               :metric              "Γεγονότα"
-                               :direction-of-values false
-                               :unit                "Δευτερόλεπτα"}]
+                               :metric              "Μέση ταχύτητα"
+                               :direction-of-values true
+                               :unit                "Πακέτα/Δευτερόλεπτο"}]
   :open-source               false
   :freely-available          false
   :test-version              true
@@ -38,7 +38,7 @@
                                                         "VIDEO" "TWITTER" "TROUBLESHOOTING_CENTER"
                                                         "SOFTWARE_VERSIONS" "CHAT" "FORUM"]
                                :support-daily-duration nil
-                               :support-package-number nil}]}
+                               :support-package-number 6}]}
  {:name                      "Elastic Security solution SIEM TEST"
   :description               "The Elastic Security solution SIEM product for test"
   :delivery-methods          ["SAAS"]
@@ -46,7 +46,7 @@
   :product-categories        ["SIEM"]
   :cost-model                [{:cost-model-types ["PER_HARDWARE_RESOURCE"]
                                :charge-packets   4
-                               :time-charge-type nil}]
+                               :time-charge-type "QUARTERLY"}]
   :security-mechanisms       ["response" "ssae" "monitoring" "isolation-of-usb-devices" "regulation-of-firewall-rules"
                               "risk-management" "update-data" "recovery-tools" "isolation" "generate-alerts"
                               "data-integrity-checks" "integrations-with-other-components-or-systems" "complex-response"
@@ -63,26 +63,20 @@
                               "logs-management" "isolation-of-network" "disable-user-account" "support-compliance-guidance"]
   :non-functional-guarantees [{:property            "Διαθεσιμότητα"
                                :operator            "LESS_THAN"
-                               :value               19.9
-                               :metric              "Unit"
-                               :direction-of-values false
-                               :unit                "Δευτερόλεπτα"}
-                              {:property            "Συλλογή"
-                               :operator            "LESS_THAN"
-                               :value               89.9
-                               :metric              "Γεγονότα"
-                               :direction-of-values nil
-                               :unit                "Δευτερόλεπτα"}]
+                               :value               99.9
+                               :metric              "Μέση διαθεσιμότητα"
+                               :direction-of-values true
+                               :unit                nil}]
   :protection-types          ["DETECTIVE"]
   :security-properties       ["INTEGRITY"]
   :protected-items           ["EVERYTHING" ]
   :threats                   ["theft" "fraud" "data-loss"]
-  :restrictions              [{:property            "Συλλογή"
+  :restrictions              [{:property            "Ταχύτητα συλλογής"
                                :operator            "LESS_EQUAL_THAN"
-                               :value               1000
-                               :metric              "Γεγονότα"
-                               :direction-of-values false
-                               :unit                "Δευτερόλεπτα"}]
+                               :value               1500
+                               :metric              "Μέση ταχύτητα"
+                               :direction-of-values true
+                               :unit                "Πακέτα/Δευτερόλεπτο"}]
   :open-source               false
   :freely-available          false
   :test-version              true
@@ -100,7 +94,7 @@
   :product-categories        ["SIEM"]
   :cost-model                [{:cost-model-types ["PER_WORKLOAD"]
                                :charge-packets   20
-                               :time-charge-type nil}]
+                               :time-charge-type "QUARTERLY"}]
   :security-mechanisms       ["threat-detection-based-on-behavior" "threat-detection-based-on-ai" "threat-detection-based-on-logs"
                               "threat-detection-in-real-time" "threat-detection-in-real-time-in-logs" "threat-detection-in-real-time-based-on-machine-learning"
                               "threat-detection-in-real-time-based-on-rules" "threat-detection-in-real-time-based-on-rules-correlation"
@@ -108,26 +102,20 @@
                               "threat-detection-in-real-time-based-on-rules-anomaly-detection"]
   :non-functional-guarantees [{:property            "Διαθεσιμότητα"
                                :operator            "LESS_THAN"
-                               :value               99.9
-                               :metric              "Unit"
-                               :direction-of-values false
-                               :unit                "Δευτερόλεπτα"}]
+                               :value               99.999
+                               :metric              "Μέση διαθεσιμότητα"
+                               :direction-of-values true
+                               :unit                nil}]
   :protection-types          ["DETECTIVE"]
   :security-properties       ["INTEGRITY"]
   :protected-items           ["DATA"]
   :threats                   ["theft" "fraud" "data-loss"]
-  :restrictions              [{:property            "Συλλογή"
+  :restrictions              [{:property            "Ταχύτητα συλλογής"
                                :operator            "LESS_EQUAL_THAN"
                                :value               500
-                               :metric              "Γεγονότα"
-                               :direction-of-values false
-                               :unit                "Δευτερόλεπτα"}
-                              {:property            "Ενεργοποίηση"
-                               :operator            "EQUAL"
-                               :value               5000
-                               :metric              "Κανόνες"
-                               :direction-of-values false
-                               :unit                "Ημέρες"}]
+                               :metric              "Μέση ταχύτητα"
+                               :direction-of-values true
+                               :unit                "Πακέτα/Δευτερόλεπτο"}]
   :open-source               false
   :freely-available          false
   :test-version              true
@@ -138,4 +126,4 @@
   :support                   [{:support-types          ["PHONE" "EMAIL" "FAQ_DOCUMENTATION"
                                                         "NOTIFICATIONS" "COMMUNITY"]
                                :support-daily-duration nil
-                               :support-package-number nil}]}]
+                               :support-package-number 4}]}]

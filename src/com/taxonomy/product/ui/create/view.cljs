@@ -25,7 +25,7 @@
     [:div.column.is-6
      [:label.label.mb-0 {:htmlFor id}
       (str (trans/translate lang (keyword "com.taxonomy.product" (name k)))
-           (when (= :name k) "*"))]
+           (when (contains? model/required-fields k) "*"))]
      [:input.input {:key       id
                     :value     (get model k)
                     :on-change (fn [e]
@@ -237,12 +237,12 @@
       [:div.column.is-5
        [items-list model selected-property available-items ::model/add-smt true lang]]
       [:div.column.is-5
-       [items-list model selected-property selected-items ::model/remove-smt false lang]]
-      [:div.column.is-4
-       [:button.button.is-info
-        {:on-click (fn [_]
-                     (rf/dispatch [::model/clear-input selected-property]))}
-        [:span (trans/translate lang ::product/clear)]]]]]))
+       [items-list model selected-property selected-items ::model/remove-smt false lang]
+       [:div.column.is-4
+        [:button.button.is-info
+         {:on-click (fn [_]
+                      (rf/dispatch [::model/clear-input selected-property]))}
+         [:span (trans/translate lang ::product/clear)]]]]]]))
 
 (defn- create-view
   [model lang]
@@ -295,7 +295,7 @@
                   :margin-top    "40px"
                   :margin-bottom "40px"
                   :padding       "10px"}}
-    [:h1.title.has-text-centered (trans/translate lang ::product/non-functional-guarantees)]
+    [:h1.title.has-text-centered (trans/translate lang ::product/nfg-restrictions)]
     [:div
      {:style {:margin-top    "2%"
               :margin-bottom "2%"}}

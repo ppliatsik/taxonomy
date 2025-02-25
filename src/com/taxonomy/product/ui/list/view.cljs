@@ -135,16 +135,16 @@
       [:div.column.is-6
        [:b (trans/translate lang (keyword "com.taxonomy.product" (name k)))]]]
      [:div.columns
+      {:style {:margin-right "0.75rem"}}
       [:div.column.is-5
        [items-list model k available-items true lang]]
       [:div.column.is-5
-       [items-list model k selected-items false lang]]
-      [:button.button.is-info
-       {:on-click (fn [_]
-                    (rf/dispatch [::model/clear-criterion-value k]))}
-       [:span (trans/translate lang ::product/clear)]]]
+       [items-list model k selected-items false lang]
+       [:button.button.is-info
+        {:on-click (fn [_]
+                     (rf/dispatch [::model/clear-criterion-value k]))}
+        [:span (trans/translate lang ::product/clear)]]]]
      [:div.columns
-      {:style {:margin-left "2%"}}
       (when login-user
         [dropdown-operators model k lang :list])]]))
 
@@ -230,46 +230,27 @@
                   :margin-top    "40px"
                   :margin-bottom "40px"
                   :padding       "10px"}}
-    [:h1.title.has-text-centered (trans/translate lang ::product/non-functional-guarantees)]
+    [:h1.title.has-text-centered (trans/translate lang ::product/nfg-restrictions)]
     [:div.columns
      [input model :nfg-property lang]
-     (when login-user
-       [dropdown-operators model :nfg-property lang :string])
-     (when login-user
-       [checkbox-not model :nfg-property lang])]
+     [input model :nfg-metric lang]]
     [:div.columns
      [input model :nfg-value lang]
      (when login-user
        [dropdown-operators model :nfg-value lang :number])
      (when login-user
        [checkbox-not model :nfg-value lang])]
-    [:div.columns
-     [input model :nfg-metric lang]
-     (when login-user
-       [dropdown-operators model :nfg-metric lang :string])
-     (when login-user
-       [checkbox-not model :nfg-metric lang])]
     [:div {:style {:border     "none"
-                   :border-top "2px dotted black"
-                   :margin     "30px"}}]
+                   :border-top "2px dotted black"}}]
     [:div.columns
      [input model :res-property lang]
-     (when login-user
-       [dropdown-operators model :res-property lang :string])
-     (when login-user
-       [checkbox-not model :res-property lang])]
+     [input model :res-metric lang]]
     [:div.columns
      [input model :res-value lang]
      (when login-user
        [dropdown-operators model :res-value lang :number])
      (when login-user
-       [checkbox-not model :res-value lang])]
-    [:div.columns
-     [input model :res-metric lang]
-     (when login-user
-       [dropdown-operators model :res-metric lang :string])
-     (when login-user
-       [checkbox-not model :res-metric lang])]]
+       [checkbox-not model :res-value lang])]]
 
    [:div {:style {:border        "2px dotted black"
                   :margin-top    "40px"
@@ -365,7 +346,7 @@
               (let [property (clj.str/replace data #"\s" "")]
                 [:div.column.is-3
                  [:label.label.mb-0 {:htmlFor (str "non-functional-guarantees-w-" property)}
-                  (str (trans/translate lang (keyword "com.taxonomy.product" product-key)) "-" property)]
+                  (str (trans/translate lang (keyword "com.taxonomy.product" product-key)) "-" data)]
                  [:input.input {:key       (str "non-functional-guarantees-w-" property)
                                 :value     (get-in model [:weights product-key property])
                                 :on-change (fn [e]
