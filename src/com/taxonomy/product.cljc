@@ -84,7 +84,7 @@
 (s/def ::product-interface (s/and string? product-interfaces-set))
 (s/def ::product-interfaces	(s/nilable (s/coll-of ::product-interface :kind vector? :min-count 0)))
 
-(s/def ::product-company string?)
+(s/def ::product-company (s/nilable string?))
 
 (def marketplaces-set #{"AWS" "GCP" "AZURE" "SEARCH_ENGINE"})
 (s/def ::marketplace (s/and string? marketplaces-set))
