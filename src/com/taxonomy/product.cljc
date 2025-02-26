@@ -242,7 +242,6 @@
                                               default-operator (if (contains? non-collection-properties property-name)
                                                                  (get ->operator "EQUAL")
                                                                  (get ->operator "EQUAL_ARRAYS"))]
-                                          (prn "??" property-name match-value)
                                           (-> criterion
                                               (assoc :match-value match-value)
                                               (assoc :doc-property (get ->doc-property property-name))

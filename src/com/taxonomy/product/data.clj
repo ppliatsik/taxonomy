@@ -93,7 +93,6 @@
                  (get-query params logical-operator)
                  (N1qlQuery/simple query-all-str))
         result (.query bucket query)]
-    (prn "query" query)
     (get-from-n1ql-result result)))
 
 (defn get-product-by-name
