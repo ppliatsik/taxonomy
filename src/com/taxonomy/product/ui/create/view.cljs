@@ -24,8 +24,9 @@
   (let [id (name k)]
     [:div.column.is-6
      [:label.label.mb-0 {:htmlFor id}
-      (str (trans/translate lang (keyword "com.taxonomy.product" (name k)))
-           (when (contains? model/required-fields k) "*"))]
+      (trans/translate lang (keyword "com.taxonomy.product" (name k)))
+      (when (contains? model/required-fields k)
+        [:span {:style {:color "red"}} "*"])]
      [:input.input {:key       id
                     :value     (get model k)
                     :on-change (fn [e]
@@ -232,7 +233,8 @@
     [:div.columns
      [:div.columns
       [:div.column.is-3
-       [:b (str (trans/translate lang (keyword "com.taxonomy.product" (name property))) "*")]]]
+       [:b (trans/translate lang (keyword "com.taxonomy.product" (name property)))
+        [:span {:style {:color "red"}} "*"]]]]
      [:div.columns
       [:div.column.is-5
        [items-list model selected-property available-items ::model/add-smt true lang]]
