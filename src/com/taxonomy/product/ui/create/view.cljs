@@ -232,7 +232,7 @@
     [:div.columns
      [:div.columns
       [:div.column.is-3
-       [:b (trans/translate lang (keyword "com.taxonomy.product" (name property)))]]]
+       [:b (str (trans/translate lang (keyword "com.taxonomy.product" (name property))) "*")]]]
      [:div.columns
       [:div.column.is-5
        [items-list model selected-property available-items ::model/add-smt true lang]]
