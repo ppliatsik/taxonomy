@@ -90,7 +90,7 @@
   (fn [_ _]
     {:fx [[:dispatch [::init]]
           [:dispatch [:ui/push-notification {:title :com.taxonomy.ui/success
-                                             :body  ::product/product-deleted
+                                             :body  ::end-user/user-deleted
                                              :type  :success}]]]}))
 
 (rf/reg-event-fx

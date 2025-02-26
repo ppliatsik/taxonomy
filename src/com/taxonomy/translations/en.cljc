@@ -141,6 +141,7 @@
    :account-activated                 "Account has been activated"
    :account-activation-problem        "Account activation problem, please contact with administrator"
    :password-changed                  "Password changed"
+   :user-deleted                      "User deleted"
    :user-registered                   "User registered"
    :user-edited                       "User information changed"})
 
