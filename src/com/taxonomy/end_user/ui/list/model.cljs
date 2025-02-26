@@ -16,6 +16,8 @@
           offset       (or offset pagination/default-offset)
           current-page (-> offset (quot limit) inc)]
       {:db (-> db
+               (assoc :username nil)
+               (assoc :hide-delete-confirmation-box true)
                (assoc :q q)
                (assoc :limit limit)
                (assoc :offset offset)
@@ -73,6 +75,45 @@
   [data-path]
   (fn [db [_ v]]
     (assoc db :q v)))
+
+(rf/reg-event-fx
+  ::delete
+  [data-path]
+  (fn [{:keys [db]} _]
+    (when-let [username (:username db)]
+      {:fx [[:dispatch [:ajax/delete {:uri     (str "/api/users/" username)
+                                      :success ::delete-success
+                                      :failure ::delete-failure}]]]})))
+
+(rf/reg-event-fx
+  ::delete-success
+  (fn [_ _]
+    {:fx [[:dispatch [::init]]
+          [:dispatch [:ui/push-notification {:title :com.taxonomy.ui/success
+                                             :body  ::product/product-deleted
+                                             :type  :success}]]]}))
+
+(rf/reg-event-fx
+  ::delete-failure
+  [data-path]
+  (fn [_ [_ {:keys [response]}]]
+    {:fx [[:dispatch [:ui/push-notification {:title :com.taxonomy.ui/failure
+                                             :body  (:reason response)
+                                             :type  :error}]]]}))
+
+(rf/reg-event-db
+  ::show-delete-confirmation-box
+  [data-path]
+  (fn [db [_ username]]
+    (assoc db :hide-delete-confirmation-box false
+              :username username)))
+
+(rf/reg-event-db
+  ::hide-delete-confirmation-box
+  [data-path]
+  (fn [db _]
+    (assoc db :hide-delete-confirmation-box true
+              :username nil)))
 
 (rf/reg-sub
   ::form-data

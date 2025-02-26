@@ -8,14 +8,17 @@
             [com.taxonomy.end-user.ui.list.model :as model]))
 
 (defn- table-row
-  [{:keys [username first-name last-name email]}]
+  [{:keys [username first-name last-name email]} lang]
   [:tr {:key username}
    [:td.nowrap
     [:a {:href (routes/user {:username username})}
      username]]
    [:td first-name]
    [:td last-name]
-   [:td email]])
+   [:td email]
+   [:td [:button.button.is-danger
+         {:on-click #(rf/dispatch [::model/show-delete-confirmation-box username])}
+         [:span (trans/translate lang ::end-user/delete)]]]])
 
 (defn- list-users
   [{:keys [users]} lang]
@@ -25,11 +28,12 @@
      [:td (trans/translate lang ::end-user/username)]
      [:td (trans/translate lang ::end-user/first-name)]
      [:td (trans/translate lang ::end-user/last-name)]
-     [:td (trans/translate lang ::end-user/email)]]]
+     [:td (trans/translate lang ::end-user/email)]
+     [:td (trans/translate lang ::end-user/delete)]]]
    [:tbody
     (map (fn [user]
            ^{:key (:username user)}
-           [table-row user])
+           [table-row user lang])
          users)]])
 
 (defn- search
@@ -54,4 +58,6 @@
      [ui.navbar/view]
      [search model]
      [list-users model lang]
-     [form/pagination (:pagination model) lang ::model/set-current-page]]))
+     [form/pagination (:pagination model) lang ::model/set-current-page]
+     (when-not (:hide-delete-confirmation-box model)
+       (form/delete-confirmation-dialog ::model/delete ::model/hide-delete-confirmation-box lang))]))

@@ -42,7 +42,7 @@
 (s/def ::property	string?)
 (def operator-types #{"LESS_THAN" "LESS_EQUAL_THAN" "GREATER_THAN" "GREATER_EQUAL_THAN" ""
                       "EQUAL" "DIFFERENT" "EQUAL_ARRAYS" "SUBSET" "SUPERSET" "INCLUDES" "NON_INCLUDES"})
-(s/def ::operator	(s/and string? operator-types))
+(s/def ::operator	(s/nilable (s/and string? operator-types)))
 (s/def ::value
   #?(:clj decimal?)
   #?(:cljs number?))
@@ -128,14 +128,14 @@
           :opt-un [::ids]))
 
 (def logical-operators #{"AND" "OR" "XOR"})
-(s/def ::logical-operator (s/and string? logical-operators))
+(s/def ::logical-operator (s/nilable (s/and string? logical-operators)))
 (s/def ::not (s/nilable boolean?))
 (s/def ::match-value
-  (s/or :number   number?
-        :string   string?
-        :vector   vector?
-        :boolean? boolean?))
-(s/def ::property-name keyword?)
+  (s/nilable (s/or :number   number?
+                   :string   string?
+                   :vector   vector?
+                   :boolean? boolean?)))
+(s/def ::property-name (s/nilable keyword?))
 (s/def ::criterion
   (s/keys :req-un [::property-name ::match-value]
           :opt-un [::operator ::not]))
