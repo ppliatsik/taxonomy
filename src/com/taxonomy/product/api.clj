@@ -86,8 +86,8 @@
     (+ non-functional-guarantees-score restrictions-score test-duration-score)))
 
 (defn- classify-products
-  [products weights]
-  (let [min-max-values (get-min-max-values products)]
+  [products all-products weights]
+  (let [min-max-values (get-min-max-values all-products)]
     (->> products
          (map (fn [product]
                 (let [score (compute-score product weights min-max-values)]
@@ -188,10 +188,11 @@
                                   :reason ::product/wrong-weights})
 
           :else
-          (let [products (if (seq (-> parameters :body :ids))
-                           (data/get-products-by-id couchbase (-> parameters :body :ids))
-                           (data/get-all-products couchbase))
-                products (classify-products products weights)]
+          (let [products     (if (seq (-> parameters :body :ids))
+                               (data/get-products-by-id couchbase (-> parameters :body :ids))
+                               (data/get-all-products couchbase))
+                all-products (data/get-all-products couchbase)
+                products     (classify-products products all-products weights)]
             (if user-info
               (http-response/ok products)
               (http-response/ok (->> products (take guest-products-limit) vec)))))))
@@ -206,8 +207,9 @@
 
           :else
           (let [normalize-params (product/normalize-params (-> parameters :body :criteria) user-info)
+                all-products     (data/get-all-products couchbase)
                 products         (-> (data/search-products couchbase normalize-params)
-                                     (classify-products weights))]
+                                     (classify-products all-products weights))]
             (if user-info
               (http-response/ok products)
               (http-response/ok (->> products (take guest-products-limit) vec)))))))
