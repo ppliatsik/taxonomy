@@ -179,7 +179,7 @@
       :deployment-models      "deployment-models"
       :product-categories     "product-categories"
       :cost-model-types       (fn [operator input]
-                                (format "ANY cmt IN `cost-model` SATISFIES cmt.`types` %s %s END" operator input))
+                                (format "ANY cmt IN `cost-model` SATISFIES ANY cc IN cmt.`cost-model-types` SATISFIES cc in %s END END" input))
       :charge-packets         (fn [operator input]
                                 (format "ANY cmt IN `cost-model` SATISFIES cmt.`charge-packets` %s %s END" operator input))
       :time-charge-types      (fn [operator input]
@@ -209,7 +209,7 @@
       :product-company        "product-company"
       :marketplaces           "marketplaces"
       :support-types          (fn [operator input]
-                                (format "ANY su IN `support` SATISFIES su.`support-types` %s %s END" operator input))
+                                (format "ANY su IN `support` SATISFIES ANY uu IN su.`support-types` SATISFIES uu in %s END END" input))
       :support-daily-duration (fn [operator input]
                                 (format "ANY su IN `support` SATISFIES su.`support-daily-duration` %s %s END" operator input))
       :support-package-number (fn [operator input]
@@ -232,8 +232,7 @@
                                     (or $ "AND")))
            params           (->> params
                                  (filter #(not= :logical-operator (:property-name %)))
-                                 (filter #(or (not (string? (:match-value %)))
-                                              (not (clj.str/blank? (:match-value %)))))
+                                 (filter #(seq (:match-value %)))
                                  (map (fn [{:keys [operator property-name match-value] :as criterion}]
                                         (let [match-value      (if (or (= :security-mechanisms property-name)
                                                                        (= :threats property-name))

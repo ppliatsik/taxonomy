@@ -75,11 +75,11 @@
         query            (reduce (fn [q {:keys [property-name not operator doc-property]}]
                                    (let [no    (if not " NOT " " ")
                                          input (str "$" property-name)]
-                                     (cond (fn? operator)
-                                           (str q logical-operator no (operator input doc-property))
-
-                                           (fn? doc-property)
+                                     (cond (fn? doc-property)
                                            (str q logical-operator no (doc-property operator input))
+
+                                           (fn? operator)
+                                           (str q logical-operator no (operator input doc-property))
 
                                            :else
                                            (str q logical-operator no "`" doc-property "`" operator input))))
