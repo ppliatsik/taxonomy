@@ -179,28 +179,28 @@
       :deployment-models      "deployment-models"
       :product-categories     "product-categories"
       :cost-model-types       (fn [operator input]
-                                (format "ANY cmt IN `cost-model` SATISFIES cmt.`types` = %s END" input))
+                                (format "ANY cmt IN `cost-model` SATISFIES cmt.`types` %s %s END" operator input))
       :charge-packets         (fn [operator input]
                                 (format "ANY cmt IN `cost-model` SATISFIES cmt.`charge-packets` %s %s END" operator input))
       :time-charge-types      (fn [operator input]
                                 (format "ANY cmt IN `cost-model` SATISFIES cmt.`time-charge-type` %s %s END" operator input))
       :nfg-property           (fn [operator input]
-                                (format "ANY nfg IN `non-functional-guarantees` SATISFIES nfg.`property` = %s END" input))
+                                (format "ANY nfg IN `non-functional-guarantees` SATISFIES nfg.`property` %s %s END" operator input))
       :nfg-value              (fn [operator input]
                                 (format "ANY nfg IN `non-functional-guarantees` SATISFIES nfg.`value` %s %s END" operator input))
       :nfg-metric             (fn [operator input]
-                                (format "ANY nfg IN `non-functional-guarantees` SATISFIES nfg.`metric` = %s END" input))
+                                (format "ANY nfg IN `non-functional-guarantees` SATISFIES nfg.`metric` %s %s END" operator input))
       :security-mechanisms    "security-mechanisms"
       :protection-types       "protection-types"
       :security-properties    "security-properties"
       :protected-items        "protected-items"
       :threats                "threats"
       :res-property           (fn [operator input]
-                                (format "ANY re IN `restrictions` SATISFIES re.`property` in %s END" input))
+                                (format "ANY re IN `restrictions` SATISFIES re.`property` %s %s END" operator input))
       :res-value              (fn [operator input]
                                 (format "ANY re IN `restrictions` SATISFIES re.`value` %s %s END" operator input))
       :res-metric             (fn [operator input]
-                                (format "ANY re IN `restrictions` SATISFIES re.`metric` = %s END" input))
+                                (format "ANY re IN `restrictions` SATISFIES re.`metric` %s %s END" operator input))
       :open-source            "open-source"
       :freely-available       "freely-available"
       :test-version           "test-version"
@@ -209,7 +209,7 @@
       :product-company        "product-company"
       :marketplaces           "marketplaces"
       :support-types          (fn [operator input]
-                                (format "ANY su IN `support` SATISFIES su.`support-types` = %s END" input))
+                                (format "ANY su IN `support` SATISFIES su.`support-types` %s %s END" operator input))
       :support-daily-duration (fn [operator input]
                                 (format "ANY su IN `support` SATISFIES su.`support-daily-duration` %s %s END" operator input))
       :support-package-number (fn [operator input]
