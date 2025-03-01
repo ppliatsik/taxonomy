@@ -179,7 +179,21 @@
       :deployment-models      "deployment-models"
       :product-categories     "product-categories"
       :cost-model-types       (fn [operator input]
-                                (format "ANY cmt IN `cost-model` SATISFIES ANY cc IN cmt.`cost-model-types` SATISFIES cc in %s END END" input))
+                                (let [query (cond (= "EQUAL_ARRAYS" operator)
+                                                  "ANY cmt IN `cost-model` SATISFIES EVERY cc IN cmt.`cost-model-types` SATISFIES cc IN %s END END"
+
+                                                  (= "SUBSET" operator)
+                                                  "ANY cmt IN `cost-model` SATISFIES EVERY cc IN %s SATISFIES ARRAY_CONTAINS(cmt.`cost-model-types`,cc) END END"
+
+                                                  (= "SUPERSET" operator)
+                                                  "ANY cmt IN `cost-model` SATISFIES EVERY cc IN cmt.`cost-model-types` SATISFIES ARRAY_CONTAINS(%s,cc) END END"
+
+                                                  (= "INCLUDES" operator)
+                                                  "ANY cmt IN `cost-model` SATISFIES ANY cc IN cmt.`cost-model-types` SATISFIES cc in %s END END"
+
+                                                  (= "NON_INCLUDES" operator)
+                                                  "ANY cmt IN `cost-model` SATISFIES EVERY cc IN cmt.`cost-model-types` SATISFIES NOT ARRAY_CONTAINS(%s,cc) END END")]
+                                  (format query input)))
       :charge-packets         (fn [operator input]
                                 (format "ANY cmt IN `cost-model` SATISFIES cmt.`charge-packets` %s %s END" operator input))
       :time-charge-types      (fn [operator input]
@@ -209,7 +223,21 @@
       :product-company        "product-company"
       :marketplaces           "marketplaces"
       :support-types          (fn [operator input]
-                                (format "ANY su IN `support` SATISFIES ANY uu IN su.`support-types` SATISFIES uu in %s END END" input))
+                                (let [query (cond (= "EQUAL_ARRAYS" operator)
+                                                  "ANY su IN `cost-model` SATISFIES EVERY uu IN su.`support-types` SATISFIES uu IN %s END END"
+
+                                                  (= "SUBSET" operator)
+                                                  "ANY su IN `support` SATISFIES EVERY uu IN %s SATISFIES ARRAY_CONTAINS(su.`support-types`,uu) END END"
+
+                                                  (= "SUPERSET" operator)
+                                                  "ANY su IN `support` SATISFIES EVERY uu IN su.`support-types` SATISFIES ARRAY_CONTAINS(%s,uu) END END"
+
+                                                  (= "INCLUDES" operator)
+                                                  "ANY su IN `support` SATISFIES ANY uu IN su.`support-types` SATISFIES uu in %s END END"
+
+                                                  (= "NON_INCLUDES" operator)
+                                                  "ANY su IN `support` SATISFIES EVERY uu IN su.`support-types` SATISFIES NOT ARRAY_CONTAINS(%s,uu) END END")]
+                                  (format query input)))
       :support-daily-duration (fn [operator input]
                                 (format "ANY su IN `support` SATISFIES su.`support-daily-duration` %s %s END" operator input))
       :support-package-number (fn [operator input]
@@ -219,6 +247,9 @@
   #{:name :description :creator :charge-packets :nfg-property :nfg-value :nfg-metric
     :res-property :res-value :res-metric :open-source :freely-available :test-version
     :test-duration :product-company :support-daily-duration :support-package-number})
+
+(def properties-with-query
+  #{:cost-model-types :support-types})
 
 #?(:clj
    (defn normalize-params
@@ -240,11 +271,14 @@
                                                                  (st/coerce ::match-value match-value st/string-transformer))
                                               default-operator (if (contains? non-collection-properties property-name)
                                                                  (get ->operator "EQUAL")
-                                                                 (get ->operator "EQUAL_ARRAYS"))]
+                                                                 (get ->operator "EQUAL_ARRAYS"))
+                                              operator         (if (contains? properties-with-query property-name)
+                                                                 (or operator "EQUAL_ARRAYS")
+                                                                 (get ->operator operator default-operator))]
                                           (-> criterion
                                               (assoc :match-value match-value)
                                               (assoc :doc-property (get ->doc-property property-name))
-                                              (assoc :operator (get ->operator operator default-operator))
+                                              (assoc :operator operator)
                                               (assoc :property-name (csk/->camelCase (name property-name))))))))]
        {:logical-operator logical-operator
         :params           params})))
