@@ -132,9 +132,9 @@
 (s/def ::not (s/nilable boolean?))
 (s/def ::match-value
   (s/nilable (s/or :number   number?
+                   :boolean? boolean?
                    :string   string?
-                   :vector   vector?
-                   :boolean? boolean?)))
+                   :vector   vector?)))
 (s/def ::property-name (s/nilable keyword?))
 (s/def ::criterion
   (s/keys :req-un [::property-name ::match-value]
@@ -263,7 +263,9 @@
                                     (or $ "AND")))
            params           (->> params
                                  (filter #(not= :logical-operator (:property-name %)))
-                                 (filter #(or (number? (:match-value %)) (seq (:match-value %))))
+                                 (filter #(or (number? (:match-value %))
+                                              (boolean? (:match-value %))
+                                              (seq (:match-value %))))
                                  (map (fn [{:keys [operator property-name match-value] :as criterion}]
                                         (let [match-value      (if (or (= :security-mechanisms property-name)
                                                                        (= :threats property-name))
