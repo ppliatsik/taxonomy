@@ -192,7 +192,7 @@
                                                   "ANY cmt IN `cost-model` SATISFIES ANY cc IN cmt.`cost-model-types` SATISFIES cc in %s END END"
 
                                                   (= "NON_INCLUDES" operator)
-                                                  "ANY cmt IN `cost-model` SATISFIES EVERY cc IN cmt.`cost-model-types` SATISFIES NOT ARRAY_CONTAINS(%s,cc) END END")]
+                                                  "EVERY cmt IN `cost-model` SATISFIES EVERY cc IN cmt.`cost-model-types` SATISFIES NOT ARRAY_CONTAINS(%s,cc) END END")]
                                   (format query input)))
       :charge-packets         (fn [operator input]
                                 (format "ANY cmt IN `cost-model` SATISFIES cmt.`charge-packets` %s %s END" operator input))
@@ -236,7 +236,7 @@
                                                   "ANY su IN `support` SATISFIES ANY uu IN su.`support-types` SATISFIES uu in %s END END"
 
                                                   (= "NON_INCLUDES" operator)
-                                                  "ANY su IN `support` SATISFIES EVERY uu IN su.`support-types` SATISFIES NOT ARRAY_CONTAINS(%s,uu) END END")]
+                                                  "EVERY su IN `support` SATISFIES EVERY uu IN su.`support-types` SATISFIES NOT ARRAY_CONTAINS(%s,uu) END END")]
                                   (format query input)))
       :support-daily-duration (fn [operator input]
                                 (format "ANY su IN `support` SATISFIES su.`support-daily-duration` %s %s END" operator input))
