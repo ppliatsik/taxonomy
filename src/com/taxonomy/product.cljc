@@ -224,7 +224,7 @@
       :marketplaces           "marketplaces"
       :support-types          (fn [operator input]
                                 (let [query (cond (= "EQUAL_ARRAYS" operator)
-                                                  "ANY su IN `cost-model` SATISFIES EVERY uu IN su.`support-types` SATISFIES uu IN %s END END"
+                                                  "ANY su IN `support` SATISFIES EVERY uu IN su.`support-types` SATISFIES uu IN %s END END"
 
                                                   (= "SUBSET" operator)
                                                   "ANY su IN `support` SATISFIES EVERY uu IN %s SATISFIES ARRAY_CONTAINS(su.`support-types`,uu) END END"
@@ -263,7 +263,7 @@
                                     (or $ "AND")))
            params           (->> params
                                  (filter #(not= :logical-operator (:property-name %)))
-                                 (filter #(seq (:match-value %)))
+                                 (filter #(or (number? (:match-value %)) (seq (:match-value %))))
                                  (map (fn [{:keys [operator property-name match-value] :as criterion}]
                                         (let [match-value      (if (or (= :security-mechanisms property-name)
                                                                        (= :threats property-name))
